@@ -1,0 +1,170 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+apply plugin: 'bugly'
+
+def metadata = project.rootProject.ext.metadata
+
+// release 时自动上传符号表 https://bugly.qq.com/androidsymbol
+def buglyAppId = metadata.buglyAppId != null ? metadata.buglyAppId : System.getenv("BUGLY_APPID");
+def buglyAppKey = metadata.buglyAppKey != null ? metadata.buglyAppKey : System.getenv("BUGLY_APPKEY");
+bugly {
+    appId = buglyAppId
+    appKey = buglyAppKey
+}
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+
+def releaseTime() {
+    return new Date().time.hashCode()
+}
+
+android {
+    def storeFilePath = metadata.storeFile != null ? metadata.storeFile : System.getenv("STORE_FILE")
+    signingConfigs {
+        debugConfig {
+            keyAlias metadata.alias
+            keyPassword metadata.pwd
+            storeFile file(storeFilePath)
+            storePassword metadata.storePwd
+        }
+        releaseConfig {
+            keyAlias metadata.alias != null ? metadata.alias : System.getenv("ALIAS_NAME")
+            keyPassword metadata.pwd != null ? metadata.pwd : System.getenv("ALIAS_PWD")
+            storeFile file(storeFilePath)
+            storePassword metadata.storePwd != null ? metadata.storePwd : System.getenv("STORE_PWD")
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+    defaultConfig {
+        applicationId "com.tomeokin.lspush"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        manifestPlaceholders = [
+                BUGLY_APPID       : buglyAppId,
+                BUGLY_APP_VERSION : metadata.buglyAppVersion,
+                BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug
+        ]
+
+        ndk {
+            // 设置支持的 SO 库架构
+            abiFilters 'armeabi', 'x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            resValue "string", "app_name", "LsPush (debug)"
+            signingConfig signingConfigs.debugConfig
+        }
+        release {
+            resValue "string", "app_name", "LsPush"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            outputs.upToDateWhen { false }
+            showStandardStreams = true
+        }
+    }
+
+    //Needed because of this https://github.com/square/okio/issues/58
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
+    // app name
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name.replace("app", "${defaultConfig.applicationId}_${defaultConfig.versionName}_${releaseTime()}")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+}
+
+dependencies {
+    def releaseDependencies = rootProject.ext.releaseDependencies
+    def debugDependencies = rootProject.ext.debugDependencies
+    def testDependencies = rootProject.ext.testDependencies
+    def androidTestDependencies = rootProject.ext.androidTestDependencies
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    // support
+    compile releaseDependencies.supportV7
+    compile releaseDependencies.supportV4
+    compile releaseDependencies.supportAnnotations
+    compile releaseDependencies.recyclerview
+
+    // log
+    compile releaseDependencies.timber
+    compile releaseDependencies.logger
+
+    // rx
+    compile releaseDependencies.rxandroid
+    compile releaseDependencies.rxjava
+
+    // butterknife
+    compile releaseDependencies.butterknife
+    apt releaseDependencies.butterknifeCompiler
+
+    // network
+    compile releaseDependencies.retrofit2
+    compile releaseDependencies.okhttp3
+
+    // binding
+    compile releaseDependencies.rxbindingV7
+    compile releaseDependencies.rxbindingRecyclerview
+
+    // gson
+    compile releaseDependencies.gson
+
+    // bugly, https://bugly.qq.com/androidfast
+    compile releaseDependencies.crashreport
+    //compile releaseDependencies.nativecrashreport
+
+    // stetho
+    debugCompile debugDependencies.stetho
+    compile debugDependencies.stethoOkhttp3
+    debugCompile debugDependencies.stethoJsRhino
+
+    testCompile testDependencies.junit
+    testCompile testDependencies.mockitoCore
+    testCompile testDependencies.robolectric
+    testCompile testDependencies.asserjCore
+
+    // android test
+    androidTestCompile androidTestDependencies.junit
+    androidTestCompile androidTestDependencies.mockitoCore
+    androidTestCompile androidTestDependencies.assertjAppCompatV7
+    androidTestCompile androidTestDependencies.assertjRecyclerView
+
+    androidTestCompile androidTestDependencies.espresso
+    androidTestCompile androidTestDependencies.runner
+    androidTestCompile androidTestDependencies.supportAnnotations
+}
+
+//tasks.matching {it instanceof Test}.all {
+//    testLogging.events = ["failed", "passed", "skipped"]
+//}
