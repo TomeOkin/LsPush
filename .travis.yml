@@ -43,4 +43,4 @@ cache:
     - ./gradlew clean test
 
   after_success:
-    - ./gradlew jacocoDebugReport coveralls
+    - ./gradlew jacocoDebugReport coveralls -Dscan --configure-on-demand --daemon --parallel --stacktrace

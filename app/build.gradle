@@ -78,6 +78,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    dexOptions {
+        preDexLibraries !Boolean.valueOf(System.getenv("TRAVIS"))
+    }
+
 //    testOptions.unitTests.all {
 //        testLogging {
 //            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
