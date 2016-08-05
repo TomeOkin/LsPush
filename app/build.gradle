@@ -7,11 +7,9 @@ apply from: rootProject.file('buildsystem/jacoco.gradle')
 def metadata = project.rootProject.ext.metadata
 
 // release 时自动上传符号表 https://bugly.qq.com/androidsymbol
-def buglyAppId = metadata.buglyAppId != null ? metadata.buglyAppId : System.getenv("BUGLY_APPID");
-def buglyAppKey = metadata.buglyAppKey != null ? metadata.buglyAppKey : System.getenv("BUGLY_APPKEY");
 bugly {
-    appId = buglyAppId
-    appKey = buglyAppKey
+    appId = metadata.buglyAppId
+    appKey = metadata.buglyAppKey
 }
 
 def versionMajor = 1
@@ -32,10 +30,10 @@ android {
             storePassword metadata.storePwd
         }
         releaseConfig {
-            keyAlias metadata.alias != null ? metadata.alias : System.getenv("ALIAS_NAME")
-            keyPassword metadata.pwd != null ? metadata.pwd : System.getenv("ALIAS_PWD")
+            keyAlias metadata.alias
+            keyPassword metadata.pwd
             storeFile file(storeFilePath)
-            storePassword metadata.storePwd != null ? metadata.storePwd : System.getenv("STORE_PWD")
+            storePassword metadata.storePwd
         }
     }
     compileSdkVersion 23
@@ -48,7 +46,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         manifestPlaceholders = [
-                BUGLY_APPID       : buglyAppId,
+                BUGLY_APPID       : metadata.buglyAppId,
                 BUGLY_APP_VERSION : metadata.buglyAppVersion,
                 BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug
         ]
@@ -96,7 +94,7 @@ android {
         textReport true
         textOutput "stdout"
 
-        // Butterknife, Okio and Realm, https://github.com/square/okio/issues/58
+        // rhino, okio and retrofit2, https://github.com/square/okio/issues/58
         warning 'InvalidPackage'
 
         // Ignore "AES/CBC/PKCS5Padding" warning, we aren't entirely rely on it.
@@ -105,6 +103,7 @@ android {
         disable "GoogleAppIndexingApiWarning"
         // update sdk version until new sdk source ability
         disable "NewerVersionAvailable"
+        disable "OldTargetApi"
         // CI issue with sdk.dir in local.properties
         disable "PropertyEscape"
         // we don't use it

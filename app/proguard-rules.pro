@@ -66,7 +66,8 @@
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 # retrofit 2.1.0
 # https://square.github.io/retrofit/

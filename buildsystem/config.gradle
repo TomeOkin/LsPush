@@ -4,17 +4,20 @@ allprojects {
     }
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 ext {
+    File file = project.rootProject.file('local.properties')
+    Properties properties = new Properties()
+    boolean isExists = file.exists();
+    if (file.exists()) {
+        properties.load(file.newDataInputStream())
+    }
     metadata = [
-            alias           : properties.getProperty("key.alias"),
-            pwd             : properties.getProperty("key.pwd"),
-            storeFile       : properties.getProperty("key.storeFile"),
-            storePwd        : properties.getProperty("key.storePwd"),
-            buglyAppId      : properties.getProperty("bugly.appId"),
-            buglyAppKey     : properties.getProperty("bugly.appKey"),
+            alias           : isExists ? properties.getProperty("key.alias") : System.getenv("ALIAS_NAME"),
+            pwd             : isExists ? properties.getProperty("key.pwd") : System.getenv("ALIAS_PWD"),
+            storeFile       : isExists ? properties.getProperty("key.storeFile") : System.getenv("STORE_FILE"),
+            storePwd        : isExists ? properties.getProperty("key.storePwd") : System.getenv("STORE_PWD"),
+            buglyAppId      : isExists ? properties.getProperty("bugly.appId") : System.getenv("BUGLY_APPID"),
+            buglyAppKey     : isExists ? properties.getProperty("bugly.appKey") : System.getenv("BUGLY_APPKEY"),
             buglyAppVersion : "1.0",
             buglyEnableDebug: false,
     ]
