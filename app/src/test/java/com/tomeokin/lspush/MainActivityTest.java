@@ -19,7 +19,8 @@ package com.tomeokin.lspush;
  * due to Robolectric bug with AppCompatActivity, it not use this time
  */
 //@RunWith(RobolectricTestRunner.class)
-//@Config(constants = BuildConfig.class, sdk = 21, packageName = "com.tomeokin.lspush", application = LsPushApplication.class)
+//@Config(constants = BuildConfig.class, sdk = 21, packageName = "com.tomeokin.lspush",
+// application = LsPushApplication.class)
 public class MainActivityTest {
 
     //@Test

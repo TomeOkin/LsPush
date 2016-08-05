@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- https://github.com/artem-zinnatullin/qualitymatters/blob/master/code_quality_tools/findbugs-filter.xml -->
+    <!-- https://github.com/ribot/android-boilerplate/blob/master/config/quality/findbugs/android-exclude-filter.xml -->
+    <Match>
+        <Class name="~.*\.R\$.*"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.Manifest\$.*"/>
+    </Match>
+
+    <!-- Do not check auto-generated classes (Dagger puts $ into class names) -->
+    <Match>
+        <Class name="~.*Dagger*.*"/>
+    </Match>
+
+    <!-- All bugs in test classes, except for JUnit-specific bugs -->
+    <Match>
+        <Class name="~.*\.*Test" />
+        <Not>
+            <Bug code="IJU" />
+        </Not>
+    </Match>
+
+    <!-- Ignore UPM in lambdas from Retrolambda, FindBugs does not correctly understand them -->
+    <Match>
+        <Bug code="UPM"/>
+        <Class name="~.*\$\$Lambda\$.*"/>
+    </Match>
+
+    <!-- Ignore Butterknife auto-generated classes -->
+    <Match>
+        <Class name="~.*\$\$ViewBinder*"/>
+    </Match>
+    <Match>
+        <Class name="~.*\$\$ViewBinder\$InnerUnbinder*"/>
+    </Match>
+</FindBugsFilter>

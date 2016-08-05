@@ -36,7 +36,7 @@ import javax.crypto.SecretKey;
 
 public class Crypt {
     private static Crypt crypt;
-    private PublicKey pubKey;
+    private PublicKey mPubKey;
 
     public static Crypt getInstance(final String pubKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
@@ -60,7 +60,7 @@ public class Crypt {
         final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         final X509EncodedKeySpec pubKeySpec =
                 new X509EncodedKeySpec(Base64.decode(pubKey, Base64.DEFAULT));
-        this.pubKey = keyFactory.generatePublic(pubKeySpec);
+        this.mPubKey = keyFactory.generatePublic(pubKeySpec);
     }
 
     public AccountAuth encrypt(final String data)
@@ -72,7 +72,7 @@ public class Crypt {
         keygen.init(random);
         SecretKey key = keygen.generateKey();
         Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.WRAP_MODE, pubKey);
+        cipher.init(Cipher.WRAP_MODE, mPubKey);
         byte[] wrappedKey = cipher.wrap(key); // wrap RSA public key
 
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");

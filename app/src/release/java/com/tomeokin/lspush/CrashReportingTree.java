@@ -25,10 +25,10 @@ import timber.log.Timber;
 
 public class CrashReportingTree extends Timber.Tree {
     private static final int MAX_LOG_LENGTH = 4000;
-    private final Context context;
+    private final Context mContext;
 
     public CrashReportingTree(final Context context) {
-        this.context = context;
+        this.mContext = context;
         CrashReport.initCrashReport(context);
     }
 
@@ -53,7 +53,7 @@ public class CrashReportingTree extends Timber.Tree {
         if (isLoggable(priority)) {
             if (priority == Log.ASSERT) {
                 // need to create tag first in bugly web console
-                // CrashReport.setUserSceneTag(context, yourUserSceneTagId);
+                // CrashReport.setUserSceneTag(mContext, yourUserSceneTagId);
                 CrashReport.postCatchedException(t);  // bugly 会将这个 throwable 上报
                 return;
             }

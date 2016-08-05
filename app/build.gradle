@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'bugly'
+apply from: rootProject.file('buildsystem/quality.gradle')
+apply from: rootProject.file('buildsystem/jacoco.gradle')
 
 def metadata = project.rootProject.ext.metadata
 
@@ -78,17 +80,30 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    testOptions.unitTests.all {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-            outputs.upToDateWhen { false }
-            showStandardStreams = true
-        }
-    }
+//    testOptions.unitTests.all {
+//        testLogging {
+//            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+//            outputs.upToDateWhen { false }
+//            showStandardStreams = true
+//        }
+//        jacoco {
+//            includeNoLocationClasses = true
+//        }
+//    }
 
-    //Needed because of this https://github.com/square/okio/issues/58
     lintOptions {
+        // 除了 xml 和 html 外，也在控制台输出
+        textReport true
+        textOutput "stdout"
+        // Butterknife, Okio and Realm, https://github.com/square/okio/issues/58
         warning 'InvalidPackage'
+//        disable "UnusedResources", // Unused will be removed on release
+//                "IconExpectedSize", // Using the material icons provided from Google
+//                "GoogleAppIndexingApiWarning", // We might want to index our app later
+//                "ResourceType", // Annotation binding
+//                "GradleDependency",
+//                "NewerVersionAvailable",
+//                "PropertyEscape" // CI issue with sdk.dir in local.properties
     }
 
     // app name
@@ -168,3 +183,22 @@ dependencies {
 //tasks.matching {it instanceof Test}.all {
 //    testLogging.events = ["failed", "passed", "skipped"]
 //}
+
+//tasks.withType(Test) {
+//    /// increased logging for tests
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//    }
+//}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        outputs.upToDateWhen { false }
+        showCauses true
+        showExceptions true
+        showStackTraces true
+        showStandardStreams true
+        events = ["failed", "passed", "skipped"]
+    }
+}

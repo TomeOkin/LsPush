@@ -29,3 +29,9 @@ cache:
   directories:
   - $HOME/.m2
   - $HOME/.gradle
+
+  script:
+    - ./gradlew clean test
+
+  after_success:
+    - ./gradlew jacocoDebugReport coveralls
