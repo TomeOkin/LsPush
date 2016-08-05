@@ -64,7 +64,7 @@ public class CrashReportingTree extends Timber.Tree {
             }
 
             for (int i = 0, length = message.length(); i < length; i++) {
-                int newline = message.indexOf("\n", i);
+                int newline = message.indexOf('\n', i);
                 newline = newline != -1 ? newline : length;
                 do {
                     int end = Math.min(newline, i + MAX_LOG_LENGTH);

@@ -95,15 +95,25 @@ android {
         // 除了 xml 和 html 外，也在控制台输出
         textReport true
         textOutput "stdout"
+
         // Butterknife, Okio and Realm, https://github.com/square/okio/issues/58
         warning 'InvalidPackage'
-//        disable "UnusedResources", // Unused will be removed on release
+
+        // Ignore "AES/CBC/PKCS5Padding" warning, we aren't entirely rely on it.
+        disable "TrulyRandom"
+        // We might want to index our app later
+        disable "GoogleAppIndexingApiWarning"
+        // update sdk version until new sdk source ability
+        disable "NewerVersionAvailable"
+        // CI issue with sdk.dir in local.properties
+        disable "PropertyEscape"
+        // we don't use it
+        disable "AllowBackup"
+//                "UnusedResources", // Unused will be removed on release
 //                "IconExpectedSize", // Using the material icons provided from Google
-//                "GoogleAppIndexingApiWarning", // We might want to index our app later
 //                "ResourceType", // Annotation binding
-//                "GradleDependency",
-//                "NewerVersionAvailable",
-//                "PropertyEscape" // CI issue with sdk.dir in local.properties
+//                "GradleDependency"
+
     }
 
     // app name

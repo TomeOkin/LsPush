@@ -19,6 +19,7 @@ import android.util.Base64;
 
 import com.tomeokin.lspush.data.model.AccountAuth;
 
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -35,15 +36,15 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class Crypt {
-    private static Crypt crypt;
+    private static Crypt sCrypt;
     private PublicKey mPubKey;
 
     public static Crypt getInstance(final String pubKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
-        if (crypt == null) {
-            crypt = new Crypt(pubKey);
+        if (sCrypt == null) {
+            sCrypt = new Crypt(pubKey);
         }
-        return crypt;
+        return sCrypt;
     }
 
     /**
@@ -77,7 +78,7 @@ public class Crypt {
 
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] encrypt = cipher.doFinal(data.getBytes());
+        byte[] encrypt = cipher.doFinal(data.getBytes(Charset.defaultCharset()));
 
         AccountAuth accountAuth = new AccountAuth();
         accountAuth.key = Base64.encodeToString(wrappedKey, Base64.DEFAULT);
