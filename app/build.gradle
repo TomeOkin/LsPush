@@ -21,18 +21,18 @@ def releaseTime() {
 }
 
 android {
-    def storeFilePath = metadata.storeFile != null ? metadata.storeFile : System.getenv("STORE_FILE")
     signingConfigs {
         debugConfig {
             keyAlias metadata.alias
             keyPassword metadata.pwd
-            storeFile file(storeFilePath)
+            // travis-ci not support relative path
+            storeFile rootProject.file(metadata.storeFile)
             storePassword metadata.storePwd
         }
         releaseConfig {
             keyAlias metadata.alias
             keyPassword metadata.pwd
-            storeFile file(storeFilePath)
+            storeFile rootProject.file(metadata.storeFile)
             storePassword metadata.storePwd
         }
     }
