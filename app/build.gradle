@@ -213,14 +213,14 @@ dependencies {
 //    }
 //}
 
-tasks.withType(Test) {
-    testLogging {
-        exceptionFormat "full"
-        outputs.upToDateWhen { false }
-        showCauses true
-        showExceptions true
-        showStackTraces true
-        showStandardStreams true
-        events = ["failed", "passed", "skipped"]
-    }
-}
+//tasks.withType(Test) {
+//    testLogging {
+//        exceptionFormat "full"
+//        outputs.upToDateWhen { false }
+//        showCauses true
+//        showExceptions true
+//        showStackTraces true
+//        showStandardStreams true
+//        events = ["failed", "passed", "skipped"]
+//    }
+//}

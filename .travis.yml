@@ -32,6 +32,7 @@ before_script:
 notifications:
   email: false
 
+# https://github.com/travis-ci/travis-ci/issues/3775
 sudo: true
 
 cache:
