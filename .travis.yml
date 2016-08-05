@@ -20,6 +20,9 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_22fb4dacca4f_key -iv $encrypted_22fb4dacca4f_iv
   -in tomeokin.jks.enc -out tomeokin.jks -d
 
+before_script:
+  - chmod +x gradlew
+
 notifications:
   email: false
 
