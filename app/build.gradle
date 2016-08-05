@@ -3,6 +3,7 @@ apply plugin: 'android-apt'
 apply plugin: 'bugly'
 apply from: rootProject.file('buildsystem/quality.gradle')
 apply from: rootProject.file('buildsystem/jacoco.gradle')
+apply from: rootProject.file('buildsystem/compile.gradle')
 
 def metadata = project.rootProject.ext.metadata
 
