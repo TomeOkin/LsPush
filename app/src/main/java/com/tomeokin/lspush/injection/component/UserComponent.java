@@ -13,16 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.data.remote;
+package com.tomeokin.lspush.injection.component;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-
-import okhttp3.OkHttpClient;
-
-public class NetworkProvider {
-    public OkHttpClient provideOkHttp() {
-        return new OkHttpClient.Builder()
-                .addNetworkInterceptor(new StethoInterceptor())
-                .build();
-    }
-}
+public class UserComponent { }
