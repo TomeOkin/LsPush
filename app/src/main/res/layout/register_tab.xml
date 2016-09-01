@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tab_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/white"
+        tools:text="@string/email" />
+
+    <View
+        android:id="@+id/tab_selection"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/selection_height"
+        android:layout_marginTop="@dimen/textField_padding" />
+
+</LinearLayout>

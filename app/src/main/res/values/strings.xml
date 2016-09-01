@@ -1,3 +1,30 @@
 <resources>
+    <string name="email_hint">Email</string>
+    <string name="phone_hint">Phone</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="next">Continue</string>
+    <string name="select_your_country">Select your country</string>
+    <string name="country_name_or_code">Country name or code</string>
+    <string name="already_have_an_account_log_in">Already have an account? <b>Log in.</b></string>
+    <string name="unexpected_error">Meet unexpected error, please try it later.</string>
 
+    <string name="captcha_hint">Confirmation Code</string>
+    <string name="enter_captcha_code">Enter Confirmation Code</string>
+    <string name="resend_captcha_code">Please enter the confirmation code you are received.<br />Not received ? <b>Resend confirmation code</b></string>
+    <string name="send_captcha_code">Send Confirmation Code</string>
+    <string name="ok">OK</string>
+    <string name="send_captcha_dialog_notice">Please waiting %d second for resend the confirmation code.</string>
+    <string name="receive_captcha_notice">Confirmation code sent successfully, please pay attention to the reception.</string>
+    <string name="send_captcha_error">Fail sent confirmation code, please try it later.</string>
+    <string name="check_captcha_error">Please checking your confirmation code input currently.</string>
+
+    <string name="uid_hint">User ID</string>
+    <string name="username_hint">User Name</string>
+    <string name="user_password_hint">Password</string>
+    <string name="uid_error">User ID length must not be less than %s numbers including letters.</string>
+    <string name="username_error">Username length must not be less than %s numbers including letters.</string>
+    <string name="user_password_error">Password length must not be less than %s numbers including letters.</string>
+    <string name="not_support_character">Not support character %c.</string>
+    <string name="uid_not_unique">User ID is existed, please try another.</string>
 </resources>

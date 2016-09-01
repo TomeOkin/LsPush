@@ -15,4 +15,6 @@
  */
 package com.tomeokin.lspush.injection.module;
 
-public class UserModule { }
+public class UserModule {
+
+}

@@ -137,3 +137,5 @@
 -keep class org.sqlite.** { *; }
 -keep class org.sqlite.database.** { *; }
 
+# lspush
+-keep public class com.tomeokin.lspush.data.model.**

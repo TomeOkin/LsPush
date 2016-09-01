@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tomeokin.lspush.ui.widget.NotificationBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notification_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/error_text_view_padding"
+    android:textColor="@color/white"
+    android:visibility="invisible"
+    tools:background="#808080"
+    tools:text="错误消息" />

@@ -15,4 +15,27 @@
  */
 package com.tomeokin.lspush.injection.component;
 
-public interface AppComponent { }
+import android.app.Application;
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.tomeokin.lspush.data.remote.LsPushService;
+import com.tomeokin.lspush.injection.module.AppModule;
+import com.tomeokin.lspush.injection.module.LsPushApiModule;
+import com.tomeokin.lspush.injection.qualifier.AppContext;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
+
+@Singleton
+@Component(modules = {AppModule.class, LsPushApiModule.class})
+public interface AppComponent {
+    @AppContext Context context();
+
+    Application application();
+
+    LsPushService lspushService();
+
+    Gson gson();
+}

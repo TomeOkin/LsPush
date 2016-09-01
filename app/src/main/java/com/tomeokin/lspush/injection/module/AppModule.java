@@ -15,4 +15,29 @@
  */
 package com.tomeokin.lspush.injection.module;
 
-public class AppModule { }
+import android.app.Application;
+import android.content.Context;
+
+import com.tomeokin.lspush.injection.qualifier.AppContext;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+
+@Module
+public class AppModule {
+    private final Application application;
+
+    public AppModule(Application application) {
+        this.application = application;
+    }
+
+    @Provides @Singleton Application application() {
+        return application;
+    }
+
+    @Provides @Singleton @AppContext Context provideAppContext() {
+        return application;
+    }
+}

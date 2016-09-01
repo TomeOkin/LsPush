@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SearchEditText">
+        <attr name="enableQuickBackWhenEmpty" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="MarginTextInputLayout">
+        <attr name="hintBottomMargin" format="dimension"/>
+    </declare-styleable>
+</resources>

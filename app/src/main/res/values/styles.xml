@@ -1,11 +1,147 @@
 <resources>
+    <style name="RowHeaderText">
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">@dimen/row_text_padding</item>
+        <item name="android:paddingTop">16.0dip</item>
+        <item name="android:paddingRight">@dimen/row_text_padding</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/row_height_small</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Divider -->
+    <style name="Widget.LsPush.Divider.Horizontal.Small" parent="">
+        <item name="android:background">@color/grey_2_whiteout</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
+    <style name="Widget.LsPush.Divider.Horizontal.Medium" parent="">
+        <item name="android:background">@color/grey_2_whiteout</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="Widget.LsPush.Divider.Horizontal.Large" parent="">
+        <item name="android:background">@color/grey_2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+    </style>
+
+    <!-- Button -->
+    <style name="Widget.LsPush.Button" parent="">
+        <item name="android:background">@drawable/dialog_button</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/row_height_small</item>
+        <item name="android:minWidth">@dimen/button_width_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="ListViewStyle">
+        <item name="android:focusable">false</item>
+        <item name="android:listSelector">#00000000</item>
+        <item name="android:cacheColorHint">@color/white</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:headerDividersEnabled">false</item>
+        <item name="android:footerDividersEnabled">false</item>
+    </style>
+
+    <style name="Widget.LsPush.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:windowAnimationStyle">@style/animationDialog</item>
+        <item name="android:listChoiceIndicatorSingle">@null</item>
+        <item name="android:listChoiceIndicatorMultiple">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:listChoiceBackgroundIndicator">@null</item>
+        <item name="android:activatedBackgroundIndicator">@null</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="Widget.LsPush.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/login_input_field</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white_70_transparent</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:textSize">@dimen/font_medium</item>
+    </style>
+
+    <style name="Widget.LsPush.ClearEditText" parent="Widget.LsPush.EditText">
+        <item name="android:drawableRight">@drawable/search_clear</item>
+    </style>
+
+    <style name="animationDialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+    <style name="SearchEditText">
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_gravity">center|left</item>
+        <item name="android:background">@drawable/input_white</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:freezesText">true</item>
+        <item name="android:drawableLeft">@drawable/nav_search</item>
+        <item name="android:drawableRight">@drawable/search_clear</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:inputType">textAutoComplete</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="TextInputHint" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextInputError" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/red_5</item>
+    </style>
+
+    <style name="TextInputCounter" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white_70_transparent</item>
+    </style>
+
+    <style name="TextInputCounterOverFlow" parent="TextAppearance.Design.Counter.Overflow">
+        <item name="android:textColor">@color/orange_5</item>
+    </style>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 </resources>

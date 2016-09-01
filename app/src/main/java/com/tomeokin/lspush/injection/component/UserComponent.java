@@ -15,4 +15,4 @@
  */
 package com.tomeokin.lspush.injection.component;
 
-public class UserComponent { }
+public interface UserComponent { }

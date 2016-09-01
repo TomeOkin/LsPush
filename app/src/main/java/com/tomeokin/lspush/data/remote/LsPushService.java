@@ -15,6 +15,25 @@
  */
 package com.tomeokin.lspush.data.remote;
 
-public class LsPushService {
+import com.tomeokin.lspush.data.model.AccessResponse;
+import com.tomeokin.lspush.data.model.BaseResponse;
+import com.tomeokin.lspush.data.model.CaptchaRequest;
+import com.tomeokin.lspush.data.model.CryptoToken;
 
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
+
+public interface LsPushService {
+    @POST("api/user/login") Call<AccessResponse> login(@Body CryptoToken cryptoToken);
+
+    @POST("api/user/refreshExpireToken") Call<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
+
+    @POST("api/user/refreshRefreshToken") Call<AccessResponse> refreshRefreshToken(@Body CryptoToken cryptoToken);
+
+    @POST("api/user/register") Call<AccessResponse> register(@Body CryptoToken cryptoToken);
+
+    @POST("api/user/sendCaptcha") Call<BaseResponse> sendCaptcha(@Body CaptchaRequest captchaRequest);
+
+    @POST("api/user/checkCaptcha") Call<BaseResponse> checkCaptcha(@Body CryptoToken cryptoToken);
 }

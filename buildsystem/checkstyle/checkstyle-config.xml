@@ -62,7 +62,7 @@
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="LeftCurly">
-            <property name="maxLineLength" value="100"/>
+            <property name="maxLineLength" value="120"/>
         </module>
 
         <module name="RightCurly">
@@ -152,14 +152,15 @@
                      value="Type name ''{0}'' must match pattern ''{1}''."/>
         </module>
 
-        <module name="MemberName">
-            <property name="applyToPublic" value="false" />
-            <property name="applyToPackage" value="false" />
-            <property name="applyToProtected" value="false" />
-            <property name="format" value="^m[A-Z][a-z0-9][a-zA-Z0-9]*$"/>
-            <message key="name.invalidPattern"
-                     value="Member name ''{0}'' must match pattern ''{1}''."/>
-        </module>
+        <!-- add prefix m is not necessarily the best -->
+        <!--<module name="MemberName">-->
+            <!--<property name="applyToPublic" value="false" />-->
+            <!--<property name="applyToPackage" value="false" />-->
+            <!--<property name="applyToProtected" value="false" />-->
+            <!--<property name="format" value="^m[A-Z][a-z0-9][a-zA-Z0-9]*$"/>-->
+            <!--<message key="name.invalidPattern"-->
+                     <!--value="Member name ''{0}'' must match pattern ''{1}''."/>-->
+        <!--</module>-->
 
         <module name="ParameterName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>

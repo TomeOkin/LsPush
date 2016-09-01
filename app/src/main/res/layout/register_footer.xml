@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dividerLine_thickness"
+        android:background="@color/white_20_transparent" />
+
+    <TextView
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_small"
+        android:background="@color/white_5_transparent"
+        android:gravity="center"
+        android:textColor="@color/white_70_transparent"
+        android:textSize="@dimen/font_small"
+        tools:text="@string/already_have_an_account_log_in" />
+
+</merge>

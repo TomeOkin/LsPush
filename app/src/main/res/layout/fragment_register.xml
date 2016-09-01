@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="#49a0b6">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/image_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/register_header_bottom_margin"
+        android:layout_marginTop="@dimen/register_header_top_margin"
+        tools:src="@drawable/register_name" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reg_field_horizontal_margin"
+        android:layout_marginRight="@dimen/reg_field_horizontal_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/userId_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_marginBottom="@dimen/row_padding"
+            android:background="@drawable/login_input_field"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/userId_field"
+                style="@style/Widget.LsPush.EditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/uid_hint"
+                android:inputType="textNoSuggestions"
+                android:paddingLeft="@dimen/row_padding"
+                android:paddingRight="@dimen/row_padding" />
+
+            <ImageView
+                android:id="@+id/userId_validation_button"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.3"
+                android:background="@drawable/validation_positive"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/userId_waiting_progress"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.35"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userName_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_marginBottom="@dimen/row_padding"
+            android:background="@drawable/login_input_field"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/userName_field"
+                style="@style/Widget.LsPush.EditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/username_hint"
+                android:inputType="textNoSuggestions"
+                android:paddingLeft="@dimen/row_padding"
+                android:paddingRight="@dimen/row_padding" />
+
+            <ImageView
+                android:id="@+id/userName_validation_button"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.3"
+                android:background="@drawable/validation_positive"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userPwd_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_marginBottom="@dimen/row_padding"
+            android:background="@drawable/login_input_field"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/userPwd_field"
+                style="@style/Widget.LsPush.EditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/user_password_hint"
+                android:inputType="textPassword"
+                android:paddingLeft="@dimen/row_padding"
+                android:paddingRight="@dimen/row_padding" />
+
+            <android.support.design.widget.CheckableImageButton
+                android:id="@+id/userPwd_toggle_button"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.3"
+                android:background="@drawable/password_eye"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <include layout="@layout/register_next" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <include layout="@layout/register_footer" />
+
+</LinearLayout>

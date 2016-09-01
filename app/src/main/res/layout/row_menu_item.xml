@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/row_height_small"
+    android:background="@drawable/bg_simple_row"
+    android:descendantFocusability="blocksDescendants"
+    android:minHeight="@dimen/row_height_small"
+    android:paddingLeft="@dimen/row_padding"
+    android:paddingRight="@dimen/row_padding">
+
+    <TextView
+        android:id="@+id/row_simple_text_textview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|left"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/row_text_padding"
+        android:paddingRight="@dimen/row_text_padding"
+        android:textStyle="bold" />
+
+    <include
+        android:id="@+id/row_divider"
+        layout="@layout/row_divider" />
+
+</FrameLayout>

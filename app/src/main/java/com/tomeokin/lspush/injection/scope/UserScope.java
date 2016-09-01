@@ -15,4 +15,16 @@
  */
 package com.tomeokin.lspush.injection.scope;
 
-public class UserScope { }
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import javax.inject.Scope;
+
+/**
+ * for those need auth service
+ */
+
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UserScope {
+}

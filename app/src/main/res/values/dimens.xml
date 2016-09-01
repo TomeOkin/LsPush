@@ -2,4 +2,34 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="row_padding">16dp</dimen>
+    <dimen name="row_text_padding">12dp</dimen>
+    <dimen name="row_height_small">48dp</dimen>
+
+    <dimen name="button_width_small">64dp</dimen>
+
+    <dimen name="font_small">12sp</dimen>
+    <dimen name="font_medium">14sp</dimen>
+    <dimen name="font_large">18sp</dimen>
+
+    <dimen name="button_corner_radius">2dp</dimen>
+
+    <dimen name="textField_padding">16dp</dimen>
+
+    <dimen name="dividerLine_thickness">1dp</dimen>
+    <dimen name="selection_height">1dp</dimen>
+
+    <dimen name="logo_icon_top_margin_small">20dp</dimen>
+    <dimen name="logo_icon_bottom_margin">20dp</dimen>
+    <dimen name="reg_field_horizontal_margin">28dp</dimen>
+    <dimen name="register_header_top_margin">48dp</dimen>
+    <dimen name="register_header_bottom_margin">24dp</dimen>
+    <dimen name="error_text_view_padding">6dp</dimen>
+
+    <dimen name="alert_dialog_checkbox_padding">32dp</dimen>
+    <dimen name="dialog_corner_radius">4dp</dimen>
+
+    <dimen name="vertical_separator_padding">8dp</dimen>
+    <dimen name="action_bar_item_padding">12dp</dimen>
 </resources>

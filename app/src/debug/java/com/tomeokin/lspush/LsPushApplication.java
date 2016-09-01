@@ -20,26 +20,41 @@ import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 import com.orhanobut.logger.Logger;
+import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.common.SMSCaptchaUtils;
+import com.tomeokin.lspush.data.crypt.Crypto;
+import com.tomeokin.lspush.data.local.LsPushConfig;
+import com.tomeokin.lspush.injection.component.AppComponent;
+import com.tomeokin.lspush.injection.component.DaggerAppComponent;
+import com.tomeokin.lspush.injection.module.AppModule;
 
 import timber.log.Timber;
 
 public class LsPushApplication extends Application {
     private static final String APP_TAG = "LsPush-App";
+    private AppComponent appComponent;
 
-    @Override
-    public void onCreate() {
+    @Override public void onCreate() {
         super.onCreate();
 
+        LsPushConfig.init(this);
+        Crypto.init(LsPushConfig.getPublicKey());
+        NetworkUtils.init(this);
+        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
+        initAppComponent();
         initLogger();
         initializeStetho(this);
+    }
+
+    private void initAppComponent() {
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 
     private void initLogger() {
         Logger.init(APP_TAG).methodOffset(5).methodCount(1);
         Timber.plant(new Timber.DebugTree() {
 
-            @Override
-            protected void log(int priority, String tag, String message, Throwable t) {
+            @Override protected void log(int priority, String tag, String message, Throwable t) {
                 Logger.log(priority, tag, message, t);
             }
         });
@@ -51,5 +66,9 @@ public class LsPushApplication extends Application {
          * or https://github.com/facebook/stetho/blob/master/stetho-sample/src/debug/java/com/facebook/stetho/sample/SampleDebugApplication.java
          */
         Stetho.initializeWithDefaults(context);
+    }
+
+    public AppComponent appComponent() {
+        return appComponent;
     }
 }

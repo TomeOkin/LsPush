@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.tomeokin.lspush"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tomeokin.lspush">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+    <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
 
+    <!-- Using 'tools:replace="android:allowBackup"' override the setting in SMS-SDK -->
+    <!-- Notice: don't add tools:ignore to it. -->
+    <!-- tools:replace will be ignore when android:name and tools:ignore both exist. -->
+    <!-- Seeing issue 193679 https://code.google.com/p/android/issues/detail?id=193679 or -->
+    <!-- Issue 205956 https://code.google.com/p/android/issues/detail?id=205956-->
     <application
         android:name=".LsPushApplication"
         android:allowBackup="false"
@@ -16,15 +22,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:replace="android:allowBackup">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".biz.auth.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".biz.auth.SignOutActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="BUGLY_APPID"
@@ -35,6 +45,20 @@
         <meta-data
             android:name="BUGLY_ENABLE_DEBUG"
             android:value="${BUGLY_ENABLE_DEBUG}" />
+
+        <meta-data
+            android:name="LSPUSH_SERVER_URL"
+            android:value="${LSPUSH_SERVER_URL}" />
+        <meta-data
+            android:name="LSPUSH_PUBLIC_KEY"
+            android:value="${LSPUSH_PUBLIC_KEY}" />
+
+        <meta-data
+            android:name="MOB_SMS_ID"
+            android:value="${MOB_SMS_ID}" />
+        <meta-data
+            android:name="MOB_SMS_KEY"
+            android:value="${MOB_SMS_KEY}" />
 
     </application>
 

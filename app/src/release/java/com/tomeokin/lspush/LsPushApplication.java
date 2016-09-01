@@ -18,18 +18,40 @@ package com.tomeokin.lspush;
 import android.app.Application;
 import android.content.Context;
 
+import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.common.SMSCaptchaUtils;
+import com.tomeokin.lspush.data.crypt.Crypto;
+import com.tomeokin.lspush.data.local.LsPushConfig;
+import com.tomeokin.lspush.injection.component.AppComponent;
+import com.tomeokin.lspush.injection.component.DaggerAppComponent;
+import com.tomeokin.lspush.injection.module.AppModule;
+
 import timber.log.Timber;
 
 public class LsPushApplication extends Application {
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        LsPushConfig.init(this);
+        Crypto.init(LsPushConfig.getPublicKey());
+        NetworkUtils.init(this);
+        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
+        initAppComponent();
         initLogger(this);
+    }
+
+    private void initAppComponent() {
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 
     private void initLogger(final Context context) {
         Timber.plant(new CrashReportingTree(context));
+    }
+
+    public AppComponent appComponent() {
+        return appComponent;
     }
 }

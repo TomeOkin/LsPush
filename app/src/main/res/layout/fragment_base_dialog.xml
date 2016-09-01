@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/modal_bg"
+    android:minWidth="250dp"
+    android:orientation="vertical"
+    tools:layout_margin="45dp">
+
+    <FrameLayout
+        android:id="@+id/dialog_titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            style="@style/RowHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:singleLine="false"
+            android:textColor="@color/grey_9_whiteout"
+            tools:text="这是标题" />
+
+        <View
+            android:id="@+id/dialog_headerDivider"
+            android:layout_gravity="bottom"
+            style="@style/Widget.LsPush.Divider.Horizontal.Large" />
+
+    </FrameLayout>
+
+    <!-- Dialog content is not excluded strictly. -->
+    <!-- If you using message, custom view or list view as follow sequence, you can combine to use them. -->
+
+    <ScrollView
+        android:id="@+id/message_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="ifContentScrolls"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/dialog_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="12dp"
+            android:autoLink="web"
+            android:lineSpacingExtra="4dp"
+            android:minHeight="@dimen/row_height_small"
+            android:textColor="@color/grey_9_whiteout"
+            tools:text="Hello, World!" />
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/customViewHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/layout_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/dialog_footerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            style="@style/Widget.LsPush.Divider.Horizontal.Medium"
+            android:layout_gravity="top" />
+
+        <TextView
+            android:id="@+id/button_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_bottom_button_blue"
+            android:gravity="center"
+            android:minHeight="@dimen/row_height_small"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="blue button"
+            tools:visibility="visible" />
+
+        <ViewStub
+            android:id="@+id/dialog_two_button_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/dialog_two_button" />
+
+        <ViewStub
+            android:id="@+id/dialog_three_button_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/dialog_three_button" />
+
+    </FrameLayout>
+
+</LinearLayout>

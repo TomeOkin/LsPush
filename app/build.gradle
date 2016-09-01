@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'bugly'
-apply from: rootProject.file('buildsystem/quality.gradle')
-apply from: rootProject.file('buildsystem/jacoco.gradle')
-apply from: rootProject.file('buildsystem/compile.gradle')
+//apply plugin: 'com.getkeepsafe.dexcount'
+//apply from: rootProject.file('buildsystem/quality.gradle')
+//apply from: rootProject.file('buildsystem/jacoco.gradle')
+//apply from: rootProject.file('buildsystem/compile.gradle')
 
 def metadata = project.rootProject.ext.metadata
 
@@ -17,10 +18,7 @@ def versionMajor = 1
 def versionMinor = 0
 def versionPatch = 0
 
-def releaseTime() {
-    return new Date().time.hashCode()
-}
-
+// https://github.com/google/android-gradle-dsl
 android {
     signingConfigs {
         debugConfig {
@@ -37,19 +35,23 @@ android {
             storePassword metadata.storePwd
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.tomeokin.lspush"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         manifestPlaceholders = [
                 BUGLY_APPID       : metadata.buglyAppId,
                 BUGLY_APP_VERSION : metadata.buglyAppVersion,
-                BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug
+                BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug,
+                LSPUSH_SERVER_URL : metadata.lspushServerUrl,
+                LSPUSH_PUBLIC_KEY : metadata.lspushPublicKey,
+                MOB_SMS_ID        : metadata.mobSMSId,
+                MOB_SMS_KEY       : metadata.mobSMSKey
         ]
 
         ndk {
@@ -81,6 +83,16 @@ android {
 
     dexOptions {
         preDexLibraries !Boolean.valueOf(System.getenv("TRAVIS"))
+        incremental true
+    }
+
+    productFlavors {
+        dev {
+            minSdkVersion 21
+        }
+        prod {
+            minSdkVersion 15
+        }
     }
 
 //    testOptions.unitTests.all {
@@ -95,6 +107,7 @@ android {
 //    }
 
     lintOptions {
+        abortOnError false
         // 除了 xml 和 html 外，也在控制台输出
         textReport true
         textOutput "stdout"
@@ -125,10 +138,16 @@ android {
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                def fileName = outputFile.name.replace("app", "${defaultConfig.applicationId}_${defaultConfig.versionName}_${releaseTime()}")
+                def fileName = outputFile.name.replace("app", "${defaultConfig.applicationId}_${defaultConfig.versionName}")
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -139,88 +158,60 @@ dependencies {
     def androidTestDependencies = rootProject.ext.androidTestDependencies
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     // support
     compile releaseDependencies.supportV7
     compile releaseDependencies.supportV4
     compile releaseDependencies.supportAnnotations
     compile releaseDependencies.recyclerview
-
+    compile releaseDependencies.cardview
+    compile releaseDependencies.design
     // log
     compile releaseDependencies.timber
     compile releaseDependencies.logger
-
     // rx
     compile releaseDependencies.rxandroid
     compile releaseDependencies.rxjava
-
     // dagger2
     compile releaseDependencies.dagger2
     apt releaseDependencies.dagger2Compiler
-    provided releaseDependencies.javaxAnnotation
-
     // butterknife
     compile releaseDependencies.butterknife
     apt releaseDependencies.butterknifeCompiler
-
     // network
     compile releaseDependencies.retrofit2
     compile releaseDependencies.okhttp3
-
+    compile releaseDependencies.retrofit2Gson
+    // also compile, but will be disabled release
+    compile releaseDependencies.okhttp3Logging
+    compile debugDependencies.stethoOkhttp3
     // binding
     compile releaseDependencies.rxbindingV7
     compile releaseDependencies.rxbindingRecyclerview
-
     // gson
     compile releaseDependencies.gson
-
     // image
     compile releaseDependencies.glide
-
     // bugly, https://bugly.qq.com/androidfast
     compile releaseDependencies.crashreport
-    //compile releaseDependencies.nativecrashreport
+    compile releaseDependencies.nativecrashreport
+
+    // sms-sdk
+    compile(name: 'SMSSDK-2.1.1', ext: 'aar')
 
     // stetho
     debugCompile debugDependencies.stetho
-    compile debugDependencies.stethoOkhttp3
     debugCompile debugDependencies.stethoJsRhino
-
     testCompile testDependencies.junit
     testCompile testDependencies.mockitoCore
     testCompile testDependencies.robolectric
-    testCompile testDependencies.asserjCore
-
+    testCompile testDependencies.assertjCore
     // android test
     androidTestCompile androidTestDependencies.junit
     androidTestCompile androidTestDependencies.mockitoCore
     androidTestCompile androidTestDependencies.assertjAppCompatV7
     androidTestCompile androidTestDependencies.assertjRecyclerView
-
     androidTestCompile androidTestDependencies.espresso
     androidTestCompile androidTestDependencies.runner
     androidTestCompile androidTestDependencies.supportAnnotations
+
 }
-
-//tasks.matching {it instanceof Test}.all {
-//    testLogging.events = ["failed", "passed", "skipped"]
-//}
-
-//tasks.withType(Test) {
-//    /// increased logging for tests
-//    testLogging {
-//        events "passed", "skipped", "failed"
-//    }
-//}
-
-//tasks.withType(Test) {
-//    testLogging {
-//        exceptionFormat "full"
-//        outputs.upToDateWhen { false }
-//        showCauses true
-//        showExceptions true
-//        showStackTraces true
-//        showStandardStreams true
-//        events = ["failed", "passed", "skipped"]
-//    }
-//}

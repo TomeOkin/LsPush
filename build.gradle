@@ -9,13 +9,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.tencent.bugly:symtabfileuploader:1.4.0'
+        classpath 'com.tencent.bugly:symtabfileuploader:2.0.4'
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        // result in ${buildDir}/outputs/dexcount/${variant}
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.6'
+        // run help->dependencyUpdates to see new available version
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
     }
 }
 
@@ -24,57 +25,4 @@ task clean(type: Delete) {
 }
 
 apply from: 'buildsystem/config.gradle'
-
-//// https://github.com/stephanenicolas/toothpick/blob/e3532b586aeed5547600596bebfc0bad6ec60053/build.gradle
-//task jacocoTestReport << {
-//    FileCollection executionData = files()
-//
-//    subprojects.findAll { subProject ->
-//        subProject.pluginManager.hasPlugin('java') && subProject.pluginManager.hasPlugin('jacoco')
-//    }.each { subProject ->
-//        executionData += subProject.tasks.jacocoTestReport.executionData
-//    }
-//
-//    executionData = files(executionData.findAll {
-//        it.exists()
-//    })
-//
-//    ant.taskdef(name: 'jacocoReport', classname: 'org.jacoco.ant.ReportTask',
-//            classpath: configurations.jacocoAnt.asPath)
-//
-//    ant.jacocoReport {
-//        executiondata {
-//            executionData.addToAntBuilder(ant, 'resources')
-//        }
-//        structure(name: project.name) {
-//            subprojects.findAll { subProject -> subProject.pluginManager.hasPlugin('java')
-//            }.each { subProject ->
-//                group(name: subProject.name) {
-//                    classfiles {
-//                        ((FileCollection) subProject.sourceSets.main.output).filter {
-//                            it.exists()
-//                        }.addToAntBuilder(ant, 'resources')
-//                    }
-//                    sourcefiles {
-//                        files((Set<File>) subProject.sourceSets.main.allJava.srcDirs).filter {
-//                            it.exists()
-//                        }.addToAntBuilder(ant, 'resources')
-//                    }
-//                }
-//            }
-//        }
-//        html(destdir: "${buildDir}/reports/jacoco/${name}/html")
-//        xml(destfile: "${buildDir}/reports/jacoco/${name}/${name}.xml")
-//        // Uncomment for CSV
-//        //csv(destfile: "${buildDir}/reports/jacoco/${name}/${name}.csv")
-//    }
-//}
-//
-//coveralls {
-//    jacocoReportPath = 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
-//    sourceDirs = files(subprojects.collect { subproject -> "${subproject.projectDir}/src/main/java" }).files.absolutePath
-//}
-
-//tasks.coveralls {
-//    dependsOn 'jacocoTestReport'
-//}
+apply plugin: 'com.github.ben-manes.versions'

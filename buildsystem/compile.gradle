@@ -16,6 +16,10 @@ tasks.withType(JavaCompile) {
     }
 }
 
+//tasks.matching {it instanceof Test}.all {
+//    testLogging.events = ["failed", "passed", "skipped"]
+//}
+
 // Turn on logging for all tests, filter to show failures/skips only
 tasks.withType(Test) {
     testLogging {
