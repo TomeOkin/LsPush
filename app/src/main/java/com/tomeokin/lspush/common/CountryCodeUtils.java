@@ -19,7 +19,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.tomeokin.lspush.data.local.CountryCodeData;
+import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.phonenumberutil.PhoneNumberUtil;
 
 import java.util.ArrayList;

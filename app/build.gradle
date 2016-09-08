@@ -191,6 +191,7 @@ dependencies {
     compile releaseDependencies.gson
     // image
     compile releaseDependencies.glide
+    //compile releaseDependencies.glideOkhttp3
     // bugly, https://bugly.qq.com/androidfast
     compile releaseDependencies.crashreport
     compile releaseDependencies.nativecrashreport

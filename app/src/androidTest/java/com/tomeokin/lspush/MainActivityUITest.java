@@ -19,7 +19,7 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.tomeokin.lspush.biz.auth.MainActivity;
+import com.tomeokin.lspush.biz.main.MainActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -47,6 +47,7 @@ import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
+import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.NotificationBar;
 
@@ -111,11 +112,15 @@ public class RegisterFragment extends BaseFragment
         mValidWatcher = new BaseTextWatcher() {
             @Override public void afterTextChanged(Editable s) {
                 if (s == mUserIdField.getText()) {
+                    // 如果用户修改了文本，此时如果处于加载状态，取消该状态，并进行状态同步，
+                    // 同时取消已进行的网络请求
                     if (mUIDAdapter.getState() == FieldAdapter.WAITING) {
+                        mUIDAdapter.active();
+                        // TODO: 2016/9/1 取消未完成的 UID 检查(取消已进行的网络请求)
+                    } else if (mUIDAdapter.getState() == FieldAdapter.INFO) {
                         mUIDAdapter.active();
                     }
                     mUIDAdapter.sync();
-                    // TODO: 2016/9/1 取消未完成的 UID 检查
                 } else if (s == mUserNameField.getText()) {
                     mUserNameAdapter.sync();
                 }
@@ -219,6 +224,7 @@ public class RegisterFragment extends BaseFragment
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mUserIdField.addTextChangedListener(mValidWatcher);
+        mUserIdField.requestFocus();
         mUserNameField.addTextChangedListener(mValidWatcher);
         mPasswordField.addTextChangedListener(mValidWatcher);
         dispatchOnResume();
@@ -266,7 +272,13 @@ public class RegisterFragment extends BaseFragment
 
     public void register() {
         mNextButtonAdapter.waiting();
-        // TODO: 2016/8/31
+        RegisterData data = new RegisterData();
+        data.setCaptchaRequest(mCaptchaRequest);
+        data.setAuthCode(mAuthCode);
+        data.setUserId(mUserIdField.getText().toString());
+        data.setNickname(mUserNameField.getText().toString());
+        data.setPassword(mPasswordField.getText().toString());
+        mPresenter.register(data);
     }
 
     public boolean isValidUserId() {

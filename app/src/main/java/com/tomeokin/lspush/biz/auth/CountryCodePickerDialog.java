@@ -32,7 +32,7 @@ import com.tomeokin.lspush.biz.auth.adapter.CountryCodeDataAdapter;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
 import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.StringUtils;
-import com.tomeokin.lspush.data.local.CountryCodeData;
+import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.ui.colorfilter.ColorFilterCache;
 import com.tomeokin.lspush.ui.widget.OnFilterTextListener;
 import com.tomeokin.lspush.ui.widget.SearchEditText;

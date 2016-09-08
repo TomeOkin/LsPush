@@ -42,8 +42,8 @@ import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
 
-public class BaseDialogFragment extends DialogFragment implements DialogInterface.OnClickListener,
-    AdapterView.OnItemClickListener {
+public class BaseDialogFragment extends DialogFragment
+    implements DialogInterface.OnClickListener, AdapterView.OnItemClickListener {
     protected static final String KEY_HAS_CANCEL_LISTENER = "has_cancel_listener";
     protected static final String KEY_HAS_DISMISS_LISTENER = "has_dismiss_listener";
     protected static final String KEY_HAS_ACTION_CLICK_LISTENER = "has_action_click_listener";
@@ -56,7 +56,9 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
     public static final int DEFAULT_REQUEST_CODE = 124;
     protected int requestCode;
 
-    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         init(savedInstanceState);
         int theme = resolveTheme();
         Builder builder = new Builder(getContext(), theme);
@@ -74,7 +76,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @NonNull protected Builder config(@NonNull Builder builder) {
+    @NonNull
+    protected Builder config(@NonNull Builder builder) {
         return builder;
     }
 
@@ -127,7 +130,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         return builder;
     }
 
-    @StyleRes protected int resolveTheme() {
+    @StyleRes
+    protected int resolveTheme() {
         int theme = 0;
         Bundle args = getArguments();
         if (args != null) {
@@ -143,7 +147,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         requestCode = resolveRequestCode();
     }
@@ -158,7 +163,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         return requestCode;
     }
 
-    @Override public void onCancel(DialogInterface dialog) {
+    @Override
+    public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
         if (hasCancelListener) {
             OnDialogCancelListener listener = getDialogListener(OnDialogCancelListener.class);
@@ -170,7 +176,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @Override public void onDismiss(DialogInterface dialog) {
+    @Override
+    public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         if (hasDismissListener) {
             OnDialogDismissListener listener = getDialogListener(OnDialogDismissListener.class);
@@ -182,7 +189,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @Override public void onClick(DialogInterface dialog, int which) {
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
         if (hasActionClickListener) {
             OnActionClickListener listener = getDialogListener(OnActionClickListener.class);
             if (listener != null) {
@@ -197,7 +205,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (hasListItemClickListener) {
             OnListItemClickListener listener = getDialogListener(OnListItemClickListener.class);
             if (listener != null) {
@@ -215,7 +224,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         }
     }
 
-    @SuppressWarnings("unchecked") protected <T> T getDialogListener(Class<T> listenerInterface) {
+    @SuppressWarnings("unchecked")
+    protected <T> T getDialogListener(Class<T> listenerInterface) {
         final Fragment targetFragment = getTargetFragment();
         if (targetFragment != null && listenerInterface.isAssignableFrom(targetFragment.getClass())) {
             return (T) targetFragment;
@@ -245,7 +255,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
         ft.commitAllowingStateLoss();
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_HAS_CANCEL_LISTENER, hasCancelListener);
         outState.putBoolean(KEY_HAS_DISMISS_LISTENER, hasDismissListener);
@@ -411,7 +422,8 @@ public class BaseDialogFragment extends DialogFragment implements DialogInterfac
             textView.setText(text);
             if (listener != null) {
                 textView.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         listener.onClick(mDialog, which);
                     }
                 });

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.tomeokin.lspush.biz.base.BasePresenter;
+import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -36,6 +37,10 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
     }
 
     public void checkUIDExist(String uid) {
+        // TODO: 2016/9/8  
+    }
 
+    public void register(RegisterData registerData) {
+        // TODO: 2016/9/8
     }
 }

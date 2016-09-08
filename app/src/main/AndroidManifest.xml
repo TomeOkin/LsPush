@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
 
-        <activity android:name=".biz.auth.MainActivity">
+        <activity android:name=".biz.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,6 +59,14 @@
         <meta-data
             android:name="MOB_SMS_KEY"
             android:value="${MOB_SMS_KEY}" />
+
+        <!-- Glide configurations for image loading -->
+        <meta-data
+            android:name="com.tomeokin.lspush.config.GlideConfiguration"
+            android:value="GlideModule" />
+        <!--<meta-data-->
+            <!--android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"-->
+            <!--android:value="GlideModule" />-->
 
     </application>
 

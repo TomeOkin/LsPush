@@ -23,7 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.data.local.CountryCodeData;
+import com.tomeokin.lspush.data.model.CountryCodeData;
 
 import java.util.ArrayList;
 import java.util.List;

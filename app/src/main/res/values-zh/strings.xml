@@ -28,4 +28,6 @@
     <string name="user_password_error">密码至少要有 %s 个字符或数字。</string>
     <string name="not_support_character">不支持使用字符 %c。</string>
     <string name="uid_not_unique">用户 ID 已经存在，请更换为其他的。</string>
+
+    <string name="use_current_image">使用当前图片？</string>
 </resources>

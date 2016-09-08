@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.listener;
+package com.tomeokin.lspush.common;
 
-import com.tomeokin.lspush.data.model.CountryCodeData;
-
-public interface OnCountryCodeSelectedListener {
-    void onCountryCodeSelected(CountryCodeData countryCodeData);
+public class UrlUtils {
+    public static String trim(String old) {
+        String url = old;
+        int query = url.lastIndexOf('?');
+        if (query != -1) {
+            url = url.substring(0, query);
+        }
+        query = url.lastIndexOf('#');
+        if (query != -1) {
+            url = url.substring(0, query);
+        }
+        return url;
+    }
 }

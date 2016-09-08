@@ -28,7 +28,7 @@ import com.tomeokin.lspush.biz.auth.CountryCodePickerDialog;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.base.LifecycleListener;
 import com.tomeokin.lspush.common.SoftInputUtils;
-import com.tomeokin.lspush.data.local.CountryCodeData;
+import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
 
 public final class PhoneFieldViewHolder extends LifecycleListener {

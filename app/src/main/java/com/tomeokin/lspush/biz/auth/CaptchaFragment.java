@@ -44,8 +44,8 @@ import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.ValidateUtils;
-import com.tomeokin.lspush.data.local.CountryCodeData;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
+import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
 
@@ -333,4 +333,20 @@ public class CaptchaFragment extends BaseFragment
             }
         }
     }
+
+    //@Override
+    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //    if (resultCode != Activity.RESULT_OK) {
+    //        return;
+    //    }
+    //
+    //    if (requestCode == Navigator.REQUEST_CODE) {
+    //        Bundle bundle = data.getExtras();
+    //        if (bundle != null) {
+    //            Timber.i("just a test %s", bundle.getString("hello_captcha"));
+    //        }
+    //    } else {
+    //        super.onActivityResult(requestCode, resultCode, data);
+    //    }
+    //}
 }

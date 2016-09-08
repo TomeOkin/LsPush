@@ -55,6 +55,8 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.startRegister)
     public void startRegister() {
-
+        //Bundle bundle = new Bundle();
+        //bundle.putString("hello_captcha", "hello_captcha_from_login");
+        //Navigator.moveTo(this, CaptchaFragment.class, bundle);
     }
 }

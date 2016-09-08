@@ -27,4 +27,15 @@
     <string name="user_password_error">Password length must not be less than %s numbers including letters.</string>
     <string name="not_support_character">Not support character %c.</string>
     <string name="uid_not_unique">User ID is existed, please try another.</string>
+
+    <string name="web_image_click_target">imageClick</string>
+    <string name="web_image_click">
+    <![CDATA[
+        javascript: (function() {
+            var obj=document.elementFromPoint(%1$s, %2$s);
+            if (obj.src!=null) { window.imageClick.click(obj.src); }
+        })()
+    ]]>
+    </string>
+    <string name="use_current_image">Use current image ?</string>
 </resources>

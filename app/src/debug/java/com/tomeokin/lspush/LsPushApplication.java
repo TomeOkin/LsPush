@@ -23,7 +23,7 @@ import com.orhanobut.logger.Logger;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.data.crypt.Crypto;
-import com.tomeokin.lspush.data.local.LsPushConfig;
+import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.injection.component.AppComponent;
 import com.tomeokin.lspush.injection.component.DaggerAppComponent;
 import com.tomeokin.lspush.injection.module.AppModule;
