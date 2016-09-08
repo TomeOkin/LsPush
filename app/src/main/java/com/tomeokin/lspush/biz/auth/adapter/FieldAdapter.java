@@ -20,65 +20,33 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.LifecycleListener;
 
-public class FieldAdapter extends LifecycleListener {
-    public static final int ACTIVE = 0;
-    public static final int DISABLE = 1;
-    public static final int WAITING = 2;
-    public static final int INFO = 3;
-
-    private final int mRequestId;
-    private FieldCallback mCallback;
-    private int mState = DISABLE;
-
+public class FieldAdapter extends BaseStateAdapter {
     private ImageView mValidButton;
     private ProgressBar mProgressBar;
 
-    public FieldAdapter(int requestId, FieldCallback callback, ImageView validButton, ProgressBar progressBar) {
-        mRequestId = requestId;
-        mCallback = callback;
+    public FieldAdapter(int requestId, BaseStateCallback callback, ImageView validButton, ProgressBar progressBar) {
+        super(requestId, callback);
         mValidButton = validButton;
         mProgressBar = progressBar;
     }
 
-    @Override public void onResume() {
-        sync();
+    public FieldAdapter(int requestId, BaseStateCallback callback, int state, ImageView validButton,
+        ProgressBar progressBar) {
+        super(requestId, callback, state);
+        mValidButton = validButton;
+        mProgressBar = progressBar;
     }
 
     @Override public void onDestroyView() {
-        mCallback = null;
+        super.onDestroyView();
         mValidButton = null;
         mProgressBar = null;
     }
 
-    @Override public void onDestroy() {
-        super.onDestroy();
-    }
-
-    public void sync() {
-        sync(mCallback.checkState(this, mRequestId, mState));
-    }
-
-    public void sync(int state) {
-        if (mState != state) {
-            mState = state;
-            mCallback.onStateChange(this, mRequestId, mState);
-        }
-
-        if (state == ACTIVE) {
-            active();
-        } else if (state == WAITING) {
-            waiting();
-        } else if (state == INFO) {
-            info();
-        } else {
-            disable();
-        }
-    }
-
+    @Override
     public void active() {
-        mState = ACTIVE;
+        super.active();
         mValidButton.setBackgroundResource(R.drawable.validation_positive);
         mValidButton.setVisibility(View.VISIBLE);
         if (mProgressBar != null) {
@@ -86,16 +54,18 @@ public class FieldAdapter extends LifecycleListener {
         }
     }
 
+    @Override
     public void waiting() {
-        mState = WAITING;
+        super.waiting();
         mValidButton.setVisibility(View.GONE);
         if (mProgressBar != null) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
+    @Override
     public void disable() {
-        mState = DISABLE;
+        super.disable();
         mValidButton.setBackgroundResource(R.drawable.validation_negative);
         mValidButton.setVisibility(View.VISIBLE);
         if (mProgressBar != null) {
@@ -103,16 +73,13 @@ public class FieldAdapter extends LifecycleListener {
         }
     }
 
+    @Override
     public void info() {
-        mState = INFO;
+        super.info();
         mValidButton.setBackgroundResource(R.drawable.info);
         mValidButton.setVisibility(View.VISIBLE);
         if (mProgressBar != null) {
             mProgressBar.setVisibility(View.GONE);
         }
-    }
-
-    public int getState() {
-        return mState;
     }
 }

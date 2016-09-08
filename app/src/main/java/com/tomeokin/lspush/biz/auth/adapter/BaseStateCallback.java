@@ -15,12 +15,8 @@
  */
 package com.tomeokin.lspush.biz.auth.adapter;
 
-import android.content.Context;
+public interface BaseStateCallback {
+    boolean isActive(BaseStateAdapter adapter, int requestId);
 
-public interface NextButtonCallback {
-    Context getContext();
-
-    int checkState(NextButtonAdapter adapter, int requestId, int currentState);
-
-    void onStateChange(NextButtonAdapter adapter, int requestId, int currentState);
+    void onStateChange(BaseStateAdapter adapter, int requestId, int currentState);
 }

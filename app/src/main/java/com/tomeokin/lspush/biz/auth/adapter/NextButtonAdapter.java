@@ -22,46 +22,40 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.LifecycleListener;
 
-public final class NextButtonAdapter extends LifecycleListener {
-    public static final int ACTIVE = 0;
-    public static final int DISABLE = 1;
-    public static final int WAITING = 2;
-
-    private final int mRequestId;
-    private int mState = DISABLE;
-
-    private NextButtonCallback mCallback;
-
+public final class NextButtonAdapter extends BaseStateAdapter {
     TextView mNextButton;
     private ProgressBar mProgressBar;
     private Context mContext;
-
     private String mNextText;
 
-    public NextButtonAdapter(int requestId, NextButtonCallback callback, TextView nextButton,
+    public NextButtonAdapter(int requestId, BaseStateCallback callback, Context context, TextView nextButton,
         ProgressBar progressBar) {
-        mRequestId = requestId;
-        mCallback = callback;
+        super(requestId, callback);
         mNextButton = nextButton;
         mProgressBar = progressBar;
-        mContext = callback.getContext();
+        mContext = context;
         mNextText = mContext.getString(R.string.next);
     }
 
-    @Override public void onResume() {
-        sync();
+    public NextButtonAdapter(int requestId, BaseStateCallback callback, Context context, int state, TextView nextButton,
+        ProgressBar progressBar) {
+        super(requestId, callback, state);
+        mNextButton = nextButton;
+        mProgressBar = progressBar;
+        mContext = context;
+        mNextText = context.getString(R.string.next);
     }
 
-    @Override public void onDestroyView() {
-        mCallback = null;
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         mNextButton = null;
         mProgressBar = null;
     }
 
-    @Override public void onDestroy() {
-        super.onDestroy();
+    @Override
+    public void onDestroy() {
         mContext = null;
     }
 
@@ -70,43 +64,27 @@ public final class NextButtonAdapter extends LifecycleListener {
         sync();
     }
 
-    public void sync() {
-        sync(mCallback.checkState(this, mRequestId, mState));
-    }
-
-    public void sync(int state) {
-        if (mState != state) {
-            mState = state;
-            mCallback.onStateChange(this, mRequestId, mState);
-        }
-
-        if (state == ACTIVE) {
-            active();
-        } else if (state == WAITING) {
-            waiting();
-        } else {
-            disable();
-        }
-    }
-
+    @Override
     public void active() {
-        mState = ACTIVE;
+        super.active();
         mNextButton.setText(mNextText);
         mNextButton.setTextColor(ContextCompat.getColor(mContext, R.color.white));
         mNextButton.setEnabled(true);
         mProgressBar.setVisibility(View.GONE);
     }
 
+    @Override
     public void waiting() {
-        mState = WAITING;
+        super.waiting();
         mNextButton.setText("");
         mNextButton.setTextColor(ContextCompat.getColor(mContext, R.color.white_20_transparent));
         mNextButton.setEnabled(false);
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void disable() {
-        mState = DISABLE;
+        super.disable();
         mNextButton.setText(mNextText);
         mNextButton.setTextColor(ContextCompat.getColor(mContext, R.color.white_20_transparent));
         mNextButton.setEnabled(false);

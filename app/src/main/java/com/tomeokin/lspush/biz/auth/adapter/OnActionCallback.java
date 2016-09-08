@@ -15,8 +15,8 @@
  */
 package com.tomeokin.lspush.biz.auth.adapter;
 
-public interface FieldCallback {
-    int checkState(FieldAdapter adapter, int requestId, int currentState);
+public interface OnActionCallback {
+    void onActionFailure(int action, String message);
 
-    void onStateChange(FieldAdapter adapter, int requestId, int currentState);
+    void onActionSuccess();
 }

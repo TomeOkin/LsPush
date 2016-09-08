@@ -34,8 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.NextButtonCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.common.Navigator;
@@ -51,12 +52,14 @@ import javax.inject.Inject;
 
 import cn.smssdk.EventHandler;
 
-public class CaptchaConfirmationFragment extends BaseFragment
-    implements CaptchaConfirmationView, NextButtonCallback {
+public class CaptchaConfirmationFragment extends BaseFragment implements CaptchaConfirmationView, BaseStateCallback {
     public static final int NEXT_BUTTON_ID = 0;
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
     public static final String EXTRA_CAPTCHA_COUNTRY_CODE = "extra.captcha.country.code";
+
+    public static final int ACTION_SEND_CAPTCHA = 0;
+    public static final int ACTION_CHECK_CAPTCHA = 1;
 
     public static final int DEFAULT_WAITING_TIME = 60_000;
     private long mWaitingTime = DEFAULT_WAITING_TIME;
@@ -79,7 +82,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         return bundle;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
@@ -92,7 +96,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         dispatchOnCreate(savedInstanceState);
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
@@ -105,7 +110,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         fieldDetail.setText(R.string.resend_captcha_code);
         mLastSentTime = SystemClock.elapsedRealtime();
         fieldDetail.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 if (SystemClock.elapsedRealtime() - mLastSentTime <= mWaitingTime) {
                     BaseDialogBuilder builder =
                         new BaseDialogBuilder(getContext(), getFragmentManager(), BaseDialogFragment.class);
@@ -124,7 +130,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         mCaptchaField.requestFocus();
         mCaptchaField.setFilters(new InputFilter[] {new InputFilter.LengthFilter(6)});
         mCaptchaField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT && isFieldValid()) {
                     checkCaptcha();
                     return true;
@@ -134,7 +141,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
             }
         });
         mValidWatcher = new BaseTextWatcher() {
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (isFieldValid()) {
                     mNextButtonAdapter.active();
                 } else {
@@ -145,18 +153,20 @@ public class CaptchaConfirmationFragment extends BaseFragment
 
         TextView nextButton = (TextView) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 checkCaptcha();
             }
         });
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.next_progress);
-        mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, nextButton, progressBar);
+        mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, getContext(), nextButton, progressBar);
         registerLifecycleListener(mNextButtonAdapter);
 
         TextView loginButton = (TextView) view.findViewById(R.id.login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Navigator.moveTo(getContext(), getFragmentManager(), LoginFragment.class, null);
             }
         });
@@ -165,7 +175,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         return view;
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.attachView(this);
         mHandler = new Handler();
@@ -173,7 +184,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         if (TextUtils.isEmpty(mCaptchaField.getText().toString())) {
             mCaptchaField.requestFocus();
@@ -186,14 +198,16 @@ public class CaptchaConfirmationFragment extends BaseFragment
         dispatchOnResume();
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         SoftInputUtils.hideInput(mCaptchaField);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
         dispatchOnPause();
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
         unregister(mNextButtonAdapter);
@@ -208,7 +222,8 @@ public class CaptchaConfirmationFragment extends BaseFragment
         dispatchOnDestroyView();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mPresenter = null;
         dispatchOnDestroy();
@@ -228,52 +243,49 @@ public class CaptchaConfirmationFragment extends BaseFragment
         return mCaptchaField.getText().toString().trim().length() >= 4;
     }
 
-    @Override public int checkState(NextButtonAdapter adapter, int requestId, int currentState) {
+    @Override
+    public boolean isActive(BaseStateAdapter adapter, int requestId) {
         if (requestId == NEXT_BUTTON_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                return currentState;
-            } else if (isFieldValid()) {
-                return NextButtonAdapter.ACTIVE;
-            } else {
-                return NextButtonAdapter.DISABLE;
-            }
+            return isFieldValid();
         }
-        return -1;
+        // other
+        return false;
     }
 
-    @Override public void onStateChange(NextButtonAdapter adapter, int requestId, int currentState) {
+    @Override
+    public void onStateChange(BaseStateAdapter adapter, int requestId, int currentState) {
         if (requestId == NEXT_BUTTON_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                mCaptchaField.setEnabled(false);
-                mCaptchaField.setClearButtonEnabled(false);
-            } else {
-                mCaptchaField.setEnabled(true);
-                mCaptchaField.setClearButtonEnabled(true);
-            }
+            final boolean enable = currentState != NextButtonAdapter.WAITING;
+            mCaptchaField.setEnabled(enable);
+            mCaptchaField.setClearButtonEnabled(enable);
         }
     }
 
-    @Override public void onSentCaptchaCodeFailure(String message) {
+    @Override
+    public void onSentCaptchaCodeFailure(String message) {
         mNextButtonAdapter.sync();
         mWaitingTime = DEFAULT_WAITING_TIME / 2;
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override public void onSentCaptchaCodeSuccess() {
+    @Override
+    public void onSentCaptchaCodeSuccess() {
         mNextButtonAdapter.sync();
         mWaitingTime = DEFAULT_WAITING_TIME;
         Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
             .show();
     }
 
-    @Override public void onCheckCaptchaFailure(String message) {
+    @Override
+    public void onCheckCaptchaFailure(String message) {
         mNextButtonAdapter.sync();
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override public void onCheckCaptchaSuccess() {
+    @Override
+    public void onCheckCaptchaSuccess() {
         mNextButtonAdapter.sync();
-        //Bundle bundle = CaptchaConfirmationFragment.prepareArgument(mCaptchaRequest, mCountryCode);
-        Navigator.moveTo(this, RegisterFragment.class, null);
+        Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCountryCode);
+        Navigator.moveTo(this, RegisterFragment.class, bundle);
     }
 }

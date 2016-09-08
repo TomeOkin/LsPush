@@ -34,11 +34,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.FieldCallback;
 import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.NextButtonCallback;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
 import com.tomeokin.lspush.biz.base.BaseFragment;
@@ -53,8 +53,7 @@ import com.tomeokin.lspush.ui.widget.NotificationBar;
 
 import javax.inject.Inject;
 
-public class RegisterFragment extends BaseFragment
-    implements NextButtonCallback, RegisterView, FilterCallback, FieldCallback {
+public class RegisterFragment extends BaseFragment implements RegisterView, FilterCallback, BaseStateCallback {
     public static final int NEXT_BUTTON_ID = 0;
     public static final int UID_FILTER_ID = 1;
     public static final int PWD_FILTER_ID = 2;
@@ -89,7 +88,8 @@ public class RegisterFragment extends BaseFragment
         return bundle;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
@@ -102,7 +102,8 @@ public class RegisterFragment extends BaseFragment
         dispatchOnCreate(savedInstanceState);
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
@@ -110,7 +111,8 @@ public class RegisterFragment extends BaseFragment
         view.findViewById(R.id.image_icon).setBackgroundResource(R.drawable.register_name);
 
         mValidWatcher = new BaseTextWatcher() {
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (s == mUserIdField.getText()) {
                     // 如果用户修改了文本，此时如果处于加载状态，取消该状态，并进行状态同步，
                     // 同时取消已进行的网络请求
@@ -128,7 +130,8 @@ public class RegisterFragment extends BaseFragment
             }
         };
         mFocusChangeValidChecker = new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (v.getId() == R.id.userId_field) {
                     if (!hasFocus
                         && mUIDAdapter.getState() != FieldAdapter.WAITING
@@ -168,7 +171,8 @@ public class RegisterFragment extends BaseFragment
             new InputFilter.LengthFilter(UserInfoModel.USER_PASSWORD_MAX_LENGTH)
         });
         mPasswordField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT && isFieldValid()) {
                     register();
                     return true;
@@ -178,7 +182,8 @@ public class RegisterFragment extends BaseFragment
         });
         final CheckableImageButton toggleButton = (CheckableImageButton) view.findViewById(R.id.userPwd_toggle_button);
         toggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 final int selection = mPasswordField.getSelectionEnd();
                 boolean passwordToggledVisible;
                 if (mPasswordField.getTransformationMethod() instanceof PasswordTransformationMethod) {
@@ -195,18 +200,20 @@ public class RegisterFragment extends BaseFragment
 
         TextView nextButton = (TextView) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 register();
             }
         });
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.next_progress);
-        mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, nextButton, progressBar);
+        mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, getContext(), nextButton, progressBar);
         registerLifecycleListener(mNextButtonAdapter);
 
         TextView loginButton = (TextView) view.findViewById(R.id.login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Navigator.moveTo(getContext(), getFragmentManager(), LoginFragment.class, null);
             }
         });
@@ -215,12 +222,14 @@ public class RegisterFragment extends BaseFragment
         return view;
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.attachView(this);
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mUserIdField.addTextChangedListener(mValidWatcher);
@@ -230,14 +239,16 @@ public class RegisterFragment extends BaseFragment
         dispatchOnResume();
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         SoftInputUtils.hideInput(mPasswordField);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
         dispatchOnPause();
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
         mUserIdFieldLayout = null;
@@ -264,7 +275,8 @@ public class RegisterFragment extends BaseFragment
         dispatchOnDestroyView();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mPresenter = null;
         dispatchOnDestroy();
@@ -298,70 +310,42 @@ public class RegisterFragment extends BaseFragment
         return isValidUserId() && isValidUserName() && isValidPassword();
     }
 
-    @Override public int checkState(NextButtonAdapter adapter, int requestId, int currentState) {
-        if (requestId == NEXT_BUTTON_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                return currentState;
-            } else if (isFieldValid()) {
-                return NextButtonAdapter.ACTIVE;
-            } else {
-                return NextButtonAdapter.DISABLE;
-            }
-        }
-
-        return -1;
-    }
-
-    @Override public void onStateChange(NextButtonAdapter adapter, int requestId, int currentState) {
-        if (requestId == NEXT_BUTTON_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                mUserIdFieldLayout.setEnabled(false);
-                mUserNameFieldLayout.setEnabled(false);
-                mPasswordFieldLayout.setEnabled(false);
-            } else {
-                mUserIdFieldLayout.setEnabled(true);
-                mUserNameFieldLayout.setEnabled(true);
-                mPasswordFieldLayout.setEnabled(true);
-            }
-        }
-    }
-
-    @Override public void onInvalidCharacter(int requestId, char c) {
+    @Override
+    public void onInvalidCharacter(int requestId, char c) {
         if (requestId == UID_FILTER_ID || requestId == PWD_FILTER_ID) {
             mNotificationBar.showTemporaryInverse(getString(R.string.not_support_character, c));
         }
     }
 
-    @Override public int checkState(FieldAdapter adapter, int requestId, int currentState) {
+    @Override
+    public boolean isActive(BaseStateAdapter adapter, int requestId) {
         if (requestId == UID_ADAPTER_ID) {
-            if (currentState == FieldAdapter.WAITING || currentState == FieldAdapter.INFO) {
-                return currentState;
-            } else if (isValidUserId()) {
-                return FieldAdapter.ACTIVE;
-            } else {
-                return FieldAdapter.DISABLE;
-            }
+            return isValidUserId();
         } else if (requestId == USER_NAME_ADAPTER_ID) {
-            if (currentState == FieldAdapter.WAITING || currentState == FieldAdapter.INFO) {
-                return currentState;
-            } else if (isValidUserName()) {
-                return FieldAdapter.ACTIVE;
-            } else {
-                return FieldAdapter.DISABLE;
-            }
+            return isValidUserName();
+        } else if (requestId == NEXT_BUTTON_ID) {
+            return isFieldValid();
         }
-        return -1;
+        return false;
     }
 
-    @Override public void onStateChange(FieldAdapter adapter, int requestId, int currentState) {
-
+    @Override
+    public void onStateChange(BaseStateAdapter adapter, int requestId, int currentState) {
+        if (requestId == NEXT_BUTTON_ID) {
+            final boolean enable = currentState != NextButtonAdapter.WAITING;
+            mUserIdFieldLayout.setEnabled(enable);
+            mUserNameFieldLayout.setEnabled(enable);
+            mPasswordFieldLayout.setEnabled(enable);
+        }
     }
 
-    @Override public void onCheckUIDSuccess() {
+    @Override
+    public void onCheckUIDSuccess() {
         mUIDAdapter.active();
     }
 
-    @Override public void onCheckUIDFailure(String message) {
+    @Override
+    public void onCheckUIDFailure(String message) {
         mUIDAdapter.info();
         // TODO: 2016/9/1 提示语句
         mNotificationBar.showTemporaryInverse(getString(R.string.uid_not_unique));

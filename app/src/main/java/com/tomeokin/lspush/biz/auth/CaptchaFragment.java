@@ -32,11 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
+import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.CaptchaViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.EmailFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.NextButtonCallback;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
 import com.tomeokin.lspush.biz.base.BaseFragment;
@@ -56,7 +57,7 @@ import javax.inject.Inject;
 import cn.smssdk.EventHandler;
 
 public class CaptchaFragment extends BaseFragment
-    implements CaptchaView, NextButtonCallback, OnCountryCodeSelectedListener {
+    implements CaptchaView, BaseStateCallback, OnCountryCodeSelectedListener {
     public static final int EMAIL_NEXT_ID = 0;
     public static final int PHONE_NEXT_ID = 1;
 
@@ -77,7 +78,8 @@ public class CaptchaFragment extends BaseFragment
 
     @Inject CaptchaPresenter mCaptchaPresenter;
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
@@ -90,7 +92,8 @@ public class CaptchaFragment extends BaseFragment
         dispatchOnCreate(savedInstanceState);
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
@@ -121,7 +124,7 @@ public class CaptchaFragment extends BaseFragment
         ProgressBar emailProgressBar = (ProgressBar) emailNextLayout.findViewById(R.id.next_progress);
 
         mEmailNextButtonAdapter =
-            new NextButtonAdapter(EMAIL_NEXT_ID, this, emailNextButton, emailProgressBar);
+            new NextButtonAdapter(EMAIL_NEXT_ID, this, getContext(), emailNextButton, emailProgressBar);
         mEmailFieldViewHolder =
             new EmailFieldViewHolder(mEmailField, clearButton, emailNextButton, this, mEmailNextButtonAdapter);
         registerLifecycleListener(mEmailNextButtonAdapter);
@@ -141,7 +144,7 @@ public class CaptchaFragment extends BaseFragment
         ProgressBar phoneProgressBar = (ProgressBar) phoneNextLayout.findViewById(R.id.next_progress);
 
         mPhoneNextButtonAdapter =
-            new NextButtonAdapter(PHONE_NEXT_ID, this, phoneNextButton, phoneProgressBar);
+            new NextButtonAdapter(PHONE_NEXT_ID, this, getContext(), phoneNextButton, phoneProgressBar);
         mPhoneFieldViewHolder =
             new PhoneFieldViewHolder(mPhoneField, countryCodePicker, phoneNextButton, this, mCountryCodeData,
                 mPhoneNextButtonAdapter);
@@ -161,7 +164,8 @@ public class CaptchaFragment extends BaseFragment
         TextView loginButton = (TextView) view.findViewById(R.id.login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Navigator.moveTo(getContext(), getFragmentManager(), LoginFragment.class, null);
             }
         });
@@ -170,7 +174,8 @@ public class CaptchaFragment extends BaseFragment
         return view;
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCaptchaPresenter.attachView(this);
         mHandler = new Handler();
@@ -178,19 +183,22 @@ public class CaptchaFragment extends BaseFragment
         SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         dispatchOnResume();
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
         dispatchOnPause();
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mCaptchaPresenter.detachView();
         mEmailField = null;
@@ -211,7 +219,8 @@ public class CaptchaFragment extends BaseFragment
         dispatchOnDestroyView();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mCaptchaPresenter = null;
         mCountryCodeData = null;
@@ -219,11 +228,13 @@ public class CaptchaFragment extends BaseFragment
         dispatchOnDestroy();
     }
 
-    @Override public CaptchaFragment self() {
+    @Override
+    public CaptchaFragment self() {
         return this;
     }
 
-    @Override public boolean isFieldValid() {
+    @Override
+    public boolean isFieldValid() {
         if (mShowingEmailTab) {
             return ValidateUtils.isEmailValid(mEmailField.getText().toString());
         } else {
@@ -231,11 +242,13 @@ public class CaptchaFragment extends BaseFragment
         }
     }
 
-    @Override public List<String> getHistoryUserEmails() {
+    @Override
+    public List<String> getHistoryUserEmails() {
         return mCaptchaPresenter.getHistoryUserEmails();
     }
 
-    @Override public void sendCaptcha() {
+    @Override
+    public void sendCaptcha() {
         if (mCaptchaRequest == null) {
             mCaptchaRequest = new CaptchaRequest();
         }
@@ -250,16 +263,19 @@ public class CaptchaFragment extends BaseFragment
         mCaptchaPresenter.sendCaptchaCode(mCaptchaRequest, mCountryCodeData.countryCode);
     }
 
-    @Override public void onTabSelectUpdate(boolean showingEmailTab) {
+    @Override
+    public void onTabSelectUpdate(boolean showingEmailTab) {
         mShowingEmailTab = showingEmailTab;
     }
 
-    @Override public void onCountryCodeSelected(CountryCodeData countryCodeData) {
+    @Override
+    public void onCountryCodeSelected(CountryCodeData countryCodeData) {
         mCountryCodeData = countryCodeData;
         mPhoneFieldViewHolder.updateCountryCode(countryCodeData);
     }
 
-    @Override public void moveToCaptchaVerify() {
+    @Override
+    public void moveToCaptchaVerify() {
         syncNextButton();
         if (mCaptchaRequest != null) {
             Bundle bundle = CaptchaConfirmationFragment.prepareArgument(mCaptchaRequest, mCountryCodeData.countryCode);
@@ -267,7 +283,8 @@ public class CaptchaFragment extends BaseFragment
         }
     }
 
-    @Override public void onSentCaptchaCodeFailure(String message) {
+    @Override
+    public void onSentCaptchaCodeFailure(String message) {
         syncNextButton();
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -280,57 +297,37 @@ public class CaptchaFragment extends BaseFragment
         }
     }
 
-    @Override public int checkState(NextButtonAdapter adapter, int requestId, int currentState) {
+    @Override
+    public boolean isActive(BaseStateAdapter adapter, int requestId) {
         if (requestId == EMAIL_NEXT_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                return currentState;
-            } else if (ValidateUtils.isEmailValid(mEmailField.getText().toString())) {
-                return NextButtonAdapter.ACTIVE;
-            } else {
-                return NextButtonAdapter.DISABLE;
-            }
+            return ValidateUtils.isEmailValid(mEmailField.getText().toString());
         } else if (requestId == PHONE_NEXT_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                return currentState;
-            } else if (ValidateUtils.isPhoneValid(mPhoneField.getText().toString(), mCountryCodeData.country)) {
-                return NextButtonAdapter.ACTIVE;
-            } else {
-                return NextButtonAdapter.DISABLE;
-            }
+            return ValidateUtils.isPhoneValid(mPhoneField.getText().toString(), mCountryCodeData.country);
         }
-        return -1;
+        return false;
     }
 
-    @Override public void onStateChange(NextButtonAdapter adapter, int requestId, int currentState) {
+    @Override
+    public void onStateChange(BaseStateAdapter adapter, int requestId, int currentState) {
         if (requestId == EMAIL_NEXT_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                mViewHolder.mEmailTab.setEnabled(false);
-                mViewHolder.mPhoneTab.setEnabled(false);
-                mEmailFieldViewHolder.mEmailField.setEnabled(false);
-                mEmailFieldViewHolder.mClearButton.setEnabled(false);
-                mEmailFieldViewHolder.mClearButton.setVisibility(View.INVISIBLE);
-            } else {
-                mViewHolder.mEmailTab.setEnabled(true);
-                mViewHolder.mPhoneTab.setEnabled(true);
-                mEmailFieldViewHolder.mEmailField.setEnabled(true);
-                mEmailFieldViewHolder.mClearButton.setEnabled(true);
+            final boolean enable = currentState != NextButtonAdapter.WAITING;
+            mViewHolder.mEmailTab.setEnabled(enable);
+            mViewHolder.mPhoneTab.setEnabled(enable);
+            mEmailFieldViewHolder.mEmailField.setEnabled(enable);
+            mEmailFieldViewHolder.mClearButton.setEnabled(enable);
+            if (enable) {
                 mEmailFieldViewHolder.mClearButton.setVisibility(
                     mEmailField.getText().length() != 0 ? View.VISIBLE : View.INVISIBLE);
+            } else {
+                mEmailFieldViewHolder.mClearButton.setVisibility(View.INVISIBLE);
             }
         } else if (requestId == PHONE_NEXT_ID) {
-            if (currentState == NextButtonAdapter.WAITING) {
-                mViewHolder.mEmailTab.setEnabled(false);
-                mViewHolder.mPhoneTab.setEnabled(false);
-                mPhoneFieldViewHolder.mCountryCodePicker.setEnabled(false);
-                mPhoneField.setEnabled(false);
-                mPhoneField.setClearButtonEnabled(false);
-            } else {
-                mViewHolder.mEmailTab.setEnabled(true);
-                mViewHolder.mPhoneTab.setEnabled(true);
-                mPhoneFieldViewHolder.mCountryCodePicker.setEnabled(true);
-                mPhoneField.setEnabled(true);
-                mPhoneField.setClearButtonEnabled(true);
-            }
+            final boolean enable = currentState != NextButtonAdapter.WAITING;
+            mViewHolder.mEmailTab.setEnabled(enable);
+            mViewHolder.mPhoneTab.setEnabled(enable);
+            mPhoneFieldViewHolder.mCountryCodePicker.setEnabled(enable);
+            mPhoneField.setEnabled(enable);
+            mPhoneField.setClearButtonEnabled(enable);
         }
     }
 
