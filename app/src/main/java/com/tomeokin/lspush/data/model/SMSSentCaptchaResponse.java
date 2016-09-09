@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.data.model;
 
-import android.support.annotation.CallSuper;
+public class SMSSentCaptchaResponse extends BaseResponse {
+    private boolean autoReadCaptcha;
 
-public class BasePresenter<T extends BaseActionCallback> implements Presenter<T> {
-    private T mMvpView;
-
-    @CallSuper @Override public void attachView(T mvpView) {
-        mMvpView = mvpView;
+    public SMSSentCaptchaResponse(boolean autoReadCaptcha) {
+        super();
+        this.autoReadCaptcha = autoReadCaptcha;
     }
 
-    @CallSuper @Override public void detachView() {
-        mMvpView = null;
+    public SMSSentCaptchaResponse(int resultCode, String result, boolean autoReadCaptcha) {
+        super(resultCode, result);
+        this.autoReadCaptcha = autoReadCaptcha;
     }
 
-    public boolean isViewAttached() {
-        return mMvpView != null;
+    public boolean isAutoReadCaptcha() {
+        return autoReadCaptcha;
     }
 
-    public T getMvpView() {
-        return mMvpView;
+    public void setAutoReadCaptcha(boolean autoReadCaptcha) {
+        this.autoReadCaptcha = autoReadCaptcha;
     }
 }

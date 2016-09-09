@@ -34,8 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;

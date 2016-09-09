@@ -34,14 +34,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
@@ -262,30 +263,28 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     }
 
     @Override
-    public void onSentCaptchaCodeFailure(String message) {
-        mNextButtonAdapter.sync();
-        mWaitingTime = DEFAULT_WAITING_TIME / 2;
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    public void onActionFailure(int action, String message) {
+        if (action == ACTION_SEND_CAPTCHA) {
+            mNextButtonAdapter.sync();
+            mWaitingTime = DEFAULT_WAITING_TIME / 2;
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        } else if (action == ACTION_CHECK_CAPTCHA) {
+            mNextButtonAdapter.sync();
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onSentCaptchaCodeSuccess() {
-        mNextButtonAdapter.sync();
-        mWaitingTime = DEFAULT_WAITING_TIME;
-        Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
-             .show();
-    }
-
-    @Override
-    public void onCheckCaptchaFailure(String message) {
-        mNextButtonAdapter.sync();
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onCheckCaptchaSuccess() {
-        mNextButtonAdapter.sync();
-        Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCountryCode);
-        Navigator.moveTo(this, RegisterFragment.class, bundle);
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+        if (action == ACTION_SEND_CAPTCHA) {
+            mNextButtonAdapter.sync();
+            mWaitingTime = DEFAULT_WAITING_TIME;
+            Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
+                 .show();
+        } else if (action == ACTION_CHECK_CAPTCHA) {
+            mNextButtonAdapter.sync();
+            Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCountryCode);
+            Navigator.moveTo(this, RegisterFragment.class, bundle);
+        }
     }
 }

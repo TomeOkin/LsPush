@@ -32,8 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.BaseStateCallback;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.CaptchaViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.EmailFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
@@ -45,6 +45,7 @@ import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.ValidateUtils;
+import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.injection.component.AuthComponent;
@@ -60,6 +61,8 @@ public class CaptchaFragment extends BaseFragment
     implements CaptchaView, BaseStateCallback, OnCountryCodeSelectedListener {
     public static final int EMAIL_NEXT_ID = 0;
     public static final int PHONE_NEXT_ID = 1;
+
+    public static final int ACTION_SEND_CAPTCHA = 0;
 
     private CaptchaRequest mCaptchaRequest = null;
     private CountryCodeData mCountryCodeData;
@@ -260,7 +263,7 @@ public class CaptchaFragment extends BaseFragment
             mCaptchaRequest.setSendObject(phone);
             mCaptchaRequest.setRegion(mCountryCodeData.country);
         }
-        mCaptchaPresenter.sendCaptchaCode(mCaptchaRequest, mCountryCodeData.countryCode);
+        mCaptchaPresenter.sendCaptchaCode(ACTION_SEND_CAPTCHA, mCaptchaRequest, mCountryCodeData.countryCode);
     }
 
     @Override
@@ -275,18 +278,23 @@ public class CaptchaFragment extends BaseFragment
     }
 
     @Override
-    public void moveToCaptchaVerify() {
-        syncNextButton();
-        if (mCaptchaRequest != null) {
-            Bundle bundle = CaptchaConfirmationFragment.prepareArgument(mCaptchaRequest, mCountryCodeData.countryCode);
-            Navigator.moveTo(this, CaptchaConfirmationFragment.class, bundle);
+    public void onActionFailure(int action, String message) {
+        if (action == ACTION_SEND_CAPTCHA) {
+            syncNextButton();
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onSentCaptchaCodeFailure(String message) {
-        syncNextButton();
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+        if (action == ACTION_SEND_CAPTCHA) {
+            syncNextButton();
+            if (mCaptchaRequest != null) {
+                Bundle bundle =
+                    CaptchaConfirmationFragment.prepareArgument(mCaptchaRequest, mCountryCodeData.countryCode);
+                Navigator.moveTo(this, CaptchaConfirmationFragment.class, bundle);
+            }
+        }
     }
 
     private void syncNextButton() {

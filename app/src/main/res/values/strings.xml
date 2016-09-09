@@ -40,4 +40,5 @@
     <string name="use_current_image">Use current image ?</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>
+    <string name="network_abnormal">Can't connecting to the server, please check you network connection.</string>
 </resources>

@@ -32,4 +32,6 @@
     <string name="use_current_image">使用当前图片？</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_ok">确定</string>
+
+    <string name="network_abnormal">无法连接到服务器，请检查您的网络连接。</string>
 </resources>

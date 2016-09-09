@@ -15,7 +15,7 @@
  */
 package com.tomeokin.lspush.biz.base;
 
-public interface Presenter<V extends MvpView> {
+public interface Presenter<V extends BaseActionCallback> {
     void attachView(V mvpView);
 
     void detachView();

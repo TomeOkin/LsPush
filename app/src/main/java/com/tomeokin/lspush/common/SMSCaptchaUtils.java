@@ -17,11 +17,13 @@ package com.tomeokin.lspush.common;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.data.model.SMSCheckCaptchaResponse;
+import com.tomeokin.lspush.data.model.SMSCountryListResponse;
+import com.tomeokin.lspush.data.model.SMSSentCaptchaResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,12 +36,6 @@ public class SMSCaptchaUtils {
     public static final int SEND_CAPTCHA = SMSSDK.EVENT_GET_VERIFICATION_CODE;
     public static final int CHECK_CAPTCHA = SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE;
     public static final int SEND_VOICE_CAPTCHA = SMSSDK.EVENT_GET_VOICE_VERIFICATION_CODE;
-
-    @IntDef(value = {
-        GET_SUPPORTED_COUNTRIES, SEND_CAPTCHA, CHECK_CAPTCHA, SEND_VOICE_CAPTCHA
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ErrorType { }
 
     private static SMSCaptchaUtils sInstance;
 
@@ -73,21 +69,11 @@ public class SMSCaptchaUtils {
         SMSSDK.submitVerificationCode(countryCode, phone, captcha);
     }
 
-    public interface SMSCaptchaCallback {
-        void onReceivedCountryList(HashMap<String, String> countryList);
-
-        void onSMSCaptchaError(@ErrorType int event);
-
-        void onSentCaptchaSuccess(boolean autoReadCaptcha);
-
-        void onSubmitCaptchaSuccess(String phone, String countryCode);
-    }
-
     public static final class CustomEventHandler extends EventHandler {
         private final Handler mHandler;
-        private final SMSCaptchaCallback mCallback;
+        private final BaseActionCallback mCallback;
 
-        public CustomEventHandler(Handler handler, SMSCaptchaCallback callback) {
+        public CustomEventHandler(Handler handler, BaseActionCallback callback) {
             mHandler = handler;
             mCallback = callback;
         }
@@ -98,32 +84,32 @@ public class SMSCaptchaUtils {
                 Timber.w((Throwable) data);
                 mHandler.post(new Runnable() {
                     @Override public void run() {
-                        mCallback.onSMSCaptchaError(event);
+                        mCallback.onActionFailure(event, null);
                     }
                 });
                 return;
             }
 
-            if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+            if (event == GET_SUPPORTED_COUNTRIES) {
                 final HashMap<String, String> countryList = getCountryList((ArrayList<HashMap<String, Object>>) data);
                 mHandler.post(new Runnable() {
                     @Override public void run() {
-                        mCallback.onReceivedCountryList(countryList);
+                        mCallback.onActionSuccess(event, new SMSCountryListResponse(countryList));
                     }
                 });
-            } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+            } else if (event == SEND_CAPTCHA) {
                 mHandler.post(new Runnable() {
                     @Override public void run() {
-                        mCallback.onSentCaptchaSuccess((Boolean) data);
+                        mCallback.onActionSuccess(event, new SMSSentCaptchaResponse((Boolean) data));
                     }
                 });
-            } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+            } else if (event == CHECK_CAPTCHA) {
                 final HashMap<String, Object> map = (HashMap<String, Object>) data;
                 final String phone = (String) map.get("phone");
                 final String countryCode = (String) map.get("country");
                 mHandler.post(new Runnable() {
                     @Override public void run() {
-                        mCallback.onSubmitCaptchaSuccess(phone, countryCode);
+                        mCallback.onActionSuccess(event, new SMSCheckCaptchaResponse(phone, countryCode));
                     }
                 });
             }

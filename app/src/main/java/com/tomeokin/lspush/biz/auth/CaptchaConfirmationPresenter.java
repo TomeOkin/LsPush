@@ -17,10 +17,13 @@ package com.tomeokin.lspush.biz.auth;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BasePresenter;
+import com.tomeokin.lspush.biz.base.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.data.crypt.Crypto;
@@ -32,22 +35,19 @@ import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import javax.inject.Inject;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 @PerActivity
 public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmationView>
-    implements SMSCaptchaUtils.SMSCaptchaCallback {
+    implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
+    private int mSendCaptchaActionId;
+    private int mCheckCaptchaActionId;
 
     @Inject
     public CaptchaConfirmationPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
@@ -56,43 +56,18 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
         mGson = gson;
     }
 
-    public void sendCaptcha(CaptchaRequest request, String countryCode) {
+    public void sendCaptcha(int action, CaptchaRequest request, String countryCode) {
+        mSendCaptchaActionId = action;
         if (request.getSendObject().contains("@")) {
-            sendEmailCaptcha(request);
+            Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
+            call.enqueue(new CommonCallback<>(mResource, action, getMvpView()));
         } else {
             SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
         }
     }
 
-    private void sendEmailCaptcha(CaptchaRequest request) {
-        Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                if (response.isSuccessful()) {
-                    BaseResponse baseResponse = response.body();
-                    if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
-                        getMvpView().onSentCaptchaCodeSuccess();
-                    } else {
-                        getMvpView().onSentCaptchaCodeFailure(baseResponse.getResult());
-                    }
-                } else {
-                    try {
-                        Timber.tag(UserScene.SEND_CAPTCHA).w(response.errorBody().string());
-                        getMvpView().onSentCaptchaCodeFailure(mResource.getString(R.string.send_captcha_error));
-                    } catch (IOException e) {
-                        Timber.w(e);
-                    }
-                }
-            }
-
-            @Override public void onFailure(Call<BaseResponse> call, Throwable t) {
-                Timber.w(t);
-                getMvpView().onSentCaptchaCodeFailure(mResource.getString(R.string.unexpected_error));
-            }
-        });
-    }
-
-    public void checkCaptcha(CaptchaRequest request, String authCode) {
+    public void checkCaptcha(int action, CaptchaRequest request, String authCode) {
+        mCheckCaptchaActionId = action;
         RegisterData registerData = new RegisterData();
         registerData.setCaptchaRequest(request);
         registerData.setAuthCode(authCode);
@@ -102,55 +77,30 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onCheckCaptchaFailure(mResource.getString(R.string.unexpected_error));
+            getMvpView().onActionFailure(action, mResource.getString(R.string.unexpected_error));
             return;
         }
         Call<BaseResponse> call = mLsPushService.checkCaptcha(cryptoToken);
-        call.enqueue(new Callback<BaseResponse>() {
-            @Override public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                if (response.isSuccessful()) {
-                    BaseResponse baseResponse = response.body();
-                    if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
-                        getMvpView().onCheckCaptchaSuccess();
-                    } else {
-                        getMvpView().onCheckCaptchaFailure(baseResponse.getResult());
-                    }
-                } else {
-                    try {
-                        Timber.tag(UserScene.CHECK_CAPTCHA).w(response.errorBody().string());
-                        getMvpView().onCheckCaptchaFailure(mResource.getString(R.string.check_captcha_error));
-                    } catch (IOException e) {
-                        Timber.w(e);
-                    }
-                }
-            }
-
-            @Override public void onFailure(Call<BaseResponse> call, Throwable t) {
-                Timber.w(t);
-                getMvpView().onCheckCaptchaFailure(mResource.getString(R.string.unexpected_error));
-            }
-        });
+        call.enqueue(new CommonCallback<>(mResource, action, getMvpView()));
     }
 
-    @Override public void onReceivedCountryList(HashMap<String, String> countryList) {
-
-    }
-
-    @Override public void onSMSCaptchaError(@SMSCaptchaUtils.ErrorType int event) {
-        if (event == SMSCaptchaUtils.SEND_CAPTCHA) {
-            Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(event));
-            getMvpView().onSentCaptchaCodeFailure(mResource.getString(R.string.send_captcha_error));
-        } else if (event == SMSCaptchaUtils.CHECK_CAPTCHA) {
-            Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(event));
-            getMvpView().onCheckCaptchaFailure(mResource.getString(R.string.check_captcha_error));
+    @Override
+    public void onActionFailure(int action, String message) {
+        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
+            Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
+            getMvpView().onActionFailure(mSendCaptchaActionId, mResource.getString(R.string.send_captcha_error));
+        } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+            Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(action));
+            getMvpView().onActionFailure(mCheckCaptchaActionId, mResource.getString(R.string.check_captcha_error));
         }
     }
 
-    @Override public void onSentCaptchaSuccess(boolean autoReadCaptcha) {
-        getMvpView().onSentCaptchaCodeSuccess();
-    }
-
-    @Override public void onSubmitCaptchaSuccess(String phone, String countryCode) {
-        getMvpView().onCheckCaptchaSuccess();
+    @Override
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
+            getMvpView().onActionSuccess(mSendCaptchaActionId, response);
+        } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+            getMvpView().onActionSuccess(mCheckCaptchaActionId, response);
+        }
     }
 }

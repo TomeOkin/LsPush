@@ -15,14 +15,8 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
-import com.tomeokin.lspush.biz.base.MvpView;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 
-public interface CaptchaConfirmationView extends MvpView {
-    void onSentCaptchaCodeFailure(String message);
+public interface CaptchaConfirmationView extends BaseActionCallback {
 
-    void onSentCaptchaCodeSuccess();
-
-    void onCheckCaptchaFailure(String message);
-
-    void onCheckCaptchaSuccess();
 }

@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.adapter;
+package com.tomeokin.lspush.biz.base;
 
-public interface BaseStateCallback {
-    boolean isActive(BaseStateAdapter adapter, int requestId);
+import android.support.annotation.Nullable;
 
-    void onStateChange(BaseStateAdapter adapter, int requestId, int currentState);
+import com.tomeokin.lspush.data.model.BaseResponse;
+
+public interface BaseActionCallback {
+    void onActionFailure(int action, String message);
+
+    void onActionSuccess(int action, @Nullable BaseResponse response);
 }

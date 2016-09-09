@@ -16,11 +16,11 @@
 package com.tomeokin.lspush.biz.auth;
 
 import com.tomeokin.lspush.biz.base.IFragment;
-import com.tomeokin.lspush.biz.base.MvpView;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 
 import java.util.List;
 
-public interface CaptchaView extends MvpView, IFragment<CaptchaFragment> {
+public interface CaptchaView extends BaseActionCallback, IFragment<CaptchaFragment> {
     // provide for view adapter
     List<String> getHistoryUserEmails();
 
@@ -29,9 +29,4 @@ public interface CaptchaView extends MvpView, IFragment<CaptchaFragment> {
     void onTabSelectUpdate(boolean showingEmailTab);
 
     boolean isFieldValid();
-
-    // provide for presenter
-    void moveToCaptchaVerify();
-
-    void onSentCaptchaCodeFailure(String message);
 }

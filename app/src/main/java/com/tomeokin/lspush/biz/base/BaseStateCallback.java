@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.base;
 
-public interface MvpView {
+public interface BaseStateCallback {
+    boolean isActive(BaseStateAdapter adapter, int requestId);
 
+    void onStateChange(BaseStateAdapter adapter, int requestId, int currentState);
 }

@@ -15,9 +15,9 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
-import com.tomeokin.lspush.biz.base.MvpView;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 
-public interface RegisterView extends MvpView {
+public interface RegisterView extends BaseActionCallback {
     void onCheckUIDSuccess();
 
     void onCheckUIDFailure(String message);
