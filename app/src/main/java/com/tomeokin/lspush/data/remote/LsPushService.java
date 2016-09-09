@@ -22,7 +22,9 @@ import com.tomeokin.lspush.data.model.CryptoToken;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface LsPushService {
     @POST("api/user/login") Call<AccessResponse> login(@Body CryptoToken cryptoToken);
@@ -36,4 +38,6 @@ public interface LsPushService {
     @POST("api/user/sendCaptcha") Call<BaseResponse> sendCaptcha(@Body CaptchaRequest captchaRequest);
 
     @POST("api/user/checkCaptcha") Call<BaseResponse> checkCaptcha(@Body CryptoToken cryptoToken);
+
+    @GET("api/user/checkUIDExisted/{uid}") Call<BaseResponse> checkUIDExisted(@Path("uid") String uid);
 }

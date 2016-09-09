@@ -278,7 +278,7 @@ public class CaptchaFragment extends BaseFragment
     }
 
     @Override
-    public void onActionFailure(int action, String message) {
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == ACTION_SEND_CAPTCHA) {
             syncNextButton();
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

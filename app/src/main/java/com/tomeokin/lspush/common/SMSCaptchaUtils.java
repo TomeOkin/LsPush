@@ -84,7 +84,7 @@ public class SMSCaptchaUtils {
                 Timber.w((Throwable) data);
                 mHandler.post(new Runnable() {
                     @Override public void run() {
-                        mCallback.onActionFailure(event, null);
+                        mCallback.onActionFailure(event, null, null);
                     }
                 });
                 return;

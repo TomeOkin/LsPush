@@ -44,7 +44,8 @@ public class CaptchaPresenter extends BasePresenter<CaptchaView> implements Base
     private final Resources mResource;
     private int mSendCaptchaRequest;
 
-    @Inject public CaptchaPresenter(LsPushService lsPushService, @ActivityContext Context context) {
+    @Inject
+    public CaptchaPresenter(LsPushService lsPushService, @ActivityContext Context context) {
         mLsPushService = lsPushService;
         mResource = context.getResources();
     }
@@ -64,10 +65,11 @@ public class CaptchaPresenter extends BasePresenter<CaptchaView> implements Base
     }
 
     @Override
-    public void onActionFailure(int action, String message) {
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
             Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mSendCaptchaRequest, mResource.getString(R.string.send_captcha_error));
+            getMvpView().onActionFailure(mSendCaptchaRequest, response,
+                mResource.getString(R.string.send_captcha_error));
         }
     }
 

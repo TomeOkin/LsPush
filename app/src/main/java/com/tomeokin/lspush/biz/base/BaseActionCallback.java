@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 import com.tomeokin.lspush.data.model.BaseResponse;
 
 public interface BaseActionCallback {
-    void onActionFailure(int action, String message);
+    void onActionFailure(int action, @Nullable BaseResponse response, String message);
 
     void onActionSuccess(int action, @Nullable BaseResponse response);
 }

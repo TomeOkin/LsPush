@@ -123,7 +123,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
                            .show();
                 } else {
                     mLastSentTime = SystemClock.elapsedRealtime();
-                    mPresenter.sendCaptcha(mCaptchaRequest, mCountryCode);
+                    mPresenter.sendCaptcha(ACTION_SEND_CAPTCHA, mCaptchaRequest, mCountryCode);
                 }
             }
         });
@@ -233,7 +233,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     public void checkCaptcha() {
         mNextButtonAdapter.waiting();
         if (mCaptchaRequest.getSendObject().contains("@")) {
-            mPresenter.checkCaptcha(mCaptchaRequest, mCaptchaField.getText().toString());
+            mPresenter.checkCaptcha(ACTION_CHECK_CAPTCHA, mCaptchaRequest, mCaptchaField.getText().toString());
         } else {
             SMSCaptchaUtils.submitCaptcha(mCountryCode, mCaptchaRequest.getSendObject(),
                 mCaptchaField.getText().toString());
@@ -263,7 +263,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     }
 
     @Override
-    public void onActionFailure(int action, String message) {
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == ACTION_SEND_CAPTCHA) {
             mNextButtonAdapter.sync();
             mWaitingTime = DEFAULT_WAITING_TIME / 2;

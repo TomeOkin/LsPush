@@ -45,12 +45,12 @@ public class CommonCallback<T extends BaseResponse> implements Callback<T> {
             if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
                 mCallback.onActionSuccess(mActionId, baseResponse);
             } else {
-                mCallback.onActionFailure(mActionId, baseResponse.getResult());
+                mCallback.onActionFailure(mActionId, baseResponse, baseResponse.getResult());
             }
         } else {
             try {
                 Timber.tag("network").w(response.errorBody().string());
-                mCallback.onActionFailure(mActionId, mResource.getString(R.string.network_abnormal));
+                mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.network_abnormal));
             } catch (IOException e) {
                 // ignore
             }
@@ -60,6 +60,6 @@ public class CommonCallback<T extends BaseResponse> implements Callback<T> {
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         Timber.w(t);
-        mCallback.onActionFailure(mActionId, mResource.getString(R.string.unexpected_error));
+        mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.unexpected_error));
     }
 }

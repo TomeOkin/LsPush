@@ -41,8 +41,7 @@ import retrofit2.Call;
 import timber.log.Timber;
 
 @PerActivity
-public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmationView>
-    implements BaseActionCallback {
+public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmationView> implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
@@ -56,18 +55,18 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
         mGson = gson;
     }
 
-    public void sendCaptcha(int action, CaptchaRequest request, String countryCode) {
-        mSendCaptchaActionId = action;
+    public void sendCaptcha(int actionId, CaptchaRequest request, String countryCode) {
+        mSendCaptchaActionId = actionId;
         if (request.getSendObject().contains("@")) {
             Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
-            call.enqueue(new CommonCallback<>(mResource, action, getMvpView()));
+            call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
         } else {
             SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
         }
     }
 
-    public void checkCaptcha(int action, CaptchaRequest request, String authCode) {
-        mCheckCaptchaActionId = action;
+    public void checkCaptcha(int actionId, CaptchaRequest request, String authCode) {
+        mCheckCaptchaActionId = actionId;
         RegisterData registerData = new RegisterData();
         registerData.setCaptchaRequest(request);
         registerData.setAuthCode(authCode);
@@ -77,21 +76,23 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onActionFailure(action, mResource.getString(R.string.unexpected_error));
+            getMvpView().onActionFailure(actionId, null, mResource.getString(R.string.unexpected_error));
             return;
         }
         Call<BaseResponse> call = mLsPushService.checkCaptcha(cryptoToken);
-        call.enqueue(new CommonCallback<>(mResource, action, getMvpView()));
+        call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
     }
 
     @Override
-    public void onActionFailure(int action, String message) {
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
             Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mSendCaptchaActionId, mResource.getString(R.string.send_captcha_error));
+            getMvpView().onActionFailure(mSendCaptchaActionId, response,
+                mResource.getString(R.string.send_captcha_error));
         } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
             Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mCheckCaptchaActionId, mResource.getString(R.string.check_captcha_error));
+            getMvpView().onActionFailure(mCheckCaptchaActionId, response,
+                mResource.getString(R.string.check_captcha_error));
         }
     }
 

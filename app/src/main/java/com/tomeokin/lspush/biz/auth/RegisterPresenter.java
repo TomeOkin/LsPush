@@ -18,7 +18,14 @@ package com.tomeokin.lspush.biz.auth;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.google.gson.Gson;
+import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BasePresenter;
+import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.data.crypt.Crypto;
+import com.tomeokin.lspush.data.model.AccessResponse;
+import com.tomeokin.lspush.data.model.BaseResponse;
+import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
@@ -26,21 +33,37 @@ import com.tomeokin.lspush.injection.scope.PerActivity;
 
 import javax.inject.Inject;
 
+import retrofit2.Call;
+import timber.log.Timber;
+
 @PerActivity
 public class RegisterPresenter extends BasePresenter<RegisterView> {
     private final LsPushService mLsPushService;
     private final Resources mResource;
+    private final Gson mGson;
 
-    @Inject public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context) {
+    @Inject public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
         mLsPushService = lsPushService;
         mResource = context.getResources();
+        mGson = gson;
     }
 
-    public void checkUIDExist(String uid) {
-        // TODO: 2016/9/8  
+    public void checkUIDExist(int actionId, String uid) {
+        Call<BaseResponse> call = mLsPushService.checkUIDExisted(uid);
+        call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
     }
 
-    public void register(RegisterData registerData) {
-        // TODO: 2016/9/8
+    public void register(int actionId, RegisterData registerData) {
+        String data = mGson.toJson(registerData, RegisterData.class);
+        CryptoToken cryptoToken;
+        try {
+            cryptoToken = Crypto.encrypt(data);
+        } catch (Exception e) {
+            Timber.w(e);
+            getMvpView().onActionFailure(actionId, null, mResource.getString(R.string.unexpected_error));
+            return;
+        }
+        Call<AccessResponse> call = mLsPushService.register(cryptoToken);
+        call.enqueue(new CommonCallback<AccessResponse>(mResource, actionId, getMvpView()));
     }
 }

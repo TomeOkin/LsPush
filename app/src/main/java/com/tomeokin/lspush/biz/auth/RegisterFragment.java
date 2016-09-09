@@ -46,6 +46,7 @@ import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.injection.component.AuthComponent;
@@ -59,6 +60,9 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     public static final int PWD_FILTER_ID = 2;
     public static final int UID_ADAPTER_ID = 3;
     public static final int USER_NAME_ADAPTER_ID = 4;
+
+    public static final int ACTION_CHECK_UID_EXISTED = 0;
+    public static final int ACTION_REGISTER = 1;
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
     public static final String EXTRA_CAPTCHA_AUTH_CODE = "extra.captcha.auth.code";
@@ -138,7 +142,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
                         && mUIDAdapter.getState() != FieldAdapter.INFO
                         && isValidUserId()) {
                         mUIDAdapter.waiting();
-                        mPresenter.checkUIDExist(mUserIdField.getText().toString());
+                        mPresenter.checkUIDExist(ACTION_CHECK_UID_EXISTED, mUserIdField.getText().toString());
                     }
                 }
             }
@@ -290,7 +294,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
         data.setUserId(mUserIdField.getText().toString());
         data.setNickname(mUserNameField.getText().toString());
         data.setPassword(mPasswordField.getText().toString());
-        mPresenter.register(data);
+        mPresenter.register(ACTION_REGISTER, data);
     }
 
     public boolean isValidUserId() {
@@ -340,14 +344,25 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     }
 
     @Override
-    public void onCheckUIDSuccess() {
-        mUIDAdapter.active();
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
+        if (action == ACTION_CHECK_UID_EXISTED) {
+            if (response != null && response.getResultCode() == 10) {
+                mUIDAdapter.info();
+                mNotificationBar.showTemporaryInverse(getString(R.string.uid_not_unique));
+            } else {
+                mNotificationBar.showTemporaryInverse(message);
+            }
+        } else if (action == ACTION_REGISTER) {
+            // TODO: 2016/9/9
+        }
     }
 
     @Override
-    public void onCheckUIDFailure(String message) {
-        mUIDAdapter.info();
-        // TODO: 2016/9/1 提示语句
-        mNotificationBar.showTemporaryInverse(getString(R.string.uid_not_unique));
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+        if (action == ACTION_CHECK_UID_EXISTED) {
+            mUIDAdapter.active();
+        } else if (action == ACTION_REGISTER) {
+            // TODO: 2016/9/9
+        }
     }
 }
