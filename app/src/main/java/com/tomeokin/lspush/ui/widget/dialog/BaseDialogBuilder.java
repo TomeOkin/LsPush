@@ -26,7 +26,7 @@ import android.support.v4.app.FragmentManager;
 /**
  * focus on the interaction functions among dialog. Not request to use.
  */
-public class BaseDialogBuilder<T extends BaseDialogFragment> {
+public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F extends BaseDialogFragment> {
     public static final String EXTRA_REQUEST_CODE = "dialog.request.code";
     public static final String EXTRA_ACTION_TYPE = "dialog.action.type";
     public static final String EXTRA_LIST_ITEM_CLICK_POSITION = "dialog.list.item.click.position";
@@ -60,114 +60,116 @@ public class BaseDialogBuilder<T extends BaseDialogFragment> {
         mClazz = clazz;
     }
 
+    protected abstract T self();
+
     @NonNull protected Bundle prepareArguments(Bundle args) {
         return args;
     }
 
-    public BaseDialogBuilder setTag(String tag) {
+    public T setTag(String tag) {
         mTag = tag;
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setTargetFragment(Fragment fragment, int requestCode) {
+    public T setTargetFragment(Fragment fragment, int requestCode) {
         mRequestCode = requestCode;
         mTargetFragment = fragment;
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setRequestCode(int requestCode) {
+    public T setRequestCode(int requestCode) {
         mArgs.putInt(EXTRA_REQUEST_CODE, requestCode);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setTheme(@StyleRes int themeId) {
+    public T setTheme(@StyleRes int themeId) {
         mArgs.putInt(EXTRA_DIALOG_THEME, themeId);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setCancelListeningEnable(boolean flag) {
+    public T setCancelListeningEnable(boolean flag) {
         mArgs.putBoolean(EXTRA_ENABLE_CANCEL_LISTENING, flag);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setDismissListeningEnable(boolean flag) {
+    public T setDismissListeningEnable(boolean flag) {
         mArgs.putBoolean(EXTRA_ENABLE_DISMISS_LISTENING, flag);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setActionClickListeningEnable(boolean flag) {
+    public T setActionClickListeningEnable(boolean flag) {
         mArgs.putBoolean(EXTRA_ENABLE_ACTION_CLICK_LISTENING, flag);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setEnableListItemSelectListening(boolean flag) {
+    public T setListItemSelectListeningEnable(boolean flag) {
         mArgs.putBoolean(EXTRA_ENABLE_LIST_ITEM_CLICK_LISTENING, flag);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setTitle(CharSequence title) {
+    public T setTitle(CharSequence title) {
         mArgs.putCharSequence(EXTRA_DIALOG_TITLE, title);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setTitle(@StringRes int resId) {
+    public T setTitle(@StringRes int resId) {
         mArgs.putCharSequence(EXTRA_DIALOG_TITLE, mContext.getResources().getString(resId));
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setMessage(CharSequence message) {
+    public T setMessage(CharSequence message) {
         mArgs.putCharSequence(EXTRA_DIALOG_MESSAGE, message);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setMessage(@StringRes int resId) {
+    public T setMessage(@StringRes int resId) {
         mArgs.putCharSequence(EXTRA_DIALOG_MESSAGE, mContext.getResources().getString(resId));
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setNeutralText(CharSequence neutralText) {
+    public T setNeutralText(CharSequence neutralText) {
         mArgs.putCharSequence(EXTRA_DIALOG_NEUTRAL_TEXT, neutralText);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setNeutralText(@StringRes int resId) {
+    public T setNeutralText(@StringRes int resId) {
         mArgs.putCharSequence(EXTRA_DIALOG_NEUTRAL_TEXT, mContext.getResources().getString(resId));
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setNegativeText(CharSequence negativeText) {
+    public T setNegativeText(CharSequence negativeText) {
         mArgs.putCharSequence(EXTRA_DIALOG_NEGATIVE_TEXT, negativeText);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setNegativeText(@StringRes int resId) {
+    public T setNegativeText(@StringRes int resId) {
         mArgs.putCharSequence(EXTRA_DIALOG_NEGATIVE_TEXT, mContext.getResources().getString(resId));
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setPositiveText(CharSequence positiveText) {
+    public T setPositiveText(CharSequence positiveText) {
         mArgs.putCharSequence(EXTRA_DIALOG_POSITIVE_TEXT, positiveText);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setPositiveText(@StringRes int resId) {
+    public T setPositiveText(@StringRes int resId) {
         mArgs.putCharSequence(EXTRA_DIALOG_POSITIVE_TEXT, mContext.getResources().getString(resId));
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setCancelable(boolean flag) {
+    public T setCancelable(boolean flag) {
         mArgs.putBoolean(EXTRA_DIALOG_CANCELABLE, flag);
-        return this;
+        return self();
     }
 
-    public BaseDialogBuilder setCanceledOnTouchOutside(boolean flag) {
+    public T setCanceledOnTouchOutside(boolean flag) {
         mArgs.putBoolean(EXTRA_DIALOG_CANCELED_ON_TOUCH_OUTSIDE, flag);
-        return this;
+        return self();
     }
 
-    @SuppressWarnings("unchecked") private T create() {
+    @SuppressWarnings("unchecked") private F create() {
         final Bundle args = prepareArguments(mArgs);
-        final T fragment = (T) Fragment.instantiate(mContext, mClazz.getName(), args);
+        final F fragment = (F) Fragment.instantiate(mContext, mClazz.getName(), args);
 
         if (mTargetFragment != null) {
             fragment.setTargetFragment(mTargetFragment, mRequestCode);
@@ -176,8 +178,8 @@ public class BaseDialogBuilder<T extends BaseDialogFragment> {
         return fragment;
     }
 
-    public T show() {
-        T fragment = create();
+    public F show() {
+        F fragment = create();
         fragment.show(mFragmentManager, mTag);
         return fragment;
     }
@@ -188,8 +190,8 @@ public class BaseDialogBuilder<T extends BaseDialogFragment> {
      * its state, so this should only be used for cases where it is okay for the UI state to change
      * unexpectedly on the user.
      */
-    public T showAllowingStateLoss() {
-        T fragment = create();
+    public F showAllowingStateLoss() {
+        F fragment = create();
         fragment.showAllowingStateLoss(mFragmentManager, mTag);
         return fragment;
     }

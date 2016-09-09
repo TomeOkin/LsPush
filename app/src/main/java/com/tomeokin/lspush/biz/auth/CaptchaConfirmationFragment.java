@@ -45,8 +45,8 @@ import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
-import com.tomeokin.lspush.ui.widget.dialog.BaseDialogBuilder;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
+import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
 
 import javax.inject.Inject;
 
@@ -113,13 +113,13 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
             @Override
             public void onClick(View v) {
                 if (SystemClock.elapsedRealtime() - mLastSentTime <= mWaitingTime) {
-                    BaseDialogBuilder builder =
-                        new BaseDialogBuilder(getContext(), getFragmentManager(), BaseDialogFragment.class);
+                    SimpleDialogBuilder builder =
+                        new SimpleDialogBuilder(getContext(), getFragmentManager(), BaseDialogFragment.class);
                     builder.setTitle(R.string.send_captcha_code)
-                        .setMessage(getResources().getString(R.string.send_captcha_dialog_notice,
-                            SystemClock.elapsedRealtime() - mLastSentTime))
-                        .setNeutralText(R.string.ok)
-                        .show();
+                           .setMessage(getResources().getString(R.string.send_captcha_dialog_notice,
+                               SystemClock.elapsedRealtime() - mLastSentTime))
+                           .setNeutralText(R.string.ok)
+                           .show();
                 } else {
                     mLastSentTime = SystemClock.elapsedRealtime();
                     mPresenter.sendCaptcha(mCaptchaRequest, mCountryCode);
@@ -273,7 +273,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
         mNextButtonAdapter.sync();
         mWaitingTime = DEFAULT_WAITING_TIME;
         Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
-            .show();
+             .show();
     }
 
     @Override

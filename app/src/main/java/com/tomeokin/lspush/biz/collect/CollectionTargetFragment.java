@@ -17,8 +17,10 @@ package com.tomeokin.lspush.biz.collect;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,9 +30,13 @@ import android.webkit.WebView;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 
-public class CollectionTargetFragment extends BaseFragment implements View.OnTouchListener {
+import timber.log.Timber;
+
+public class CollectionTargetFragment extends BaseFragment implements View.OnTouchListener, OnActionClickListener {
     public static final String EXTRA_TARGET_URL = "extra.target.url";
+    public static final int REQUEST_DIALOG = 0;
 
     private WebView mWebView;
     private String mUrl;
@@ -59,32 +65,45 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
         mWebView = (WebView) view.findViewById(R.id.webview);
         mWebView.loadUrl(mUrl);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(new JsInterface(getContext()), getString(R.string.web_image_click_target));
+        mWebView.addJavascriptInterface(new JsInterface(getContext(), this),
+            getString(R.string.web_image_click_target));
         mWebView.setOnTouchListener(this);
         return view;
     }
 
+    @Override
+    public void onDialogActionClick(DialogInterface dialog, int requestCode, int which) {
+        if (requestCode == REQUEST_DIALOG) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                Timber.i("ok is click");
+            } else  if (which == DialogInterface.BUTTON_NEGATIVE) {
+                Timber.i("cancel is click");
+            }
+        }
+    }
+
     private class JsInterface {
         private Context mContext;
+        private Fragment mInstance;
         private ImageDialogFragment dialog;
 
-        public JsInterface(Context context) {
+        public JsInterface(Context context, Fragment instance) {
             mContext = context;
+            mInstance = instance;
         }
 
         @JavascriptInterface
-        public void click(String url) {
-            dialog = new ImageDialogFragment.Builder(mContext, getFragmentManager()).show(url);
-            //Intent intent = new Intent(mContext,ImgUrlActivity.class);
-            //intent.putExtra("url", url);
-            //startActivity(intent);
+        public void click(String url, int width, int height) {
+            final float density = getResources().getDisplayMetrics().density;
+            dialog = new ImageDialogFragment.Builder(mContext, getFragmentManager()).setTargetFragment(mInstance,
+                REQUEST_DIALOG).show(url, (int) (width * density), (int) (height * density));
         }
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         //In response to the picture on the web click event by wenview touch
-        float density = getResources().getDisplayMetrics().density; //Screen density
+        final float density = getResources().getDisplayMetrics().density; //Screen density
         float touchX = event.getX() / density;  //Must be divided by the density of the screen
         float touchY = event.getY() / density;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

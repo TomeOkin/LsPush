@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<com.tomeokin.lspush.ui.widget.DialogButtonsLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <com.tomeokin.lspush.ui.widget.DialogButtonsLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/button_negative"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/dialog_row_bottom"
+        android:gravity="center"
         android:minHeight="@dimen/row_height_small"
-        android:orientation="horizontal">
+        android:singleLine="true"
+        android:textColor="@color/grey_9_whiteout"
+        android:textStyle="bold"
+        tools:text="取消" />
 
-        <TextView
-            android:id="@+id/button_negative"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/dialog_row_bottom"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textColor="@color/grey_9_whiteout"
-            android:textStyle="bold"
-            tools:text="取消" />
+    <View
+        android:id="@+id/button_divider"
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/vertical_separator_padding"
+        android:layout_marginTop="@dimen/vertical_separator_padding"
+        android:background="@color/grey_2_whiteout" />
 
-        <View
-            android:id="@+id/button_divider"
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/vertical_separator_padding"
-            android:layout_marginTop="@dimen/vertical_separator_padding"
-            android:background="@color/grey_2_whiteout" />
+    <TextView
+        android:id="@+id/button_positive"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/dialog_row_bottom"
+        android:gravity="center"
+        android:minHeight="@dimen/row_height_small"
+        android:singleLine="true"
+        android:textColor="@color/grey_9_whiteout"
+        android:textStyle="bold"
+        tools:text="确定" />
 
-        <TextView
-            android:id="@+id/button_positive"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/dialog_row_bottom"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textColor="@color/grey_9_whiteout"
-            android:textStyle="bold"
-            tools:text="确定" />
-
-    </com.tomeokin.lspush.ui.widget.DialogButtonsLayout>
-
-</merge>
+</com.tomeokin.lspush.ui.widget.DialogButtonsLayout>

@@ -33,9 +33,11 @@
     <![CDATA[
         javascript: (function() {
             var obj=document.elementFromPoint(%1$s, %2$s);
-            if (obj.src!=null) { window.imageClick.click(obj.src); }
+            if (obj.src!=null) { window.imageClick.click(obj.src, obj.width, obj.height); }
         })()
     ]]>
     </string>
     <string name="use_current_image">Use current image ?</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
 </resources>

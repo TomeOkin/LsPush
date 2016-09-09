@@ -28,8 +28,8 @@
 
         <View
             android:id="@+id/dialog_headerDivider"
-            android:layout_gravity="bottom"
-            style="@style/Widget.LsPush.Divider.Horizontal.Large" />
+            style="@style/Widget.LsPush.Divider.Horizontal.Large"
+            android:layout_gravity="bottom" />
 
     </FrameLayout>
 
@@ -62,6 +62,7 @@
         android:id="@+id/customViewHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:padding="8dp"
         android:visibility="gone" />
 

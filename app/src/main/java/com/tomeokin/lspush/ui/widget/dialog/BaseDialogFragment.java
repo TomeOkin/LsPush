@@ -354,6 +354,10 @@ public class BaseDialogFragment extends DialogFragment
             return this;
         }
 
+        public FrameLayout getCustomViewHolder() {
+            return mCustomViewHolder;
+        }
+
         public Builder setItems(ListAdapter listAdapter, final AdapterView.OnItemClickListener listener) {
             mListView.setAdapter(listAdapter);
             mListView.setOnItemClickListener(listener);
@@ -363,6 +367,7 @@ public class BaseDialogFragment extends DialogFragment
         }
 
         public Builder setItems(ListAdapter listAdapter, AdapterView.OnItemClickListener listener, int choiceMode) {
+            hasListItemClickListener = true;
             mListView.setAdapter(listAdapter);
             mListView.setOnItemClickListener(listener);
             mListView.setChoiceMode(choiceMode);
@@ -419,11 +424,13 @@ public class BaseDialogFragment extends DialogFragment
 
         private void setOnClickListener(TextView textView, CharSequence text,
             final DialogInterface.OnClickListener listener, final int which) {
+            hasActionClickListener = true;
             textView.setText(text);
             if (listener != null) {
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mDialog.dismiss();
                         listener.onClick(mDialog, which);
                     }
                 });
@@ -453,6 +460,8 @@ public class BaseDialogFragment extends DialogFragment
                         DialogInterface.BUTTON_POSITIVE);
                 }
             } else if (!TextUtils.isEmpty(mPositiveText) || !TextUtils.isEmpty(mNegativeText)) {
+                mDialogFooterContainer.setVisibility(View.VISIBLE);
+
                 // two button version
                 View view = mDialogTwoButtonStub.inflate();
                 TextView negativeButton = (TextView) view.findViewById(R.id.button_negative);
@@ -467,7 +476,7 @@ public class BaseDialogFragment extends DialogFragment
 
         public final Builder setOnDismissListener(DialogInterface.OnDismissListener listener) {
             mDialog.setOnDismissListener(listener);
-
+            hasDismissListener = true;
             return this;
         }
 

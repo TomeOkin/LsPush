@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button_neutral"
+        style="@style/Widget.LsPush.Button"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        tools:text="更多" />
+
+    <LinearLayout
+        android:id="@+id/button_right_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_neutral"
+            android:id="@+id/button_negative"
             style="@style/Widget.LsPush.Button"
-            android:layout_alignParentLeft="true"
             android:textStyle="bold"
-            android:ellipsize="end"
-            tools:text="更多" />
+            tools:text="取消" />
 
-        <LinearLayout
-            android:id="@+id/button_right_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_positive"
+            style="@style/Widget.LsPush.Button"
+            android:textStyle="bold"
+            tools:text="确定" />
 
-            <Button
-                android:id="@+id/button_negative"
-                style="@style/Widget.LsPush.Button"
-                android:textStyle="bold"
-                tools:text="取消" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/button_positive"
-                style="@style/Widget.LsPush.Button"
-                android:textStyle="bold"
-                tools:text="确定" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-</merge>
+</RelativeLayout>
