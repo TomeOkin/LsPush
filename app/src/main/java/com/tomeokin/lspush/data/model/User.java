@@ -23,6 +23,7 @@ public class User {
     private String region; // 地区码, use for phone
     private String password;
     private int validate; // 00：未验证，01：手机号已验证，02：email已验证，03：手机号和 email都已验证
+    private String image;
 
     public String getUid() {
         return uid;
@@ -80,7 +81,16 @@ public class User {
         this.validate = validate;
     }
 
-    @Override public String toString() {
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
         return "User{" +
             "uid='" + uid + '\'' +
             ", nickname='" + nickname + '\'' +
@@ -89,6 +99,7 @@ public class User {
             ", region='" + region + '\'' +
             ", password='" + password + '\'' +
             ", validate=" + validate +
+            ", image='" + image + '\'' +
             '}';
     }
 }
