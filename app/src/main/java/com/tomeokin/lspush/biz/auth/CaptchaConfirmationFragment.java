@@ -283,7 +283,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
                  .show();
         } else if (action == ACTION_CHECK_CAPTCHA) {
             mNextButtonAdapter.sync();
-            Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCountryCode);
+            Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCaptchaField.getText().toString());
             Navigator.moveTo(this, RegisterFragment.class, bundle);
         }
     }

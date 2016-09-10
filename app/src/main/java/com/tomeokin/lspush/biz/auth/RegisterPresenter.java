@@ -55,6 +55,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
 
     public void register(int actionId, RegisterData registerData) {
         String data = mGson.toJson(registerData, RegisterData.class);
+        Timber.i("register-data %s", data);
         CryptoToken cryptoToken;
         try {
             cryptoToken = Crypto.encrypt(data);
