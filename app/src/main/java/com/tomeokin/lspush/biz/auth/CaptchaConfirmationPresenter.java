@@ -45,8 +45,6 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
-    private int mSendCaptchaActionId;
-    private int mCheckCaptchaActionId;
 
     @Inject
     public CaptchaConfirmationPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
@@ -55,18 +53,16 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
         mGson = gson;
     }
 
-    public void sendCaptcha(int actionId, CaptchaRequest request, String countryCode) {
-        mSendCaptchaActionId = actionId;
+    public void sendCaptcha(CaptchaRequest request, String countryCode) {
         if (request.getSendObject().contains("@")) {
             Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
-            call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
+            call.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_SEND_CAPTCHA, getMvpView()));
         } else {
             SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
         }
     }
 
-    public void checkCaptcha(int actionId, CaptchaRequest request, String authCode) {
-        mCheckCaptchaActionId = actionId;
+    public void checkCaptcha(CaptchaRequest request, String authCode) {
         RegisterData registerData = new RegisterData();
         registerData.setCaptchaRequest(request);
         registerData.setAuthCode(authCode);
@@ -76,22 +72,23 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onActionFailure(actionId, null, mResource.getString(R.string.unexpected_error));
+            getMvpView().onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, null,
+                mResource.getString(R.string.unexpected_error));
             return;
         }
         Call<BaseResponse> call = mLsPushService.checkCaptcha(cryptoToken);
-        call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
+        call.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_CHECK_CAPTCHA, getMvpView()));
     }
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
             Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mSendCaptchaActionId, response,
+            getMvpView().onActionFailure(UserScene.ACTION_SEND_CAPTCHA, response,
                 mResource.getString(R.string.send_captcha_error));
         } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
             Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mCheckCaptchaActionId, response,
+            getMvpView().onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, response,
                 mResource.getString(R.string.check_captcha_error));
         }
     }
@@ -99,9 +96,9 @@ public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmat
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
-            getMvpView().onActionSuccess(mSendCaptchaActionId, response);
+            getMvpView().onActionSuccess(UserScene.ACTION_SEND_CAPTCHA, response);
         } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
-            getMvpView().onActionSuccess(mCheckCaptchaActionId, response);
+            getMvpView().onActionSuccess(UserScene.ACTION_CHECK_CAPTCHA, response);
         }
     }
 }

@@ -16,6 +16,13 @@
 package com.tomeokin.lspush.biz.common;
 
 public class UserScene {
+    public static final String REGISTER = "register";
     public static final String SEND_CAPTCHA = "send-captcha";
     public static final String CHECK_CAPTCHA = "check-captcha";
+
+    public static final int ACTION_SEND_CAPTCHA = 0;
+    public static final int ACTION_CHECK_CAPTCHA = 1;
+    public static final int ACTION_CHECK_UID = 2;
+    public static final int ACTION_REGISTER = 3;
+    public static final int ACTION_LOGIN = 4;
 }

@@ -42,7 +42,6 @@ import timber.log.Timber;
 public class CaptchaPresenter extends BasePresenter<CaptchaView> implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Resources mResource;
-    private int mSendCaptchaRequest;
 
     @Inject
     public CaptchaPresenter(LsPushService lsPushService, @ActivityContext Context context) {
@@ -54,11 +53,10 @@ public class CaptchaPresenter extends BasePresenter<CaptchaView> implements Base
         return null;
     }
 
-    public void sendCaptchaCode(int action, CaptchaRequest request, String countryCode) {
-        mSendCaptchaRequest = action;
+    public void sendCaptchaCode(CaptchaRequest request, String countryCode) {
         if (request.getSendObject().contains("@")) {
             Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
-            call.enqueue(new CommonCallback<>(mResource, action, getMvpView()));
+            call.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_SEND_CAPTCHA, getMvpView()));
         } else {
             SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
         }
@@ -68,7 +66,7 @@ public class CaptchaPresenter extends BasePresenter<CaptchaView> implements Base
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
             Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(mSendCaptchaRequest, response,
+            getMvpView().onActionFailure(UserScene.ACTION_SEND_CAPTCHA, response,
                 mResource.getString(R.string.send_captcha_error));
         }
     }
@@ -76,7 +74,7 @@ public class CaptchaPresenter extends BasePresenter<CaptchaView> implements Base
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
-            getMvpView().onActionSuccess(mSendCaptchaRequest, response);
+            getMvpView().onActionSuccess(UserScene.ACTION_SEND_CAPTCHA, response);
         }
     }
 }

@@ -17,6 +17,8 @@ package com.tomeokin.lspush.biz.base;
 
 import android.support.annotation.CallSuper;
 
+import retrofit2.Call;
+
 public class BasePresenter<T extends BaseActionCallback> implements Presenter<T> {
     private T mMvpView;
 
@@ -34,5 +36,11 @@ public class BasePresenter<T extends BaseActionCallback> implements Presenter<T>
 
     public T getMvpView() {
         return mMvpView;
+    }
+
+    protected void checkAndCancel(Call<?> call) {
+        if (call != null && !call.isCanceled()) {
+            call.cancel();
+        }
     }
 }

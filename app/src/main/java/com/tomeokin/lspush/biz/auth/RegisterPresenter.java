@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BasePresenter;
 import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
@@ -41,6 +42,8 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
+    private Call<BaseResponse> mCheckUIDCall;
+    private Call<AccessResponse> mRegisterCall;
 
     @Inject public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
         mLsPushService = lsPushService;
@@ -48,12 +51,13 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         mGson = gson;
     }
 
-    public void checkUIDExist(int actionId, String uid) {
-        Call<BaseResponse> call = mLsPushService.checkUIDExisted(uid);
-        call.enqueue(new CommonCallback<>(mResource, actionId, getMvpView()));
+    public void checkUIDExist(String uid) {
+        checkAndCancel(mCheckUIDCall);
+        mCheckUIDCall = mLsPushService.checkUIDExisted(uid);
+        mCheckUIDCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_CHECK_UID, getMvpView()));
     }
 
-    public void register(int actionId, RegisterData registerData) {
+    public void register(RegisterData registerData) {
         String data = mGson.toJson(registerData, RegisterData.class);
         Timber.i("register-data %s", data);
         CryptoToken cryptoToken;
@@ -61,10 +65,29 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onActionFailure(actionId, null, mResource.getString(R.string.unexpected_error));
+            getMvpView().onActionFailure(UserScene.ACTION_REGISTER, null, mResource.getString(R.string.unexpected_error));
             return;
         }
-        Call<AccessResponse> call = mLsPushService.register(cryptoToken);
-        call.enqueue(new CommonCallback<AccessResponse>(mResource, actionId, getMvpView()));
+
+        checkAndCancel(mRegisterCall);
+        mRegisterCall = mLsPushService.register(cryptoToken);
+        mRegisterCall.enqueue(new CommonCallback<AccessResponse>(mResource, UserScene.ACTION_REGISTER, getMvpView()));
+    }
+
+    public void cancel(int action) {
+        if (action == UserScene.ACTION_CHECK_UID) {
+            checkAndCancel(mCheckUIDCall);
+        } else if (action == UserScene.ACTION_REGISTER) {
+            checkAndCancel(mRegisterCall);
+        }
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        checkAndCancel(mCheckUIDCall);
+        checkAndCancel(mRegisterCall);
+        mCheckUIDCall = null;
+        mRegisterCall = null;
     }
 }

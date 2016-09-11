@@ -39,6 +39,7 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.SoftInputUtils;
@@ -58,9 +59,6 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
     public static final String EXTRA_CAPTCHA_COUNTRY_CODE = "extra.captcha.country.code";
-
-    public static final int ACTION_SEND_CAPTCHA = 0;
-    public static final int ACTION_CHECK_CAPTCHA = 1;
 
     public static final int DEFAULT_WAITING_TIME = 60_000;
     private long mWaitingTime = DEFAULT_WAITING_TIME;
@@ -123,7 +121,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
                            .show();
                 } else {
                     mLastSentTime = SystemClock.elapsedRealtime();
-                    mPresenter.sendCaptcha(ACTION_SEND_CAPTCHA, mCaptchaRequest, mCountryCode);
+                    mPresenter.sendCaptcha(mCaptchaRequest, mCountryCode);
                 }
             }
         });
@@ -233,7 +231,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     public void checkCaptcha() {
         mNextButtonAdapter.waiting();
         if (mCaptchaRequest.getSendObject().contains("@")) {
-            mPresenter.checkCaptcha(ACTION_CHECK_CAPTCHA, mCaptchaRequest, mCaptchaField.getText().toString());
+            mPresenter.checkCaptcha(mCaptchaRequest, mCaptchaField.getText().toString());
         } else {
             SMSCaptchaUtils.submitCaptcha(mCountryCode, mCaptchaRequest.getSendObject(),
                 mCaptchaField.getText().toString());
@@ -264,11 +262,11 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == ACTION_SEND_CAPTCHA) {
+        if (action == UserScene.ACTION_SEND_CAPTCHA) {
             mNextButtonAdapter.sync();
             mWaitingTime = DEFAULT_WAITING_TIME / 2;
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        } else if (action == ACTION_CHECK_CAPTCHA) {
+        } else if (action == UserScene.ACTION_CHECK_CAPTCHA) {
             mNextButtonAdapter.sync();
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
@@ -276,12 +274,12 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == ACTION_SEND_CAPTCHA) {
+        if (action == UserScene.ACTION_SEND_CAPTCHA) {
             mNextButtonAdapter.sync();
             mWaitingTime = DEFAULT_WAITING_TIME;
             Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
                  .show();
-        } else if (action == ACTION_CHECK_CAPTCHA) {
+        } else if (action == UserScene.ACTION_CHECK_CAPTCHA) {
             mNextButtonAdapter.sync();
             Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCaptchaField.getText().toString());
             Navigator.moveTo(this, RegisterFragment.class, bundle);

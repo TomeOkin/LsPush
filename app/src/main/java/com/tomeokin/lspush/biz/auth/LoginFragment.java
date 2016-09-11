@@ -24,9 +24,6 @@ import android.view.ViewGroup;
 
 import com.tomeokin.lspush.R;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class LoginFragment extends Fragment {
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +34,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -51,12 +48,5 @@ public class LoginFragment extends Fragment {
 
     @Override public void onDestroy() {
         super.onDestroy();
-    }
-
-    @OnClick(R.id.startRegister)
-    public void startRegister() {
-        //Bundle bundle = new Bundle();
-        //bundle.putString("hello_captcha", "hello_captcha_from_login");
-        //Navigator.moveTo(this, CaptchaFragment.class, bundle);
     }
 }

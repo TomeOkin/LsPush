@@ -43,6 +43,7 @@ import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
@@ -61,9 +62,6 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     public static final int PWD_FILTER_ID = 2;
     public static final int UID_ADAPTER_ID = 3;
     public static final int USER_NAME_ADAPTER_ID = 4;
-
-    public static final int ACTION_CHECK_UID_EXISTED = 0;
-    public static final int ACTION_REGISTER = 1;
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
     public static final String EXTRA_CAPTCHA_AUTH_CODE = "extra.captcha.auth.code";
@@ -123,7 +121,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
                     // 同时取消已进行的网络请求
                     if (mUIDAdapter.getState() == FieldAdapter.WAITING) {
                         mUIDAdapter.active();
-                        // TODO: 2016/9/1 取消未完成的 UID 检查(取消已进行的网络请求)
+                        mPresenter.cancel(UserScene.ACTION_CHECK_UID);
                     } else if (mUIDAdapter.getState() == FieldAdapter.INFO) {
                         mUIDAdapter.active();
                     }
@@ -143,7 +141,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
                         && mUIDAdapter.getState() != FieldAdapter.INFO
                         && isValidUserId()) {
                         mUIDAdapter.waiting();
-                        mPresenter.checkUIDExist(ACTION_CHECK_UID_EXISTED, mUserIdField.getText().toString());
+                        mPresenter.checkUIDExist(mUserIdField.getText().toString());
                     }
                 }
             }
@@ -295,7 +293,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
         data.setUserId(mUserIdField.getText().toString());
         data.setNickname(mUserNameField.getText().toString());
         data.setPassword(mPasswordField.getText().toString());
-        mPresenter.register(ACTION_REGISTER, data);
+        mPresenter.register(data);
     }
 
     public boolean isValidUserId() {
@@ -361,23 +359,23 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == ACTION_CHECK_UID_EXISTED) {
+        if (action == UserScene.ACTION_CHECK_UID) {
             if (response != null && response.getResultCode() == 10) {
                 mUIDAdapter.info();
                 mNotificationBar.showTemporaryInverse(getString(R.string.uid_not_unique));
             } else {
                 mNotificationBar.showTemporaryInverse(message);
             }
-        } else if (action == ACTION_REGISTER) {
+        } else if (action == UserScene.ACTION_REGISTER) {
             mNotificationBar.showTemporaryInverse(message);
         }
     }
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == ACTION_CHECK_UID_EXISTED) {
+        if (action == UserScene.ACTION_CHECK_UID) {
             mUIDAdapter.active();
-        } else if (action == ACTION_REGISTER) {
+        } else if (action == UserScene.ACTION_REGISTER) {
             // TODO: 2016/9/9
         }
     }

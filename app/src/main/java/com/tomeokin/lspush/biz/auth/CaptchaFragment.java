@@ -41,6 +41,7 @@ import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
 import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
@@ -61,8 +62,6 @@ public class CaptchaFragment extends BaseFragment
     implements CaptchaView, BaseStateCallback, OnCountryCodeSelectedListener {
     public static final int EMAIL_NEXT_ID = 0;
     public static final int PHONE_NEXT_ID = 1;
-
-    public static final int ACTION_SEND_CAPTCHA = 0;
 
     private CaptchaRequest mCaptchaRequest = null;
     private CountryCodeData mCountryCodeData;
@@ -263,7 +262,7 @@ public class CaptchaFragment extends BaseFragment
             mCaptchaRequest.setSendObject(phone);
             mCaptchaRequest.setRegion(mCountryCodeData.country);
         }
-        mCaptchaPresenter.sendCaptchaCode(ACTION_SEND_CAPTCHA, mCaptchaRequest, mCountryCodeData.countryCode);
+        mCaptchaPresenter.sendCaptchaCode(mCaptchaRequest, mCountryCodeData.countryCode);
     }
 
     @Override
@@ -279,7 +278,7 @@ public class CaptchaFragment extends BaseFragment
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == ACTION_SEND_CAPTCHA) {
+        if (action == UserScene.ACTION_SEND_CAPTCHA) {
             syncNextButton();
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
@@ -287,7 +286,7 @@ public class CaptchaFragment extends BaseFragment
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == ACTION_SEND_CAPTCHA) {
+        if (action == UserScene.ACTION_SEND_CAPTCHA) {
             syncNextButton();
             if (mCaptchaRequest != null) {
                 Bundle bundle =

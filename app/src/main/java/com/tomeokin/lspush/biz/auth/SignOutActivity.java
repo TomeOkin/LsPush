@@ -29,9 +29,6 @@ import com.tomeokin.lspush.injection.scope.PerActivity;
 @PerActivity
 public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent> {
     private AuthComponent mComponent;
-    //public static final String ACTION_CAPTCHA = "captcha";
-    //public static final String ACTION_REGISTER = "register";
-    //public static final String ACTION_LOGIN = "login";
 
     @Override public AuthComponent component() {
         if (mComponent == null) {
@@ -49,51 +46,8 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
 
         component().inject(this);
 
-        boolean hasHistoryLogin = false;
-        //moveTo(hasHistoryLogin ? ACTION_LOGIN : ACTION_CAPTCHA);
-        //moveTo(hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
+        //boolean hasHistoryLogin = false;
         //Navigator.moveTo(this, hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
         Navigator.moveTo(this, CaptchaFragment.class, null);
     }
-
-    //public void moveTo(String tag) {
-    //    FragmentManager fragmentManager = getSupportFragmentManager();
-    //    Fragment current = fragmentManager.findFragmentById(R.id.fragment_container);
-    //    Fragment target = fragmentManager.findFragmentByTag(tag);
-    //
-    //    if (target == null) {
-    //        target = createFragment(tag);
-    //        if (target == null) {
-    //            return;
-    //        }
-    //        FragmentTransaction transaction = fragmentManager.beginTransaction();
-    //        if (current == null) {
-    //            transaction.add(R.id.fragment_container, target, tag);
-    //        } else {
-    //            transaction.replace(R.id.fragment_container, target, tag);
-    //            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-    //            transaction.addToBackStack(tag);
-    //        }
-    //        transaction.commit();
-    //    } else {
-    //        if (current == target) {
-    //            return;
-    //        }
-    //        fragmentManager.popBackStackImmediate(tag, 0);
-    //    }
-    //}
-    //
-    //public Fragment createFragment(String tag) {
-    //    switch (tag) {
-    //        case ACTION_REGISTER:
-    //            return new RegisterFragment();
-    //        case ACTION_LOGIN:
-    //            return new LoginFragment();
-    //        case ACTION_CAPTCHA:
-    //            return new CaptchaFragment();
-    //        default:
-    //            Timber.tag("error").w("error text");
-    //            return null;
-    //    }
-    //}
 }
