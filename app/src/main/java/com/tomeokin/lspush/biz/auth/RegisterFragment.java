@@ -34,18 +34,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseStateAdapter;
-import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
 import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.RegisterData;
@@ -307,7 +308,22 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     }
 
     public boolean isValidPassword() {
-        return mPasswordField.getText().toString().trim().length() >= UserInfoModel.USER_PASSWORD_MIN_LENGTH;
+        return mPasswordField.getText().toString().trim().length() >= UserInfoModel.USER_PASSWORD_MIN_LENGTH
+            && quickFallPasswordStrength(mPasswordField.getText());
+    }
+
+    public boolean quickFallPasswordStrength(CharSequence password) {
+        int result = StringUtils.indexDigest(password) >= 0 ? 1 : 0;
+        result += StringUtils.indexLowerLetter(password) >= 0 ? 1 : 0;
+        if (result == 2) {
+            return true;
+        }
+        result += StringUtils.indexUpperLetter(password) >= 0 ? 1 : 0;
+        if (result >= 2) {
+            return true;
+        }
+        result += StringUtils.indexSpecial(UserInfoModel.PASSWORD_SPECIAL_SORT, password);
+        return result >= 2;
     }
 
     public boolean isFieldValid() {
@@ -353,7 +369,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
                 mNotificationBar.showTemporaryInverse(message);
             }
         } else if (action == ACTION_REGISTER) {
-            // TODO: 2016/9/9
+            mNotificationBar.showTemporaryInverse(message);
         }
     }
 

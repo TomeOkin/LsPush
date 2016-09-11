@@ -17,8 +17,10 @@ package com.tomeokin.lspush.biz.auth.adapter;
 
 import android.text.LoginFilter;
 
+import com.tomeokin.lspush.biz.model.UserInfoModel;
+
 public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
-    private static final String mAllowed = ".,;"; // Additional characters
+    private static final String mAllowed = UserInfoModel.PASSWORD_SPECIAL; // Additional characters
     private final int mRequestId;
     private final FilterCallback mCallback;
 

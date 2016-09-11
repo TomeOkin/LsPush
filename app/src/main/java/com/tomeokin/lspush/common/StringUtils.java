@@ -15,6 +15,7 @@
  */
 package com.tomeokin.lspush.common;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class StringUtils {
@@ -62,5 +63,54 @@ public class StringUtils {
         }
 
         return true;
+    }
+
+    public static int indexDigest(CharSequence sequence) {
+        int length = sequence.length();
+        for (int i = 0; i < length; i++) {
+            if (Character.isDigit(sequence.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexLowerLetter(CharSequence sequence) {
+        int length = sequence.length();
+        for (int i = 0; i < length; i++) {
+            if (Character.isLowerCase(sequence.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexUpperLetter(CharSequence sequence) {
+        int length = sequence.length();
+        for (int i = 0; i < length; i++) {
+            if (Character.isUpperCase(sequence.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexSpecial(CharSequence special, CharSequence sequence) {
+        final char[] chars = special.toString().toCharArray();
+        Arrays.sort(chars);
+        return indexSpecial(chars, sequence);
+    }
+
+    /**
+     * @param chars sort characters
+     */
+    public static int indexSpecial(char[] chars, CharSequence sequence) {
+        int length = sequence.length();
+        for (int i = 0; i < length; i++) {
+            if (Arrays.binarySearch(chars, sequence.charAt(i)) >= 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

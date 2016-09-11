@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.model;
 
+import java.util.Arrays;
+
 public class UserInfoModel {
     public static final int USER_ID_MAX_LENGTH = 24;
     public static final int USER_NAME_MAX_LENGTH = 30;
@@ -22,4 +24,11 @@ public class UserInfoModel {
     public static final int USER_ID_MIN_LENGTH = 3;
     public static final int USER_NAME_MIN_LENGTH = 3;
     public static final int USER_PASSWORD_MIN_LENGTH = 6;
+
+    public static final String PASSWORD_SPECIAL = ".,;";
+    public static final char[] PASSWORD_SPECIAL_SORT = PASSWORD_SPECIAL.toCharArray();
+
+    static {
+        Arrays.sort(PASSWORD_SPECIAL_SORT);
+    }
 }

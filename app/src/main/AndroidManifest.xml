@@ -14,7 +14,7 @@
     <!-- Notice: don't add tools:ignore to it. -->
     <!-- tools:replace will be ignore when android:name and tools:ignore both exist. -->
     <!-- Seeing issue 193679 https://code.google.com/p/android/issues/detail?id=193679 or -->
-    <!-- Issue 205956 https://code.google.com/p/android/issues/detail?id=205956-->
+    <!-- Issue 205956 https://code.google.com/p/android/issues/detail?id=205956 -->
     <application
         android:name=".LsPushApplication"
         android:allowBackup="false"
@@ -24,7 +24,12 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
 
-        <activity android:name=".biz.main.MainActivity">
+        <activity
+            android:name=".biz.main.MainActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
