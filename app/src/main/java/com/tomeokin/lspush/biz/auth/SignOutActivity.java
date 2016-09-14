@@ -48,6 +48,6 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
 
         //boolean hasHistoryLogin = false;
         //Navigator.moveTo(this, hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
-        Navigator.moveTo(this, CaptchaFragment.class, null);
+        Navigator.moveTo(this, RegisterFragment.class, null);
     }
 }

@@ -20,6 +20,7 @@ import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,19 +47,24 @@ public class CountryCodePickerDialog extends BaseDialogFragment {
     public SearchEditText searchEditText;
     public CountryCodeDataAdapter adapter;
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         countryCodeDatas = CountryCodeUtils.getCountryCodeDatas(getContext());
     }
 
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getDialog().getWindow()
-            .setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                   .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                       | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
-    @SuppressLint("InflateParams") @NonNull @Override protected Builder config(@NonNull Builder builder) {
+    @SuppressLint("InflateParams")
+    @NonNull
+    @Override
+    protected Builder config(@NonNull Builder builder) {
         builder.setTitle(getString(R.string.select_your_country).toUpperCase(Locale.getDefault()));
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_country_codes, null);
@@ -85,11 +91,13 @@ public class CountryCodePickerDialog extends BaseDialogFragment {
                 }
             }
 
-            @Override public void onTextCompleted(SearchEditText editText, String text) {
+            @Override
+            public void onTextCompleted(SearchEditText editText, String text) {
 
             }
         });
-        ColorFilter colorFilter = ColorFilterCache.getColorFilter(getResources().getColor(R.color.grey_light));
+        ColorFilter colorFilter =
+            ColorFilterCache.getColorFilter(ContextCompat.getColor(getContext(), R.color.grey_light));
         searchEditText.getCompoundDrawables()[0].mutate().setColorFilter(colorFilter);
         searchEditText.setClearButtonColorFilter(colorFilter);
         adapter = new CountryCodeDataAdapter(getContext(), countryCodeDatas);
@@ -100,7 +108,8 @@ public class CountryCodePickerDialog extends BaseDialogFragment {
         builder.setCanceledOnTouchOutside(true);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CountryCodeData countryCodeData = (CountryCodeData) parent.getItemAtPosition(position);
                 ((OnCountryCodeSelectedListener) getTargetFragment()).onCountryCodeSelected(countryCodeData);
                 getDialog().dismiss();

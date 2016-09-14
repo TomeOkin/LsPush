@@ -29,14 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> {
-    private final List<CountryCodeData> list;
-    private final ArrayList<CountryCodeData> b;
+    private final List<CountryCodeData> mList;
+    private final ArrayList<CountryCodeData> mCountryCodeList;
 
     public CountryCodeDataAdapter(Context context, List<CountryCodeData> list) {
         super(context, R.layout.row_menu_item, list);
-        this.list = list;
-        this.b = new ArrayList<>();
-        b.addAll(list);
+        mList = list;
+        mCountryCodeList = new ArrayList<>(list);
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,19 +48,24 @@ public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> 
         return convertView;
     }
 
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+
     public void clearList() {
-        list.clear();
+        mList.clear();
     }
 
     public void restoreList() {
-        list.addAll(b);
+        mList.addAll(mCountryCodeList);
     }
 
     public ArrayList<CountryCodeData> getBackList() {
-        return b;
+        return mCountryCodeList;
     }
 
     public void addCountryCodeData(CountryCodeData countryCodeData) {
-        list.add(countryCodeData);
+        mList.add(countryCodeData);
     }
 }

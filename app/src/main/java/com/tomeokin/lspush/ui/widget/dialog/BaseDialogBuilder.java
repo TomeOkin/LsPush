@@ -35,7 +35,6 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
     public static final String EXTRA_ENABLE_CANCEL_LISTENING = "dialog.enable.cancel.listening";
     public static final String EXTRA_ENABLE_DISMISS_LISTENING = "dialog.enable.dismiss.listening";
     public static final String EXTRA_ENABLE_ACTION_CLICK_LISTENING = "dialog.enable.action.click.listening";
-    public static final String EXTRA_ENABLE_LIST_ITEM_CLICK_LISTENING = "dialog.enable.list.item.click.listening";
     public static final String EXTRA_DIALOG_TITLE = "dialog.title";
     public static final String EXTRA_DIALOG_MESSAGE = "dialog.message";
     public static final String EXTRA_DIALOG_NEUTRAL_TEXT = "dialog.neutral.text";
@@ -43,6 +42,7 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
     public static final String EXTRA_DIALOG_POSITIVE_TEXT = "dialog.positive.text";
     public static final String EXTRA_DIALOG_CANCELABLE = "dialog.cancelable";
     public static final String EXTRA_DIALOG_CANCELED_ON_TOUCH_OUTSIDE = "dialog.canceled.on.touch.outside";
+    public static final String EXTRA_DIALOG_LIST_ITEMS = "dialog.list.items";
 
     protected final Context mContext;
     protected final FragmentManager mFragmentManager;
@@ -102,8 +102,8 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
         return self();
     }
 
-    public T setListItemSelectListeningEnable(boolean flag) {
-        mArgs.putBoolean(EXTRA_ENABLE_LIST_ITEM_CLICK_LISTENING, flag);
+    public T setListItem(String[] items) {
+        mArgs.putCharSequenceArray(EXTRA_DIALOG_LIST_ITEMS, items);
         return self();
     }
 

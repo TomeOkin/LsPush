@@ -15,7 +15,13 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CheckableImageButton;
 import android.text.Editable;
@@ -28,11 +34,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
@@ -45,6 +54,8 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
+import com.tomeokin.lspush.common.FileUtils;
+import com.tomeokin.lspush.common.ImageIntentUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.common.StringUtils;
@@ -53,22 +64,39 @@ import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.NotificationBar;
+import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
+import com.tomeokin.lspush.ui.widget.dialog.OnListItemClickListener;
+import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
-public class RegisterFragment extends BaseFragment implements RegisterView, FilterCallback, BaseStateCallback {
+import timber.log.Timber;
+
+public class RegisterFragment extends BaseFragment
+    implements RegisterView, FilterCallback, BaseStateCallback, OnListItemClickListener {
     public static final int NEXT_BUTTON_ID = 0;
     public static final int UID_FILTER_ID = 1;
     public static final int PWD_FILTER_ID = 2;
     public static final int UID_ADAPTER_ID = 3;
     public static final int USER_NAME_ADAPTER_ID = 4;
 
+    private static final int REQUEST_PERMISSION_PICK_IMAGE = 101;
+    private static final int REQUEST_PERMISSION_TAKE_IMAGE = 102;
+
+    private static final int REQUEST_PICK_IMAGE = 0;
+    private static final int REQUEST_SELECT_IMAGE_SOURCE = 1;
+    private static String[] SELECT_IMAGE_SOURCE;
+
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
     public static final String EXTRA_CAPTCHA_AUTH_CODE = "extra.captcha.auth.code";
 
     private CaptchaRequest mCaptchaRequest = null;
     private String mAuthCode;
+    private String mUserAvatarImage = null;
 
+    private ImageView mUserAvatar;
     private NotificationBar mNotificationBar;
     private View mUserIdFieldLayout;
     private EditText mUserIdField;
@@ -81,6 +109,9 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     private View.OnFocusChangeListener mFocusChangeValidChecker;
     private FieldAdapter mUIDAdapter;
     private FieldAdapter mUserNameAdapter;
+
+    private File mUserAvatarCropFile;
+    private BaseDialogFragment mBaseDialogFragment;
 
     @Inject RegisterPresenter mPresenter;
 
@@ -101,6 +132,12 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
             mAuthCode = getArguments().getString(EXTRA_CAPTCHA_AUTH_CODE);
         }
 
+        // we need to confirm the order, so don't use array resource
+        SELECT_IMAGE_SOURCE = new String[] {
+            getString(R.string.select_from_gallery), // position = 0
+            getString(R.string.select_from_camera) // position = 1
+        };
+
         component(AuthComponent.class).inject(this);
         dispatchOnCreate(savedInstanceState);
     }
@@ -111,7 +148,18 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
         inflater.inflate(R.layout.fragment_register, (ViewGroup) view.findViewById(R.id.content_container), true);
-        view.findViewById(R.id.image_icon).setBackgroundResource(R.drawable.register_name);
+        mUserAvatar = (ImageView) view.findViewById(R.id.image_icon);
+        mUserAvatar.setBackgroundResource(R.drawable.register_name);
+        mUserAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBaseDialogFragment =
+                    new SimpleDialogBuilder(RegisterFragment.this).setTitle(getString(R.string.select_image_source))
+                        .setListItem(SELECT_IMAGE_SOURCE)
+                        .setTargetFragment(RegisterFragment.this, REQUEST_SELECT_IMAGE_SOURCE)
+                        .show();
+            }
+        });
 
         mValidWatcher = new BaseTextWatcher() {
             @Override
@@ -226,6 +274,64 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     }
 
     @Override
+    public void onItemClick(DialogInterface dialog, int requestCode, AdapterView<?> parent, View view, int position,
+        long id) {
+        if (requestCode == REQUEST_SELECT_IMAGE_SOURCE) {
+            if (position == 0) {
+                pickImageWithPermissionCheck();
+            } else if (position == 1) {
+                takeImageWithPermissionCheck();
+            }
+        }
+    }
+
+    private void pickImageWithPermissionCheck() {
+        if (hasPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
+            pickImage();
+        } else if (shouldShowRequestPermissionRationale(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
+            requestPermissions(needPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE),
+                REQUEST_PERMISSION_PICK_IMAGE);
+        } else {
+            mNotificationBar.showTemporaryInverse(getString(R.string.no_permission_to_pick_image));
+        }
+    }
+
+    private void pickImage() {
+        Intent intent = ImageIntentUtils.createSelectJPEGIntent();
+        startActivityForResult(Intent.createChooser(intent, getText(R.string.pick_image)), REQUEST_PICK_IMAGE);
+    }
+
+    private void takeImageWithPermissionCheck() {
+
+    }
+
+    private void takeImage() {
+        File file = FileUtils.getJPEGFile(getContext());
+        Intent intent = ImageIntentUtils.createTakeImageIntent(file);
+        boolean canTakePhoto = intent.resolveActivity(getContext().getPackageManager()) != null;
+        if (!canTakePhoto) {
+            mNotificationBar.showTemporaryInverse(getString(R.string.no_suitable_camera));
+            return;
+        }
+
+        // TODO: 2016/9/14 take image
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_PICK_IMAGE) {
+            if (hasPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
+                pickImage();
+            } else {
+                mNotificationBar.showTemporaryInverse(getString(R.string.no_permission_to_pick_image));
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter.attachView(this);
@@ -243,6 +349,59 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK && requestCode != CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            return;
+        }
+        if (requestCode == REQUEST_PICK_IMAGE) {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+            }
+
+            mUserAvatarCropFile = FileUtils.getJPEGFile(getContext());
+            if (uri != null && uri.toString().length() != 0) {
+                // 根据 uri 裁剪图片
+                Timber.i("Uri.toString: %s", uri.toString());
+                CropImage.activity(uri)
+                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setOutputUri(Uri.fromFile(mUserAvatarCropFile))
+                    .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
+                    .setMinCropResultSize(256, 256)
+                    .setRequestedSize(256, 256)
+                    .setMaxCropResultSize(512, 512)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
+                    .start(getContext(), this);
+            } else {
+                mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
+            }
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                Uri resultUri;
+                if (mUserAvatarCropFile != null && mUserAvatarCropFile.exists()) {
+                    resultUri = Uri.fromFile(mUserAvatarCropFile);
+                } else {
+                    resultUri = result.getUri();
+                }
+                if (resultUri == null) {
+                    mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
+                    return;
+                }
+
+                Timber.i("resultUri: %s", resultUri);
+                // TODO: 2016/9/13 上传图片
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
+                Timber.i(result.getError(), "crop image failure");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         SoftInputUtils.hideInput(mPasswordField);
@@ -254,6 +413,8 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
+        mBaseDialogFragment.dismiss();
+        mBaseDialogFragment = null;
         mUserIdFieldLayout = null;
         mUserNameFieldLayout = null;
         mPasswordFieldLayout = null;
@@ -269,6 +430,7 @@ public class RegisterFragment extends BaseFragment implements RegisterView, Filt
         mUserIdField = null;
         mUserNameField = null;
         mPasswordField = null;
+        mUserAvatar = null;
         unregister(mUIDAdapter);
         unregister(mUserNameAdapter);
         unregister(mNextButtonAdapter);

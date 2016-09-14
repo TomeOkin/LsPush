@@ -34,10 +34,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseStateAdapter;
-import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.Navigator;
@@ -47,7 +47,6 @@ import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
-import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
 
 import javax.inject.Inject;
@@ -112,8 +111,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
             @Override
             public void onClick(View v) {
                 if (SystemClock.elapsedRealtime() - mLastSentTime <= mWaitingTime) {
-                    SimpleDialogBuilder builder =
-                        new SimpleDialogBuilder(getContext(), getFragmentManager(), BaseDialogFragment.class);
+                    SimpleDialogBuilder builder = new SimpleDialogBuilder(getContext(), getFragmentManager());
                     builder.setTitle(R.string.send_captcha_code)
                            .setMessage(getResources().getString(R.string.send_captcha_dialog_notice,
                                SystemClock.elapsedRealtime() - mLastSentTime))

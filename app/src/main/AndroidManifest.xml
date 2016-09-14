@@ -12,6 +12,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+
     <!-- Using 'tools:replace="android:allowBackup"' override the setting in SMS-SDK -->
     <!-- Notice: don't add tools:ignore to it. -->
     <!-- tools:replace will be ignore when android:name and tools:ignore both exist. -->
@@ -42,6 +49,10 @@
         <activity
             android:name=".biz.auth.SignOutActivity"
             android:exported="true" />
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="BUGLY_APPID"

@@ -16,12 +16,17 @@
 package com.tomeokin.lspush.biz.base;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.tomeokin.lspush.injection.ProvideComponent;
+
+import java.util.ArrayList;
 
 public abstract class BaseFragment extends Fragment implements LifecycleDispatcherManager {
     private final LifecycleListenerSupport listenerSupport;
@@ -65,7 +70,8 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport.registerAll(listenerSupport);
     }
 
-    @Override public void registerLifecycleListener(OnLifecycleListener listener) {
+    @Override
+    public void registerLifecycleListener(OnLifecycleListener listener) {
         listenerSupport.register(listener);
     }
 
@@ -76,7 +82,42 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
     /**
      * Gets a component for dependency injection by its type.
      */
-    @SuppressWarnings("unchecked") protected <C> C component(Class<C> componentType) {
+    @SuppressWarnings("unchecked")
+    protected <C> C component(Class<C> componentType) {
         return componentType.cast(((ProvideComponent<C>) getActivity()).component());
+    }
+
+    public boolean hasPermission(String permission) {
+        return ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public boolean hasPermissions(String[] permissions) {
+        for (String permission : permissions) {
+            if (!hasPermission(permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean shouldShowRequestPermissionRationale(@NonNull String[] permissions) {
+        for (String permission : permissions) {
+            if (shouldShowRequestPermissionRationale(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String[] needPermissions(@NonNull String[] permissions) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String perm : permissions) {
+            if (!hasPermission(perm)) {
+                result.add(perm);
+            }
+        }
+
+        return result.toArray(new String[result.size()]);
     }
 }

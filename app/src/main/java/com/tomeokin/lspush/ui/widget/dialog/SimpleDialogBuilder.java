@@ -16,12 +16,21 @@
 package com.tomeokin.lspush.ui.widget.dialog;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 public class SimpleDialogBuilder extends BaseDialogBuilder<SimpleDialogBuilder, BaseDialogFragment> {
-    public SimpleDialogBuilder(Context context, FragmentManager fragmentManager,
-        Class<? extends BaseDialogFragment> clazz) {
-        super(context, fragmentManager, clazz);
+    public SimpleDialogBuilder(Context context, FragmentManager fragmentManager) {
+        super(context, fragmentManager, BaseDialogFragment.class);
+    }
+
+    public SimpleDialogBuilder(Fragment fragment) {
+        super(fragment.getContext(), fragment.getFragmentManager(), BaseDialogFragment.class);
+    }
+
+    public SimpleDialogBuilder(FragmentActivity activity) {
+        super(activity, activity.getSupportFragmentManager(), BaseDialogFragment.class);
     }
 
     @Override

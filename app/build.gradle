@@ -199,6 +199,9 @@ dependencies {
     // sms-sdk
     compile(name: 'SMSSDK-2.1.1', ext: 'aar')
 
+    // crop-image
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino
@@ -214,5 +217,4 @@ dependencies {
     androidTestCompile androidTestDependencies.espresso
     androidTestCompile androidTestDependencies.runner
     androidTestCompile androidTestDependencies.supportAnnotations
-
 }

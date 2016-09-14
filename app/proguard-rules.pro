@@ -139,3 +139,8 @@
 
 # lspush
 -keep public class com.tomeokin.lspush.data.model.**
+
+# mob sms sdk
+-keepattributes EnclosingMethod
+-keep class cn.smssdk.** { *; }
+-keep class com.mob.commpns.** { *; }

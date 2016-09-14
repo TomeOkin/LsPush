@@ -14,8 +14,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, SignOutActivity.class);
-        startActivity(intent);
+        boolean hasLogin = false;
+        if (!hasLogin) {
+            Intent intent = new Intent(this, SignOutActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
         //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);

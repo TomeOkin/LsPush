@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
@@ -98,8 +99,6 @@ public class BaseDialogFragment extends DialogFragment
             hasDismissListener = args.getBoolean(BaseDialogBuilder.EXTRA_ENABLE_DISMISS_LISTENING, hasDismissListener);
             hasActionClickListener =
                 args.getBoolean(BaseDialogBuilder.EXTRA_ENABLE_ACTION_CLICK_LISTENING, hasActionClickListener);
-            hasListItemClickListener =
-                args.getBoolean(BaseDialogBuilder.EXTRA_ENABLE_LIST_ITEM_CLICK_LISTENING, hasListItemClickListener);
 
             DialogInterface.OnClickListener listener = hasActionClickListener ? this : null;
             field = args.getCharSequence(BaseDialogBuilder.EXTRA_DIALOG_NEUTRAL_TEXT, null);
@@ -115,11 +114,9 @@ public class BaseDialogFragment extends DialogFragment
                 builder.addPositiveButton(field, listener);
             }
 
-            if (hasListItemClickListener) {
-                final ListView listView = builder.getListView();
-                if (listView != null && listView.getVisibility() == View.VISIBLE) {
-                    listView.setOnItemClickListener(this);
-                }
+            CharSequence[] items = args.getCharSequenceArray(BaseDialogBuilder.EXTRA_DIALOG_LIST_ITEMS);
+            if (items != null) {
+                builder.setItems(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, items), this);
             }
 
             boolean flag = args.getBoolean(BaseDialogBuilder.EXTRA_DIALOG_CANCELABLE, true);
@@ -359,6 +356,7 @@ public class BaseDialogFragment extends DialogFragment
         }
 
         public Builder setItems(ListAdapter listAdapter, final AdapterView.OnItemClickListener listener) {
+            hasListItemClickListener = listener != null;
             mListView.setAdapter(listAdapter);
             mListView.setOnItemClickListener(listener);
             mListView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
@@ -367,7 +365,7 @@ public class BaseDialogFragment extends DialogFragment
         }
 
         public Builder setItems(ListAdapter listAdapter, AdapterView.OnItemClickListener listener, int choiceMode) {
-            hasListItemClickListener = true;
+            hasListItemClickListener = listener != null;
             mListView.setAdapter(listAdapter);
             mListView.setOnItemClickListener(listener);
             mListView.setChoiceMode(choiceMode);

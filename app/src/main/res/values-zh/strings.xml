@@ -34,4 +34,12 @@
     <string name="dialog_ok">确定</string>
 
     <string name="network_abnormal">无法连接到服务器，请检查您的网络连接。</string>
+    <string name="pick_image">选择图片</string>
+    <string name="could_not_access_image">无法访问图片。</string>
+    <string name="fail_crop_image">裁剪图片失败。</string>
+    <string name="select_image_source">选择图片来源</string>
+    <string name="select_from_gallery">图库</string>
+    <string name="select_from_camera">相机</string>
+    <string name="no_permission_to_pick_image">抱歉，我们没有权限去访问图片。</string>
+    <string name="no_suitable_camera">没有找到合适的摄像头。</string>
 </resources>
