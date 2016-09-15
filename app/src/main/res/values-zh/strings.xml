@@ -41,7 +41,11 @@
     <string name="select_from_gallery">图库</string>
     <string name="select_from_camera">相机</string>
     <string name="no_suitable_camera">没有找到合适的摄像头。</string>
-    <string name="pick_image_rationale">我们需要访问您的图片。</string>
-    <string name="take_photo_rationale">我们需要访问您的照相机。</string>
+    <string name="pick_image_rationale">当前应用需要访问您的图片。</string>
+    <string name="take_photo_rationale">当前应用需要访问您的照相机。</string>
     <string name="not_image_file">请选择一张图片。</string>
+    <string name="setting">设置</string>
+    <string name="settings_dialog_title">权限请求</string>
+    <string name="rationale_ask_again">缺少该权限，应用可能无法正常工作。 打开设置以修改应用权限。</string>
+    <string name="open_camera_failure">无法打开照相机。</string>
 </resources>

@@ -28,7 +28,8 @@ public class FileNameUtils {
     private static AtomicInteger sIndex = new AtomicInteger(0);
 
     public static File getJPEGFile(Context context) {
-        return new File(context.getCacheDir(), "temp_" + getFilename() + ".jpg");
+        // don't use getCacheDir(), otherwise camera will fail to put data into it.
+        return new File(context.getExternalCacheDir(), "temp_" + getFilename() + ".jpg");
     }
 
     private static String getFilename() {

@@ -48,7 +48,11 @@
     <string name="select_from_gallery">Gallery</string>
     <string name="select_from_camera">Camera</string>
     <string name="no_suitable_camera">No Found Any Suitable Camera.</string>
-    <string name="pick_image_rationale">We need permission to access your image.</string>
-    <string name="take_photo_rationale">We need permission to take a photo.</string>
+    <string name="pick_image_rationale">This app need permission to access your image.</string>
+    <string name="take_photo_rationale">This app need permission to take a photo.</string>
     <string name="not_image_file">Please select a image.</string>
+    <string name="setting">Settings</string>
+    <string name="settings_dialog_title">Permissions Required</string>
+    <string name="rationale_ask_again">This app may not work correctly without the requested permissions. Open the app settings screen to modify app permissions.</string>
+    <string name="open_camera_failure">Fail to open camera.</string>
 </resources>

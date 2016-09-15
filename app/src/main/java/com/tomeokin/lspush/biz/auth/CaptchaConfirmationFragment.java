@@ -261,11 +261,10 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == UserScene.ACTION_SEND_CAPTCHA) {
-            mNextButtonAdapter.sync();
             mWaitingTime = DEFAULT_WAITING_TIME / 2;
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         } else if (action == UserScene.ACTION_CHECK_CAPTCHA) {
-            mNextButtonAdapter.sync();
+            mNextButtonAdapter.syncRevokeWaiting();
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
@@ -273,12 +272,11 @@ public class CaptchaConfirmationFragment extends BaseFragment implements Captcha
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_SEND_CAPTCHA) {
-            mNextButtonAdapter.sync();
             mWaitingTime = DEFAULT_WAITING_TIME;
             Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
                  .show();
         } else if (action == UserScene.ACTION_CHECK_CAPTCHA) {
-            mNextButtonAdapter.sync();
+            mNextButtonAdapter.syncRevokeWaiting();
             Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCaptchaField.getText().toString());
             Navigator.moveTo(this, RegisterFragment.class, bundle);
         }

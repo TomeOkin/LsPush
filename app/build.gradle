@@ -205,6 +205,9 @@ dependencies {
     // permission
     compile 'pub.devrel:easypermissions:0.2.0'
 
+    // image
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino

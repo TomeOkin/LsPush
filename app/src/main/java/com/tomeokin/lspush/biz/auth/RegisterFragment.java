@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CheckableImageButton;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
@@ -40,6 +41,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tomeokin.lspush.R;
@@ -63,7 +66,9 @@ import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.RegisterData;
+import com.tomeokin.lspush.data.model.UploadResponse;
 import com.tomeokin.lspush.injection.component.AuthComponent;
+import com.tomeokin.lspush.ui.glide.CircleTransform;
 import com.tomeokin.lspush.ui.widget.NotificationBar;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 import com.tomeokin.lspush.ui.widget.dialog.OnListItemClickListener;
@@ -75,6 +80,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import timber.log.Timber;
 
@@ -176,12 +182,11 @@ public class RegisterFragment extends BaseFragment
                     // 如果用户修改了文本，此时如果处于加载状态，取消该状态，并进行状态同步，
                     // 同时取消已进行的网络请求
                     if (mUIDAdapter.getState() == FieldAdapter.WAITING) {
-                        mUIDAdapter.active();
                         mPresenter.cancel(UserScene.ACTION_CHECK_UID);
                     } else if (mUIDAdapter.getState() == FieldAdapter.INFO) {
                         mUIDAdapter.active();
                     }
-                    mUIDAdapter.sync();
+                    mUIDAdapter.syncRevokeWaiting();
                 } else if (s == mUserNameField.getText()) {
                     mUserNameAdapter.sync();
                 }
@@ -293,14 +298,6 @@ public class RegisterFragment extends BaseFragment
         }
     }
 
-    //private void pickImageWithPermissionCheck() {
-    //    if (hasPermissions(ImageIntentUtils.PERMISSION_PICK_IMAGE)) {
-    //        pickImage();
-    //    } else {
-    //        requestPermissions(needPermissions(ImageIntentUtils.PERMISSION_PICK_IMAGE), REQUEST_PERMISSION_PICK_IMAGE);
-    //    }
-    //}
-
     @AfterPermissionGranted(REQUEST_PERMISSION_PICK_IMAGE)
     private void pickImageTask() {
         if (EasyPermissions.hasPermissions(getContext(), ImageIntentUtils.PERMISSION_PICK_IMAGE)) {
@@ -316,7 +313,7 @@ public class RegisterFragment extends BaseFragment
     private void takePhotoTask() {
         if (EasyPermissions.hasPermissions(getContext(), ImageIntentUtils.PERMISSION_TAKE_PHOTO)) {
             mTakePhotoFile = FileNameUtils.getJPEGFile(getContext());
-            Intent intent = ImageIntentUtils.createTakeImageIntent(mTakePhotoFile);
+            Intent intent = ImageIntentUtils.createTakePhotoIntent(mTakePhotoFile);
             boolean canTakePhoto = intent.resolveActivity(getContext().getPackageManager()) != null;
             if (!canTakePhoto) {
                 mNotificationBar.showTemporaryInverse(getString(R.string.no_suitable_camera));
@@ -339,6 +336,17 @@ public class RegisterFragment extends BaseFragment
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Timber.i("permission denied %d", requestCode);
+
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
+                .setTitle(getString(R.string.settings_dialog_title))
+                .setPositiveButton(getString(R.string.setting))
+                .setNegativeButton(getString(R.string.dialog_cancel), null /* click listener */)
+                .build()
+                .show();
+        }
     }
 
     // 根据 uri 裁剪图片
@@ -354,10 +362,10 @@ public class RegisterFragment extends BaseFragment
             .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
             .setOutputUri(Uri.fromFile(mUserAvatarFile))
             .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
-            .setMinCropResultSize(256, 256)
-            .setRequestedSize(256, 256)
-            .setMaxCropResultSize(512, 512)
-            .setCropShape(CropImageView.CropShape.RECTANGLE)
+            .setMinCropResultSize(512, 512)
+            .setRequestedSize(512, 512)
+            .setMaxCropResultSize(768, 768)
+            .setCropShape(CropImageView.CropShape.OVAL)
             .start(getContext(), this);
     }
 
@@ -388,6 +396,7 @@ public class RegisterFragment extends BaseFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK && requestCode != CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Timber.i("request-code-failure %d, result: %d", requestCode, resultCode);
             return;
         }
         if (requestCode == REQUEST_PICK_IMAGE) {
@@ -411,20 +420,22 @@ public class RegisterFragment extends BaseFragment
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
-                Uri resultUri;
-                if (mUserAvatarFile != null && mUserAvatarFile.exists()) {
-                    resultUri = Uri.fromFile(mUserAvatarFile);
-                } else {
-                    resultUri = result.getUri();
+                if (mUserAvatarFile == null || !mUserAvatarFile.exists()) {
+                    mUserAvatarFile = new File(result.getUri().toString());
                 }
-                if (resultUri == null) {
+                if (mUserAvatarFile == null) {
                     mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
                     return;
                 }
 
-                Timber.i("crop-image result uri: %s", resultUri);
-                // TODO: 2016/9/13 添加进度条
-                mPresenter.upload(mUserAvatarFile);
+                Timber.i("crop-image result uri: %s", mUserAvatarFile.getAbsolutePath());
+                Glide.with(getContext())
+                    .load(mUserAvatarFile)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    // when using transform or bitmapTransform, don't use fitCenter() or centerCrop()
+                    .transform(new CircleTransform(getContext()))
+                    .override(450, 450)
+                    .into(mUserAvatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
                 Timber.i(result.getError(), "crop image failure");
@@ -482,6 +493,11 @@ public class RegisterFragment extends BaseFragment
 
     public void register() {
         mNextButtonAdapter.waiting();
+        if (mUserAvatarFile != null && TextUtils.isEmpty(mUserAvatarImage)) {
+            mPresenter.upload(mUserAvatarFile);
+            return;
+        }
+
         RegisterData data = new RegisterData();
         data.setCaptchaRequest(mCaptchaRequest);
         data.setAuthCode(mAuthCode);
@@ -546,6 +562,7 @@ public class RegisterFragment extends BaseFragment
     public void onStateChange(BaseStateAdapter adapter, int requestId, int currentState) {
         if (requestId == NEXT_BUTTON_ID) {
             final boolean enable = currentState != NextButtonAdapter.WAITING;
+            mUserAvatar.setEnabled(enable);
             mUserIdFieldLayout.setEnabled(enable);
             mUserNameFieldLayout.setEnabled(enable);
             mPasswordFieldLayout.setEnabled(enable);
@@ -562,8 +579,10 @@ public class RegisterFragment extends BaseFragment
                 mNotificationBar.showTemporaryInverse(message);
             }
         } else if (action == UserScene.ACTION_REGISTER) {
+            mNextButtonAdapter.syncRevokeWaiting();
             mNotificationBar.showTemporaryInverse(message);
         } else if (action == UserScene.ACTION_UPLOAD) {
+            mNextButtonAdapter.syncRevokeWaiting();
             mNotificationBar.showTemporaryInverse(message);
         }
     }
@@ -575,8 +594,16 @@ public class RegisterFragment extends BaseFragment
         } else if (action == UserScene.ACTION_REGISTER) {
             // TODO: 2016/9/9 持久化用户信息及跳转到主页
             Timber.i("register success");
+            mNextButtonAdapter.syncRevokeWaiting();
         } else if (action == UserScene.ACTION_UPLOAD) {
-            Timber.i("upload success");
+            UploadResponse res = (UploadResponse) response;
+            if (res != null) {
+                mUserAvatarImage = res.getFilename();
+                register();
+            } else {
+                Timber.w("unexpected problem");
+                mNextButtonAdapter.syncRevokeWaiting();
+            }
         }
     }
 }

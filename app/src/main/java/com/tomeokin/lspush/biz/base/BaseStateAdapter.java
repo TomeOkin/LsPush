@@ -60,6 +60,19 @@ public abstract class BaseStateAdapter extends LifecycleListener {
         }
     }
 
+    /**
+     * this method only call when you need to break waiting state conveniently.
+     */
+    @CallSuper
+    public void syncRevokeWaiting() {
+        if (mState == INFO) {
+            sync(mState);
+        } else {
+            final boolean isActive = mCallback.isActive(this, mRequestId);
+            sync(isActive ? ACTIVE : DISABLE);
+        }
+    }
+
     @CallSuper
     public void sync(int state) {
         if (mState != state) {

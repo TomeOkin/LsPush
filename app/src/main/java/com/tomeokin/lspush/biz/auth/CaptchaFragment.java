@@ -298,9 +298,9 @@ public class CaptchaFragment extends BaseFragment
 
     private void syncNextButton() {
         if (mShowingEmailTab) {
-            mEmailNextButtonAdapter.sync();
+            mEmailNextButtonAdapter.syncRevokeWaiting();
         } else {
-            mPhoneNextButtonAdapter.sync();
+            mPhoneNextButtonAdapter.syncRevokeWaiting();
         }
     }
 
