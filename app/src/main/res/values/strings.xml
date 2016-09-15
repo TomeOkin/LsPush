@@ -47,6 +47,8 @@
     <string name="select_image_source">Select Image Source</string>
     <string name="select_from_gallery">Gallery</string>
     <string name="select_from_camera">Camera</string>
-    <string name="no_permission_to_pick_image">Sorry, we don\'t has permission to access the images.</string>
     <string name="no_suitable_camera">No Found Any Suitable Camera.</string>
+    <string name="pick_image_rationale">We need permission to access your image.</string>
+    <string name="take_photo_rationale">We need permission to take a photo.</string>
+    <string name="not_image_file">Please select a image.</string>
 </resources>

@@ -22,7 +22,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class FileUtils {
+public class FileNameUtils {
+    private FileNameUtils() {}
+
     private static AtomicInteger sIndex = new AtomicInteger(0);
 
     public static File getJPEGFile(Context context) {

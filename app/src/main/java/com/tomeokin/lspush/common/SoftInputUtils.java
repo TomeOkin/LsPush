@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class SoftInputUtils {
+    private SoftInputUtils() {}
+
     public static void hideInput(View view) {
         ((InputMethodManager) view.getContext().
             getSystemService(Context.INPUT_METHOD_SERVICE)).

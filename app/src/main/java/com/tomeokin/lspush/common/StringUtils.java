@@ -19,7 +19,8 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class StringUtils {
-    private static final Pattern a = Pattern.compile("(@[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)*)", Pattern.CASE_INSENSITIVE);
+    private StringUtils() {}
+
     private static final Pattern BLANK = Pattern.compile("\\s+");
 
     public static String removeBlank(CharSequence charSequence) {

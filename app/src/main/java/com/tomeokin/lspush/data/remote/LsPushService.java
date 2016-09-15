@@ -19,25 +19,45 @@ import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.CryptoToken;
+import com.tomeokin.lspush.data.model.UploadResponse;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface LsPushService {
-    @POST("api/user/login") Call<AccessResponse> login(@Body CryptoToken cryptoToken);
+    @POST("api/user/login")
+    Call<AccessResponse> login(@Body CryptoToken cryptoToken);
 
-    @POST("api/user/refreshExpireToken") Call<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
+    @POST("api/user/refreshExpireToken")
+    Call<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
 
-    @POST("api/user/refreshRefreshToken") Call<AccessResponse> refreshRefreshToken(@Body CryptoToken cryptoToken);
+    @POST("api/user/refreshRefreshToken")
+    Call<AccessResponse> refreshRefreshToken(@Body CryptoToken cryptoToken);
 
-    @POST("api/user/register") Call<AccessResponse> register(@Body CryptoToken cryptoToken);
+    @POST("api/user/register")
+    Call<AccessResponse> register(@Body CryptoToken cryptoToken);
 
-    @POST("api/user/sendCaptcha") Call<BaseResponse> sendCaptcha(@Body CaptchaRequest captchaRequest);
+    @POST("api/user/sendCaptcha")
+    Call<BaseResponse> sendCaptcha(@Body CaptchaRequest captchaRequest);
 
-    @POST("api/user/checkCaptcha") Call<BaseResponse> checkCaptcha(@Body CryptoToken cryptoToken);
+    @POST("api/user/checkCaptcha")
+    Call<BaseResponse> checkCaptcha(@Body CryptoToken cryptoToken);
 
-    @GET("api/user/checkUIDExisted/{uid}") Call<BaseResponse> checkUIDExisted(@Path("uid") String uid);
+    @GET("api/user/checkUIDExisted/{uid}")
+    Call<BaseResponse> checkUIDExisted(@Path("uid") String uid);
+
+    /**
+     * resourceType: 1: avatar，2：other
+     */
+    @Multipart
+    @POST("api/resource/upload/{resourceType}")
+    Call<UploadResponse> upload(@Path("resourceType") int resourceType, @Part("description") RequestBody description,
+        @Part() MultipartBody.Part image);
 }

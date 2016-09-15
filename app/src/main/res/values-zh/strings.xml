@@ -40,6 +40,8 @@
     <string name="select_image_source">选择图片来源</string>
     <string name="select_from_gallery">图库</string>
     <string name="select_from_camera">相机</string>
-    <string name="no_permission_to_pick_image">抱歉，我们没有权限去访问图片。</string>
     <string name="no_suitable_camera">没有找到合适的摄像头。</string>
+    <string name="pick_image_rationale">我们需要访问您的图片。</string>
+    <string name="take_photo_rationale">我们需要访问您的照相机。</string>
+    <string name="not_image_file">请选择一张图片。</string>
 </resources>

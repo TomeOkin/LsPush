@@ -24,11 +24,13 @@ import android.provider.MediaStore;
 import java.io.File;
 
 public class ImageIntentUtils {
-    public static final String[] PERMISSION_SELECT_IMAGE = new String[] {
+    private ImageIntentUtils() {}
+
+    public static final String[] PERMISSION_PICK_IMAGE = new String[] {
         Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    public static final String[] PERMISSION_TAKE_IMAGE = new String[] {
+    public static final String[] PERMISSION_TAKE_PHOTO = new String[] {
         Manifest.permission.CAMERA,
         Manifest.permission.READ_EXTERNAL_STORAGE
     };

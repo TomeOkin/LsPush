@@ -54,8 +54,9 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
-import com.tomeokin.lspush.common.FileUtils;
+import com.tomeokin.lspush.common.FileNameUtils;
 import com.tomeokin.lspush.common.ImageIntentUtils;
+import com.tomeokin.lspush.common.MimeTypeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.common.StringUtils;
@@ -69,13 +70,17 @@ import com.tomeokin.lspush.ui.widget.dialog.OnListItemClickListener;
 import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import timber.log.Timber;
 
 public class RegisterFragment extends BaseFragment
-    implements RegisterView, FilterCallback, BaseStateCallback, OnListItemClickListener {
+    implements RegisterView, FilterCallback, BaseStateCallback, OnListItemClickListener,
+    EasyPermissions.PermissionCallbacks {
     public static final int NEXT_BUTTON_ID = 0;
     public static final int UID_FILTER_ID = 1;
     public static final int PWD_FILTER_ID = 2;
@@ -83,10 +88,12 @@ public class RegisterFragment extends BaseFragment
     public static final int USER_NAME_ADAPTER_ID = 4;
 
     private static final int REQUEST_PERMISSION_PICK_IMAGE = 101;
-    private static final int REQUEST_PERMISSION_TAKE_IMAGE = 102;
+    private static final int REQUEST_PERMISSION_TAKE_PHOTO = 102;
 
-    private static final int REQUEST_PICK_IMAGE = 0;
-    private static final int REQUEST_SELECT_IMAGE_SOURCE = 1;
+    private static final int REQUEST_SELECT_IMAGE_SOURCE = 0;
+    private static final int REQUEST_PICK_IMAGE = 1;
+    private static final int REQUEST_TAKE_PHOTO = 2;
+
     private static String[] SELECT_IMAGE_SOURCE;
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
@@ -110,7 +117,8 @@ public class RegisterFragment extends BaseFragment
     private FieldAdapter mUIDAdapter;
     private FieldAdapter mUserNameAdapter;
 
-    private File mUserAvatarCropFile;
+    private File mTakePhotoFile = null;
+    private File mUserAvatarFile = null;
     private BaseDialogFragment mBaseDialogFragment;
 
     @Inject RegisterPresenter mPresenter;
@@ -278,57 +286,86 @@ public class RegisterFragment extends BaseFragment
         long id) {
         if (requestCode == REQUEST_SELECT_IMAGE_SOURCE) {
             if (position == 0) {
-                pickImageWithPermissionCheck();
+                pickImageTask();
             } else if (position == 1) {
-                takeImageWithPermissionCheck();
+                takePhotoTask();
             }
         }
     }
 
-    private void pickImageWithPermissionCheck() {
-        if (hasPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
-            pickImage();
-        } else if (shouldShowRequestPermissionRationale(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
-            requestPermissions(needPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE),
-                REQUEST_PERMISSION_PICK_IMAGE);
+    //private void pickImageWithPermissionCheck() {
+    //    if (hasPermissions(ImageIntentUtils.PERMISSION_PICK_IMAGE)) {
+    //        pickImage();
+    //    } else {
+    //        requestPermissions(needPermissions(ImageIntentUtils.PERMISSION_PICK_IMAGE), REQUEST_PERMISSION_PICK_IMAGE);
+    //    }
+    //}
+
+    @AfterPermissionGranted(REQUEST_PERMISSION_PICK_IMAGE)
+    private void pickImageTask() {
+        if (EasyPermissions.hasPermissions(getContext(), ImageIntentUtils.PERMISSION_PICK_IMAGE)) {
+            Intent intent = ImageIntentUtils.createSelectJPEGIntent();
+            startActivityForResult(Intent.createChooser(intent, getText(R.string.pick_image)), REQUEST_PICK_IMAGE);
         } else {
-            mNotificationBar.showTemporaryInverse(getString(R.string.no_permission_to_pick_image));
+            EasyPermissions.requestPermissions(this, getString(R.string.pick_image_rationale),
+                REQUEST_PERMISSION_PICK_IMAGE, needPermissions(ImageIntentUtils.PERMISSION_PICK_IMAGE));
         }
     }
 
-    private void pickImage() {
-        Intent intent = ImageIntentUtils.createSelectJPEGIntent();
-        startActivityForResult(Intent.createChooser(intent, getText(R.string.pick_image)), REQUEST_PICK_IMAGE);
+    @AfterPermissionGranted(REQUEST_PERMISSION_TAKE_PHOTO)
+    private void takePhotoTask() {
+        if (EasyPermissions.hasPermissions(getContext(), ImageIntentUtils.PERMISSION_TAKE_PHOTO)) {
+            mTakePhotoFile = FileNameUtils.getJPEGFile(getContext());
+            Intent intent = ImageIntentUtils.createTakeImageIntent(mTakePhotoFile);
+            boolean canTakePhoto = intent.resolveActivity(getContext().getPackageManager()) != null;
+            if (!canTakePhoto) {
+                mNotificationBar.showTemporaryInverse(getString(R.string.no_suitable_camera));
+                return;
+            }
+
+            // TODO: 2016/9/14 some camera don't support setting face with intent, later may change to custom control version.
+            startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.take_photo_rationale),
+                REQUEST_PERMISSION_TAKE_PHOTO, needPermissions(ImageIntentUtils.PERMISSION_TAKE_PHOTO));
+        }
     }
 
-    private void takeImageWithPermissionCheck() {
-
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Timber.i("permission granted %d", requestCode);
     }
 
-    private void takeImage() {
-        File file = FileUtils.getJPEGFile(getContext());
-        Intent intent = ImageIntentUtils.createTakeImageIntent(file);
-        boolean canTakePhoto = intent.resolveActivity(getContext().getPackageManager()) != null;
-        if (!canTakePhoto) {
-            mNotificationBar.showTemporaryInverse(getString(R.string.no_suitable_camera));
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Timber.i("permission denied %d", requestCode);
+    }
+
+    // 根据 uri 裁剪图片
+    private void cropImage(@NonNull Uri input) {
+        Timber.i("Uri.toString: %s", input.toString());
+        if (!MimeTypeUtils.isImage(getContext(), input)) {
+            mNotificationBar.showTemporaryInverse(getString(R.string.not_image_file));
             return;
         }
 
-        // TODO: 2016/9/14 take image
+        mUserAvatarFile = FileNameUtils.getJPEGFile(getContext());
+        CropImage.activity(input)
+            .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+            .setOutputUri(Uri.fromFile(mUserAvatarFile))
+            .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
+            .setMinCropResultSize(256, 256)
+            .setRequestedSize(256, 256)
+            .setMaxCropResultSize(512, 512)
+            .setCropShape(CropImageView.CropShape.RECTANGLE)
+            .start(getContext(), this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION_PICK_IMAGE) {
-            if (hasPermissions(ImageIntentUtils.PERMISSION_SELECT_IMAGE)) {
-                pickImage();
-            } else {
-                mNotificationBar.showTemporaryInverse(getString(R.string.no_permission_to_pick_image));
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -359,19 +396,15 @@ public class RegisterFragment extends BaseFragment
                 uri = data.getData();
             }
 
-            mUserAvatarCropFile = FileUtils.getJPEGFile(getContext());
             if (uri != null && uri.toString().length() != 0) {
-                // 根据 uri 裁剪图片
-                Timber.i("Uri.toString: %s", uri.toString());
-                CropImage.activity(uri)
-                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
-                    .setOutputUri(Uri.fromFile(mUserAvatarCropFile))
-                    .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
-                    .setMinCropResultSize(256, 256)
-                    .setRequestedSize(256, 256)
-                    .setMaxCropResultSize(512, 512)
-                    .setCropShape(CropImageView.CropShape.RECTANGLE)
-                    .start(getContext(), this);
+                cropImage(uri);
+            } else {
+                mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
+            }
+        } else if (requestCode == REQUEST_TAKE_PHOTO) {
+            if (mTakePhotoFile != null && mTakePhotoFile.exists()) {
+                Uri uri = Uri.fromFile(mTakePhotoFile);
+                cropImage(uri);
             } else {
                 mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
             }
@@ -379,8 +412,8 @@ public class RegisterFragment extends BaseFragment
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri;
-                if (mUserAvatarCropFile != null && mUserAvatarCropFile.exists()) {
-                    resultUri = Uri.fromFile(mUserAvatarCropFile);
+                if (mUserAvatarFile != null && mUserAvatarFile.exists()) {
+                    resultUri = Uri.fromFile(mUserAvatarFile);
                 } else {
                     resultUri = result.getUri();
                 }
@@ -389,9 +422,9 @@ public class RegisterFragment extends BaseFragment
                     return;
                 }
 
-                Timber.i("resultUri: %s", resultUri);
-                // TODO: 2016/9/13 上传图片
-
+                Timber.i("crop-image result uri: %s", resultUri);
+                // TODO: 2016/9/13 添加进度条
+                mPresenter.upload(mUserAvatarFile);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
                 Timber.i(result.getError(), "crop image failure");
@@ -530,6 +563,8 @@ public class RegisterFragment extends BaseFragment
             }
         } else if (action == UserScene.ACTION_REGISTER) {
             mNotificationBar.showTemporaryInverse(message);
+        } else if (action == UserScene.ACTION_UPLOAD) {
+            mNotificationBar.showTemporaryInverse(message);
         }
     }
 
@@ -538,7 +573,10 @@ public class RegisterFragment extends BaseFragment
         if (action == UserScene.ACTION_CHECK_UID) {
             mUIDAdapter.active();
         } else if (action == UserScene.ACTION_REGISTER) {
-            // TODO: 2016/9/9
+            // TODO: 2016/9/9 持久化用户信息及跳转到主页
+            Timber.i("register success");
+        } else if (action == UserScene.ACTION_UPLOAD) {
+            Timber.i("upload success");
         }
     }
 }

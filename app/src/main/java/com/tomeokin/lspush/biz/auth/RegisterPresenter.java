@@ -28,12 +28,18 @@ import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.RegisterData;
+import com.tomeokin.lspush.data.model.UploadResponse;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import timber.log.Timber;
 
@@ -42,8 +48,9 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
-    private Call<BaseResponse> mCheckUIDCall;
-    private Call<AccessResponse> mRegisterCall;
+    private Call<BaseResponse> mCheckUIDCall = null;
+    private Call<AccessResponse> mRegisterCall = null;
+    private Call<UploadResponse> mUploadCall = null;
 
     @Inject public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
         mLsPushService = lsPushService;
@@ -74,12 +81,26 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         mRegisterCall.enqueue(new CommonCallback<AccessResponse>(mResource, UserScene.ACTION_REGISTER, getMvpView()));
     }
 
+    public void upload(File file) {
+        String descriptionString = "upload user avatar";
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), descriptionString);
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+        mUploadCall = mLsPushService.upload(1, description, body);
+        mUploadCall.enqueue(new CommonCallback<UploadResponse>(mResource, UserScene.ACTION_UPLOAD, getMvpView()));
+    }
+
     public void cancel(int action) {
         if (action == UserScene.ACTION_CHECK_UID) {
             checkAndCancel(mCheckUIDCall);
         } else if (action == UserScene.ACTION_REGISTER) {
             checkAndCancel(mRegisterCall);
+        } else if (action == UserScene.ACTION_UPLOAD) {
+            checkAndCancel(mUploadCall);
         }
+        // TODO: 2016/9/15 upload other at activity
     }
 
     @Override
@@ -87,7 +108,9 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         super.detachView();
         checkAndCancel(mCheckUIDCall);
         checkAndCancel(mRegisterCall);
+        checkAndCancel(mUploadCall);
         mCheckUIDCall = null;
         mRegisterCall = null;
+        mUploadCall = null;
     }
 }

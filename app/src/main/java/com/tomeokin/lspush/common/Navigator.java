@@ -28,6 +28,8 @@ import android.support.v4.app.FragmentTransaction;
 import com.tomeokin.lspush.R;
 
 public class Navigator {
+    private Navigator() {}
+
     public static final int INVALID_CONTAINER_ID = -1;
     public static final int REQUEST_CODE = 72;
 

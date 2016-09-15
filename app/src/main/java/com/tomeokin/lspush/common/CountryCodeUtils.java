@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 
 public final class CountryCodeUtils {
+    private CountryCodeUtils() {}
+
     public static CountryCodeData getDefault(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String simCountryIso = telephonyManager.getSimCountryIso();

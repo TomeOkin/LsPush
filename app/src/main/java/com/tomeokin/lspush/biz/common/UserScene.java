@@ -25,4 +25,5 @@ public class UserScene {
     public static final int ACTION_CHECK_UID = 2;
     public static final int ACTION_REGISTER = 3;
     public static final int ACTION_LOGIN = 4;
+    public static final int ACTION_UPLOAD = 5;
 }

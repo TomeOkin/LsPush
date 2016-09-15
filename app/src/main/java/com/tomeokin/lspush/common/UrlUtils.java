@@ -16,6 +16,8 @@
 package com.tomeokin.lspush.common;
 
 public class UrlUtils {
+    private UrlUtils() {}
+
     public static String trim(String old) {
         String url = old;
         int query = url.lastIndexOf('?');

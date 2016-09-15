@@ -17,11 +17,11 @@ package com.tomeokin.lspush.biz.base;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.tomeokin.lspush.injection.ProvideComponent;
@@ -88,7 +88,11 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
     }
 
     public boolean hasPermission(String permission) {
-        return ContextCompat.checkSelfPermission(getContext(), permission) == PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return getContext().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+        }
+        // other
+        return true;
     }
 
     public boolean hasPermissions(String[] permissions) {
@@ -98,15 +102,6 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
             }
         }
         return true;
-    }
-
-    public boolean shouldShowRequestPermissionRationale(@NonNull String[] permissions) {
-        for (String permission : permissions) {
-            if (shouldShowRequestPermissionRationale(permission)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public String[] needPermissions(@NonNull String[] permissions) {
