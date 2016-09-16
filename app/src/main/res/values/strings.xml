@@ -28,8 +28,8 @@
     <string name="not_support_character">Not support character %c.</string>
     <string name="uid_not_unique">User ID is existed, please try another.</string>
 
-    <string name="web_image_click_target">imageClick</string>
-    <string name="web_image_click">
+    <string name="web_image_click_target" translatable="false">imageClick</string>
+    <string name="web_image_click" translatable="false">
     <![CDATA[
         javascript: (function() {
             var obj=document.elementFromPoint(%1$s, %2$s);

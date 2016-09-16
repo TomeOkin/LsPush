@@ -362,7 +362,7 @@ public class RegisterFragment extends BaseFragment
             .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
             .setOutputUri(Uri.fromFile(mUserAvatarFile))
             .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
-            .setMinCropResultSize(512, 512)
+            .setMinCropResultSize(450, 450)
             .setRequestedSize(512, 512)
             .setMaxCropResultSize(768, 768)
             .setCropShape(CropImageView.CropShape.OVAL)

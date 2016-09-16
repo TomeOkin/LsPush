@@ -17,6 +17,7 @@ package com.tomeokin.lspush.data.crypt;
 
 import android.util.Base64;
 
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.model.CryptoToken;
 
 import java.nio.charset.StandardCharsets;
@@ -41,15 +42,15 @@ import javax.crypto.spec.IvParameterSpec;
 import timber.log.Timber;
 
 public class Crypto {
-    private static Crypto crypt;
+    private static Crypto crypto;
     private static PublicKey pubKey;
 
     public static void init(final String pubKey) {
-        if (crypt == null) {
+        if (crypto == null) {
             try {
-                crypt = new Crypto(pubKey);
+                crypto = new Crypto(pubKey);
             } catch (Exception e) {
-                Timber.tag("app").wtf(e, "generate crypt instance failure");
+                Timber.tag(UserScene.TAG_APP).wtf(e, "generate crypto instance failure");
             }
         }
     }

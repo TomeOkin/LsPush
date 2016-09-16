@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="email_postfix">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="email_postfix" tools:ignore="MissingTranslation">
         <item>qq.com</item>
         <item>163.com</item>
         <item>gmail.com</item>

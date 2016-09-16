@@ -16,12 +16,15 @@
 package com.tomeokin.lspush.injection.module;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tomeokin.lspush.BuildConfig;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import java.io.File;
@@ -45,9 +48,13 @@ import timber.log.Timber;
 
 @Module
 public class LsPushApiModule {
-    private static final String API_URL = "http://lspush.cn";
+    private static final String API_URL;
     private static final String CACHE_CONTROL = "Cache-Control";
     private static final String CACHE_DIR = "http-cache-lspush";
+
+    static {
+        API_URL = LsPushConfig.getServerUrl();
+    }
 
     @Provides @Singleton public OkHttpClient provideOkHttpClient(final Application application) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -80,7 +87,8 @@ public class LsPushApiModule {
     private HttpLoggingInterceptor provideHttpLoggingInterceptor() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override public void log(String message) {
-                Timber.d(message);
+                // for better see, change to normal
+                Log.d(UserScene.TAG_NETWORK, message);
             }
         });
         loggingInterceptor.setLevel(

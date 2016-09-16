@@ -29,6 +29,7 @@ public class FileNameUtils {
 
     public static File getJPEGFile(Context context) {
         // don't use getCacheDir(), otherwise camera will fail to put data into it.
+        // when use getCacheDir(), need to grant a write and read permission to uri
         return new File(context.getExternalCacheDir(), "temp_" + getFilename() + ".jpg");
     }
 

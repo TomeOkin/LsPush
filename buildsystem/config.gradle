@@ -6,6 +6,13 @@ allprojects {
 
 ext {
     supportVersion = "24.2.1"
+    rxbindingVersion = "0.4.0"
+    butterknifeVersion = "8.4.0"
+    daggerVersion = "2.7"
+    retrofit2Version = "2.1.0"
+    okhttp3Version = "3.4.1"
+    stethoVersion = "1.4.1"
+    junit4Version = "4.12"
 
     File file = project.rootProject.file('local.properties')
     Properties properties = new Properties()
@@ -18,14 +25,19 @@ ext {
             pwd             : isExists ? properties.getProperty("key.pwd") : System.getenv("ALIAS_PWD"),
             storeFile       : isExists ? properties.getProperty("key.storeFile") : System.getenv("STORE_FILE"),
             storePwd        : isExists ? properties.getProperty("key.storePwd") : System.getenv("STORE_PWD"),
+
             lspushServerUrl : isExists ? properties.getProperty("lspush.serverUrl") : System.getenv("LSPUSH_SERVER_URL"),
-            lspushPublicKey : isExists ? properties.getProperty("lspush.publicKey") : System.getenv("LSPUSH_PUBLIC_KEY"),
+//            lspushPublicKey : isExists ? properties.getProperty("lspush.publicKey") : System.getenv("LSPUSH_PUBLIC_KEY"),
+
+            buglyAppVersion : "1.0",
+            buglyEnableDebug: false,
             buglyAppId      : isExists ? properties.getProperty("bugly.appId") : System.getenv("BUGLY_APPID"),
             buglyAppKey     : isExists ? properties.getProperty("bugly.appKey") : System.getenv("BUGLY_APPKEY"),
-            mobSMSId        : isExists ? properties.getProperty("mob.sms.id") : System.getenv("MOB_SMS_ID"),
-            mobSMSKey       : isExists ? properties.getProperty("mob.sms.key") : System.getenv("MOB_SMS_KEY"),
-            buglyAppVersion : "1.0",
-            buglyEnableDebug: false
+
+//            mobSMSId        : isExists ? properties.getProperty("mob.sms.id") : System.getenv("MOB_SMS_ID"),
+//            mobSMSKey       : isExists ? properties.getProperty("mob.sms.key") : System.getenv("MOB_SMS_KEY"),
+
+            jaqKey          : isExists ? properties.getProperty("jaq.key") : System.getenv("JAQ_KEY")
     ]
 
     releaseDependencies = [
@@ -46,24 +58,24 @@ ext {
             rxandroid            : "io.reactivex:rxandroid:1.2.1",
             rxjava               : "io.reactivex:rxjava:1.1.10",
 
-            rxbindingV7          : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0",
-            rxbindingRecyclerview: "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0",
+            rxbindingV7          : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxbindingVersion}",
+            rxbindingRecyclerview: "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${rxbindingVersion}",
 
             // inject
-            butterknife          : "com.jakewharton:butterknife:8.4.0",
-            butterknifeCompiler  : "com.jakewharton:butterknife-compiler:8.4.0",
+            butterknife          : "com.jakewharton:butterknife:${butterknifeVersion}",
+            butterknifeCompiler  : "com.jakewharton:butterknife-compiler:${butterknifeVersion}",
 
             // dagger
-            dagger2              : "com.google.dagger:dagger:2.6.1",
-            dagger2Compiler      : "com.google.dagger:dagger-compiler:2.6.1",
+            dagger2              : "com.google.dagger:dagger:${daggerVersion}",
+            dagger2Compiler      : "com.google.dagger:dagger-compiler:${daggerVersion}",
             javaxAnnotation      : "org.glassfish:javax.annotation:10.0-b28", // provided; after dagger 2.1, don't need it
 
             // network
-            retrofit2            : "com.squareup.retrofit2:retrofit:2.1.0",
-            okhttp3              : "com.squareup.okhttp3:okhttp:3.4.1",
-            retrofit2Gson        : "com.squareup.retrofit2:converter-gson:2.1.0",
+            retrofit2            : "com.squareup.retrofit2:retrofit:${retrofit2Version}",
+            okhttp3              : "com.squareup.okhttp3:okhttp:${okhttp3Version}",
+            retrofit2Gson        : "com.squareup.retrofit2:converter-gson:${retrofit2Version}",
             // stetho has problems in some device, so also using this
-            okhttp3Logging       : "com.squareup.okhttp3:logging-interceptor:3.4.1",
+            okhttp3Logging       : "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}",
 
             // gson
             gson                 : "com.google.code.gson:gson:2.7",
@@ -82,20 +94,20 @@ ext {
     ]
 
     debugDependencies = [
-            stetho       : "com.facebook.stetho:stetho:1.4.0",
-            stethoOkhttp3: "com.facebook.stetho:stetho-okhttp3:1.4.0",
-            stethoJsRhino: "com.facebook.stetho:stetho-js-rhino:1.4.0",
+            stetho       : "com.facebook.stetho:stetho:${stethoVersion}",
+            stethoOkhttp3: "com.facebook.stetho:stetho-okhttp3:${stethoVersion}",
+            stethoJsRhino: "com.facebook.stetho:stetho-js-rhino:${stethoVersion}",
     ]
 
     testDependencies = [
-            junit      : "junit:junit:4.12",
+            junit      : "junit:junit:${junit4Version}",
             robolectric: "org.robolectric:robolectric:3.1.2",
             assertjCore: "org.assertj:assertj-core:3.5.2",
             mockitoCore: "org.mockito:mockito-core:1.10.19"
     ]
 
     androidTestDependencies = [
-            junit              : "junit:junit:4.12",
+            junit              : "junit:junit:${junit4Version}",
             mockitoCore        : "org.mockito:mockito-core:1.10.19",
             assertjAppCompatV7 : "com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar",
             assertjRecyclerView: "com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1@aar",

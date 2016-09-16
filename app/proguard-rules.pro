@@ -144,3 +144,10 @@
 -keepattributes EnclosingMethod
 -keep class cn.smssdk.** { *; }
 -keep class com.mob.commpns.** { *; }
+
+# alibaba jaq sdk
+-keep class com.taobao.securityjni.**{*;}
+-keep class com.taobao.wireless.security.**{*;}
+-keep class com.ut.secbody.**{*;}
+-keep class com.taobao.dp.**{*;}
+-keep class com.alibaba.wireless.security.**{*;}

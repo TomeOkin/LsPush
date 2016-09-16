@@ -18,10 +18,15 @@ package com.tomeokin.lspush;
 import android.app.Application;
 import android.content.Context;
 
+import com.alibaba.wireless.security.jaq.JAQException;
+import com.alibaba.wireless.security.jaq.SecurityInit;
+import com.orhanobut.hawk.Hawk;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
+import com.tomeokin.lspush.config.LsPushConfig;
+import com.tomeokin.lspush.data.crypt.BeeCrypto;
+import com.tomeokin.lspush.data.crypt.BeeEncryption;
 import com.tomeokin.lspush.data.crypt.Crypto;
-import com.tomeokin.lspush.data.local.LsPushConfig;
 import com.tomeokin.lspush.injection.component.AppComponent;
 import com.tomeokin.lspush.injection.component.DaggerAppComponent;
 import com.tomeokin.lspush.injection.module.AppModule;
@@ -35,12 +40,27 @@ public class LsPushApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initLogger(this);
+        initJAQ(this);
         LsPushConfig.init(this);
+        BeeCrypto.init(this, LsPushConfig.getJaqKey());
         Crypto.init(LsPushConfig.getPublicKey());
+        initHawk(this);
         NetworkUtils.init(this);
         SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();
-        initLogger(this);
+    }
+
+    private void initJAQ(final Context context) {
+        try {
+            SecurityInit.Initialize(context);
+        } catch (JAQException e) {
+            Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
+        }
+    }
+
+    private void initHawk(final Context context) {
+        Hawk.init(context).setEncryption(new BeeEncryption(context)).build();
     }
 
     private void initAppComponent() {

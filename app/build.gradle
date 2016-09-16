@@ -49,9 +49,10 @@ android {
                 BUGLY_APP_VERSION : metadata.buglyAppVersion,
                 BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug,
                 LSPUSH_SERVER_URL : metadata.lspushServerUrl,
-                LSPUSH_PUBLIC_KEY : metadata.lspushPublicKey,
-                MOB_SMS_ID        : metadata.mobSMSId,
-                MOB_SMS_KEY       : metadata.mobSMSKey
+//                LSPUSH_PUBLIC_KEY : metadata.lspushPublicKey,
+//                MOB_SMS_ID        : metadata.mobSMSId,
+//                MOB_SMS_KEY       : metadata.mobSMSKey,
+                JAQ_KEY           : metadata.jaqKey
         ]
 
         ndk {
@@ -108,20 +109,20 @@ android {
 
     lintOptions {
         abortOnError false
-        // 除了 xml 和 html 外，也在控制台输出
+        // 除了 xml 和 html 外，还在控制台输出
         textReport true
         textOutput "stdout"
 
         // rhino, okio and retrofit2, https://github.com/square/okio/issues/58
         warning 'InvalidPackage'
 
-        // Ignore "AES/CBC/PKCS5Padding" warning, we aren't entirely rely on it.
-        disable "TrulyRandom"
+        // We using "AES/CBC/PKCS5Padding" now.
+        //disable "TrulyRandom"
         // We might want to index our app later
         disable "GoogleAppIndexingApiWarning"
         // update sdk version until new sdk source ability
-        disable "NewerVersionAvailable"
-        disable "OldTargetApi"
+        //disable "NewerVersionAvailable"
+        //disable "OldTargetApi"
         // CI issue with sdk.dir in local.properties
         disable "PropertyEscape"
         // we don't use it
@@ -199,6 +200,9 @@ dependencies {
     // sms-sdk
     compile(name: 'SMSSDK-2.1.1', ext: 'aar')
 
+    // secure-store
+    compile(name: 'SecurityGuardSDK-external-release-5.1.38', ext: 'aar')
+
     // crop-image
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
 
@@ -206,15 +210,20 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.2.0'
 
     // image
-    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    //compile 'jp.wasabeef:glide-transformations:2.0.1'
+
+    // secure-share-preference
+    compile 'com.orhanobut:hawk:2.0.0-Alpha'
 
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino
+
     testCompile testDependencies.junit
     testCompile testDependencies.mockitoCore
     testCompile testDependencies.robolectric
     testCompile testDependencies.assertjCore
+
     // android test
     androidTestCompile androidTestDependencies.junit
     androidTestCompile androidTestDependencies.mockitoCore

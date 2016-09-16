@@ -17,13 +17,21 @@ package com.tomeokin.lspush;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
+import com.alibaba.wireless.security.jaq.JAQException;
+import com.alibaba.wireless.security.jaq.SecurityInit;
 import com.facebook.stetho.Stetho;
+import com.orhanobut.hawk.Hawk;
+import com.orhanobut.hawk.LogInterceptor;
 import com.orhanobut.logger.Logger;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
-import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.config.LsPushConfig;
+import com.tomeokin.lspush.data.crypt.BeeCrypto;
+import com.tomeokin.lspush.data.crypt.BeeEncryption;
+import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.injection.component.AppComponent;
 import com.tomeokin.lspush.injection.component.DaggerAppComponent;
 import com.tomeokin.lspush.injection.module.AppModule;
@@ -31,19 +39,39 @@ import com.tomeokin.lspush.injection.module.AppModule;
 import timber.log.Timber;
 
 public class LsPushApplication extends Application {
-    private static final String APP_TAG = "LsPush-App";
     private AppComponent appComponent;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
 
+        initLogger();
+        initJAQ(this);
         LsPushConfig.init(this);
+        BeeCrypto.init(this, LsPushConfig.getJaqKey());
         Crypto.init(LsPushConfig.getPublicKey());
+        initHawk(this);
         NetworkUtils.init(this);
         SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();
-        initLogger();
         initializeStetho(this);
+    }
+
+    private void initJAQ(final Context context) {
+        try {
+            SecurityInit.Initialize(context);
+        } catch (JAQException e) {
+            Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
+        }
+    }
+
+    private void initHawk(final Context context) {
+        Hawk.init(context).setEncryption(new BeeEncryption(context)).setLogInterceptor(new LogInterceptor() {
+            @Override
+            public void onLog(String message) {
+                Log.d(UserScene.TAG_APP, message);
+            }
+        }).build();
     }
 
     private void initAppComponent() {
@@ -51,10 +79,11 @@ public class LsPushApplication extends Application {
     }
 
     private void initLogger() {
-        Logger.init(APP_TAG).methodOffset(5).methodCount(1);
+        Logger.init(UserScene.TAG_APP).methodOffset(5).methodCount(1);
         Timber.plant(new Timber.DebugTree() {
 
-            @Override protected void log(int priority, String tag, String message, Throwable t) {
+            @Override
+            protected void log(int priority, String tag, String message, Throwable t) {
                 Logger.log(priority, tag, message, t);
             }
         });
