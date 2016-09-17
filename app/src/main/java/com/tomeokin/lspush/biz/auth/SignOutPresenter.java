@@ -16,7 +16,22 @@
 package com.tomeokin.lspush.biz.auth;
 
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.BasePresenter;
+import com.tomeokin.lspush.data.local.UserManager;
+import com.tomeokin.lspush.injection.scope.PerActivity;
 
-public interface RegisterView extends BaseActionCallback {
+import javax.inject.Inject;
 
+@PerActivity
+public class SignOutPresenter extends BasePresenter<BaseActionCallback> {
+    private final UserManager mUserManager;
+
+    @Inject
+    public SignOutPresenter(UserManager userManager) {
+        mUserManager = userManager;
+    }
+
+    public boolean hasHistoryLoginUser() {
+        return mUserManager.hasHistoryUser();
+    }
 }

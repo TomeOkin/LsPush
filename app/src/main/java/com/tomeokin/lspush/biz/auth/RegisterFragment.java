@@ -51,11 +51,13 @@ import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.main.MainActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.common.FileNameUtils;
 import com.tomeokin.lspush.common.ImageIntentUtils;
@@ -63,10 +65,12 @@ import com.tomeokin.lspush.common.MimeTypeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.common.StringUtils;
+import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.model.UploadResponse;
+import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.glide.CircleTransform;
 import com.tomeokin.lspush.ui.widget.NotificationBar;
@@ -85,7 +89,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import timber.log.Timber;
 
 public class RegisterFragment extends BaseFragment
-    implements RegisterView, FilterCallback, BaseStateCallback, OnListItemClickListener,
+    implements BaseActionCallback, FilterCallback, BaseStateCallback, OnListItemClickListener,
     EasyPermissions.PermissionCallbacks {
     public static final int NEXT_BUTTON_ID = 0;
     public static final int UID_FILTER_ID = 1;
@@ -108,6 +112,7 @@ public class RegisterFragment extends BaseFragment
     private CaptchaRequest mCaptchaRequest = null;
     private String mAuthCode;
     private String mUserAvatarImage = null;
+    private RegisterData mRegisterData;
 
     private ImageView mUserAvatar;
     private NotificationBar mNotificationBar;
@@ -457,8 +462,10 @@ public class RegisterFragment extends BaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         mPresenter.detachView();
-        mBaseDialogFragment.dismiss();
-        mBaseDialogFragment = null;
+        if (mBaseDialogFragment != null) {
+            mBaseDialogFragment.dismiss();
+            mBaseDialogFragment = null;
+        }
         mUserIdFieldLayout = null;
         mUserNameFieldLayout = null;
         mPasswordFieldLayout = null;
@@ -498,13 +505,16 @@ public class RegisterFragment extends BaseFragment
             return;
         }
 
-        RegisterData data = new RegisterData();
-        data.setCaptchaRequest(mCaptchaRequest);
-        data.setAuthCode(mAuthCode);
-        data.setUserId(mUserIdField.getText().toString());
-        data.setNickname(mUserNameField.getText().toString());
-        data.setPassword(mPasswordField.getText().toString());
-        mPresenter.register(data);
+        if (mRegisterData == null) {
+            mRegisterData = new RegisterData();
+        }
+        mRegisterData.setCaptchaRequest(mCaptchaRequest);
+        mRegisterData.setAuthCode(mAuthCode);
+        mRegisterData.setUserId(mUserIdField.getText().toString());
+        mRegisterData.setNickname(mUserNameField.getText().toString());
+        mRegisterData.setPassword(mPasswordField.getText().toString());
+        mRegisterData.setUserAvatar(mUserAvatarImage);
+        mPresenter.register(mRegisterData);
     }
 
     public boolean isValidUserId() {
@@ -592,7 +602,24 @@ public class RegisterFragment extends BaseFragment
         if (action == UserScene.ACTION_CHECK_UID) {
             mUIDAdapter.active();
         } else if (action == UserScene.ACTION_REGISTER) {
-            // TODO: 2016/9/9 持久化用户信息及跳转到主页
+            AccessResponse res = (AccessResponse) response;
+            if (res != null) {
+                User user = new User();
+                user.setUid(res.getUserId());
+                user.setNickname(mRegisterData.getNickname());
+                if (mRegisterData.getCaptchaRequest().getSendObject().contains("@")) {
+                    user.setEmail(mRegisterData.getCaptchaRequest().getSendObject());
+                } else {
+                    user.setPhone(mRegisterData.getCaptchaRequest().getSendObject());
+                    user.setRegion(mRegisterData.getCaptchaRequest().getRegion());
+                }
+                user.setImage(mRegisterData.getUserAvatar());
+                user.setPassword(mRegisterData.getPassword());
+                mPresenter.updateUserInfo(res, user);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
             Timber.i("register success");
             mNextButtonAdapter.syncRevokeWaiting();
         } else if (action == UserScene.ACTION_UPLOAD) {

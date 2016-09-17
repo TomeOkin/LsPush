@@ -21,6 +21,7 @@ public class RegisterData {
     private String nickname;
     private String password;
     private String authCode; // 验证码
+    private String userAvatar; // 用户头像
 
     public CaptchaRequest getCaptchaRequest() {
         return captchaRequest;
@@ -60,5 +61,13 @@ public class RegisterData {
 
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 }

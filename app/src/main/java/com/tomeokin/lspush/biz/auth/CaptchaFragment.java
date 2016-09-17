@@ -32,15 +32,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseStateAdapter;
-import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.auth.adapter.CaptchaViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.EmailFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.biz.base.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.Navigator;
@@ -59,7 +60,7 @@ import javax.inject.Inject;
 import cn.smssdk.EventHandler;
 
 public class CaptchaFragment extends BaseFragment
-    implements CaptchaView, BaseStateCallback, OnCountryCodeSelectedListener {
+    implements CaptchaView, BaseActionCallback, BaseStateCallback, OnCountryCodeSelectedListener {
     public static final int EMAIL_NEXT_ID = 0;
     public static final int PHONE_NEXT_ID = 1;
 
@@ -127,8 +128,8 @@ public class CaptchaFragment extends BaseFragment
 
         mEmailNextButtonAdapter =
             new NextButtonAdapter(EMAIL_NEXT_ID, this, getContext(), emailNextButton, emailProgressBar);
-        mEmailFieldViewHolder =
-            new EmailFieldViewHolder(mEmailField, clearButton, emailNextButton, this, mEmailNextButtonAdapter);
+        mEmailFieldViewHolder = new EmailFieldViewHolder(getContext(), mEmailField, clearButton, emailNextButton, this,
+            mEmailNextButtonAdapter);
         registerLifecycleListener(mEmailNextButtonAdapter);
         registerLifecycleListener(mEmailFieldViewHolder);
 
@@ -148,8 +149,8 @@ public class CaptchaFragment extends BaseFragment
         mPhoneNextButtonAdapter =
             new NextButtonAdapter(PHONE_NEXT_ID, this, getContext(), phoneNextButton, phoneProgressBar);
         mPhoneFieldViewHolder =
-            new PhoneFieldViewHolder(mPhoneField, countryCodePicker, phoneNextButton, this, mCountryCodeData,
-                mPhoneNextButtonAdapter);
+            new PhoneFieldViewHolder(this, getFragmentManager(), mPhoneField, countryCodePicker, phoneNextButton, this,
+                mCountryCodeData, mPhoneNextButtonAdapter);
         registerLifecycleListener(mPhoneNextButtonAdapter);
         registerLifecycleListener(mPhoneFieldViewHolder);
 
@@ -228,11 +229,6 @@ public class CaptchaFragment extends BaseFragment
         mCountryCodeData = null;
         mCaptchaRequest = null;
         dispatchOnDestroy();
-    }
-
-    @Override
-    public CaptchaFragment self() {
-        return this;
     }
 
     @Override

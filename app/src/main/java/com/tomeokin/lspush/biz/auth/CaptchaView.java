@@ -15,13 +15,9 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
-import com.tomeokin.lspush.biz.base.IFragment;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
-
 import java.util.List;
 
-public interface CaptchaView extends BaseActionCallback, IFragment<CaptchaFragment> {
-    // provide for view adapter
+public interface CaptchaView {
     List<String> getHistoryUserEmails();
 
     void sendCaptcha();

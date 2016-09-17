@@ -47,7 +47,7 @@ public final class EmailFieldViewHolder extends LifecycleListener {
     private final Context mContext;
     private final NextButtonAdapter mNextButtonAdapter;
 
-    public EmailFieldViewHolder(AutoCompleteTextView emailField, ImageView clearButton, TextView nextButton,
+    public EmailFieldViewHolder(Context context, AutoCompleteTextView emailField, ImageView clearButton, TextView nextButton,
         CaptchaView captchaView, NextButtonAdapter emailFieldStateAdapter) {
         mEmailField = emailField;
         mEmptyWatcher = new BaseTextWatcher() {
@@ -68,7 +68,7 @@ public final class EmailFieldViewHolder extends LifecycleListener {
         mClearButton = clearButton;
         mNextButton = nextButton;
         mCaptchaView = captchaView;
-        mContext = captchaView.getContext();
+        mContext = context;
         mNextButtonAdapter = emailFieldStateAdapter;
     }
 

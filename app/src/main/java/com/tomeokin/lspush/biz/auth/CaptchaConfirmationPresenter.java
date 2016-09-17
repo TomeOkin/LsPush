@@ -41,7 +41,7 @@ import retrofit2.Call;
 import timber.log.Timber;
 
 @PerActivity
-public class CaptchaConfirmationPresenter extends BasePresenter<CaptchaConfirmationView> implements BaseActionCallback {
+public class CaptchaConfirmationPresenter extends BasePresenter<BaseActionCallback> implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;

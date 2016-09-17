@@ -20,15 +20,18 @@ import android.content.res.Resources;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BasePresenter;
 import com.tomeokin.lspush.biz.base.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.crypt.Crypto;
+import com.tomeokin.lspush.data.local.UserManager;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.model.UploadResponse;
+import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -44,18 +47,22 @@ import retrofit2.Call;
 import timber.log.Timber;
 
 @PerActivity
-public class RegisterPresenter extends BasePresenter<RegisterView> {
+public class RegisterPresenter extends BasePresenter<BaseActionCallback> {
     private final LsPushService mLsPushService;
     private final Resources mResource;
     private final Gson mGson;
+    private final UserManager mUserManager;
     private Call<BaseResponse> mCheckUIDCall = null;
     private Call<AccessResponse> mRegisterCall = null;
     private Call<UploadResponse> mUploadCall = null;
 
-    @Inject public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
+    @Inject
+    public RegisterPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson,
+        UserManager userManager) {
         mLsPushService = lsPushService;
         mResource = context.getResources();
         mGson = gson;
+        mUserManager = userManager;
     }
 
     public void checkUIDExist(String uid) {
@@ -72,7 +79,8 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onActionFailure(UserScene.ACTION_REGISTER, null, mResource.getString(R.string.unexpected_error));
+            getMvpView().onActionFailure(UserScene.ACTION_REGISTER, null,
+                mResource.getString(R.string.unexpected_error));
             return;
         }
 
@@ -100,7 +108,14 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         } else if (action == UserScene.ACTION_UPLOAD) {
             checkAndCancel(mUploadCall);
         }
-        // TODO: 2016/9/15 upload other at activity
+    }
+
+    public void updateUserInfo(AccessResponse accessResponse, User user) {
+        mUserManager.login(user);
+        mUserManager.putExpireTime(accessResponse.getExpireTime());
+        mUserManager.putRefreshTime(accessResponse.getRefreshTime());
+        mUserManager.putExpireToken(accessResponse.getExpireToken());
+        mUserManager.putRefreshToken(accessResponse.getRefreshToken());
     }
 
     @Override

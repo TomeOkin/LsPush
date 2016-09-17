@@ -15,6 +15,23 @@
  */
 package com.tomeokin.lspush.injection.module;
 
-public class UserModule {
+import android.content.Context;
 
+import com.google.gson.Gson;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.tomeokin.lspush.data.local.UserManager;
+import com.tomeokin.lspush.injection.qualifier.AppContext;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+
+@Module
+public class UserModule {
+    @Provides
+    @Singleton
+    public UserManager provideUserPreference(@AppContext Context context, Gson gson, BriteDatabase briteDatabase) {
+        return UserManager.get(context, gson, briteDatabase);
+    }
 }

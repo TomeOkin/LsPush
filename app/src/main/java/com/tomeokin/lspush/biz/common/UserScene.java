@@ -18,6 +18,7 @@ package com.tomeokin.lspush.biz.common;
 public class UserScene {
     public static final String TAG_APP = "LsPush-App";
     public static final String TAG_NETWORK = "LsPush-Network";
+    public static final String TAG_DATABASE = "LsPush-Database";
 
     public static final String REGISTER = "register";
     public static final String SEND_CAPTCHA = "send-captcha";

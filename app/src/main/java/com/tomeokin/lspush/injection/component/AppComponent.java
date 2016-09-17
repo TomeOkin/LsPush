@@ -19,9 +19,13 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.tomeokin.lspush.data.local.UserManager;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.module.AppModule;
+import com.tomeokin.lspush.injection.module.DbModule;
 import com.tomeokin.lspush.injection.module.LsPushApiModule;
+import com.tomeokin.lspush.injection.module.UserModule;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
 import javax.inject.Singleton;
@@ -29,7 +33,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {AppModule.class, LsPushApiModule.class})
+@Component(modules = {AppModule.class, LsPushApiModule.class, UserModule.class, DbModule.class})
 public interface AppComponent {
     @AppContext Context context();
 
@@ -38,4 +42,8 @@ public interface AppComponent {
     LsPushService lspushService();
 
     Gson gson();
+
+    UserManager userManager();
+
+    BriteDatabase briteDatabase();
 }

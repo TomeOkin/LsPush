@@ -67,6 +67,10 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new JsInterface(getContext(), this),
             getString(R.string.web_image_click_target));
+        // http://blog.csdn.net/u013107656/article/details/51729398
+        mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
+        mWebView.removeJavascriptInterface("accessibilityTraversal");
+        mWebView.removeJavascriptInterface("accessibility");
         mWebView.setOnTouchListener(this);
         return view;
     }

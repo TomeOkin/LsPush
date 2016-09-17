@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
@@ -53,7 +54,7 @@ import javax.inject.Inject;
 
 import cn.smssdk.EventHandler;
 
-public class CaptchaConfirmationFragment extends BaseFragment implements CaptchaConfirmationView, BaseStateCallback {
+public class CaptchaConfirmationFragment extends BaseFragment implements BaseActionCallback, BaseStateCallback {
     public static final int NEXT_BUTTON_ID = 0;
 
     public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";

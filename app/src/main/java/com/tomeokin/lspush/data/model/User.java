@@ -15,7 +15,10 @@
  */
 package com.tomeokin.lspush.data.model;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private String uid; // ([a-zA-Z0-9]){3,24}, restraints by UserIdFilter, LengthFilter and valid checker
     private String nickname;
     private String email;
@@ -102,4 +105,40 @@ public class User {
             ", image='" + image + '\'' +
             '}';
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.uid);
+        dest.writeString(this.nickname);
+        dest.writeString(this.email);
+        dest.writeString(this.phone);
+        dest.writeString(this.region);
+        dest.writeString(this.password);
+        dest.writeInt(this.validate);
+        dest.writeString(this.image);
+    }
+
+    public User() {}
+
+    protected User(Parcel in) {
+        this.uid = in.readString();
+        this.nickname = in.readString();
+        this.email = in.readString();
+        this.phone = in.readString();
+        this.region = in.readString();
+        this.password = in.readString();
+        this.validate = in.readInt();
+        this.image = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {return new User(source);}
+
+        @Override
+        public User[] newArray(int size) {return new User[size];}
+    };
 }

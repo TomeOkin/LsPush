@@ -30,6 +30,10 @@ public class StringUtils {
         return BLANK.matcher(charSequence.toString().trim()).replaceAll(" ");
     }
 
+    public static String emptyIfNull(String str) {
+        return str == null ? "" : str;
+    }
+
     /**
      * Compare two string without considering spaces and case of string
      *

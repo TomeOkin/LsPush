@@ -204,16 +204,18 @@ dependencies {
     compile(name: 'SecurityGuardSDK-external-release-5.1.38', ext: 'aar')
 
     // crop-image
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
+    compile "com.theartofdev.edmodo:android-image-cropper:2.3.1"
 
     // permission
-    compile 'pub.devrel:easypermissions:0.2.0'
+    compile "pub.devrel:easypermissions:0.2.0"
 
     // image
     //compile 'jp.wasabeef:glide-transformations:2.0.1'
 
     // secure-share-preference
-    compile 'com.orhanobut:hawk:2.0.0-Alpha'
+    compile "com.orhanobut:hawk:2.0.0-Alpha"
+
+    compile "com.squareup.sqlbrite:sqlbrite:0.7.0"
 
     // stetho
     debugCompile debugDependencies.stetho

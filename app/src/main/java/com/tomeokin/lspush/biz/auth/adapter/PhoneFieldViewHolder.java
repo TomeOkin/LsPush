@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.auth.adapter;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,6 +38,8 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
     private final TextWatcher mValidWatcher;
     private PhoneNumberFormattingTextWatcher mFormatWatcher;
 
+    private final Fragment mFragment;
+    private final FragmentManager mFragmentManager;
     public final TextView mCountryCodePicker;
     private final TextView mNextButton;
     private final CaptchaView mCaptchaView;
@@ -44,11 +48,13 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
 
     private final NextButtonAdapter mNextButtonAdapter;
 
-    public PhoneFieldViewHolder(SearchEditText phoneField, TextView countryCodePicker, TextView nextButton,
-        CaptchaView captchaView, CountryCodeData countryCodeData, NextButtonAdapter phoneFieldStateAdapter) {
+    public PhoneFieldViewHolder(Fragment fragment, FragmentManager fragmentManager, SearchEditText phoneField,
+        TextView countryCodePicker, TextView nextButton, CaptchaView captchaView, CountryCodeData countryCodeData,
+        NextButtonAdapter phoneFieldStateAdapter) {
         mPhoneField = phoneField;
         mValidWatcher = new BaseTextWatcher() {
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (mCaptchaView.isFieldValid()) {
                     mNextButtonAdapter.active();
                 } else {
@@ -57,6 +63,8 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
             }
         };
 
+        mFragment = fragment;
+        mFragmentManager = fragmentManager;
         mCountryCodePicker = countryCodePicker;
         mNextButton = nextButton;
         mCaptchaView = captchaView;
@@ -79,19 +87,22 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         mPhoneField.addTextChangedListener(mFormatWatcher);
     }
 
-    @Override public void onCreateView(View view) {
+    @Override
+    public void onCreateView(View view) {
         mCountryCodePicker.setText(mCountryCodeData.formatSimple());
         mCountryCodePicker.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mCountryCodePickerDialog = new CountryCodePickerDialog();
-                mCountryCodePickerDialog.setTargetFragment(mCaptchaView.self(), 0);
-                mCountryCodePickerDialog.show(mCaptchaView.getFragmentManager(), null);
+                mCountryCodePickerDialog.setTargetFragment(mFragment, 0);
+                mCountryCodePickerDialog.show(mFragmentManager, null);
             }
         });
 
         updatePhoneNumberFormatting(mCountryCodeData);
         mPhoneField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT && mCaptchaView.isFieldValid()) {
                     onSendCaptcha();
                     return true;
@@ -101,7 +112,8 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         });
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 onSendCaptcha();
             }
         });
@@ -112,12 +124,14 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         mCaptchaView.sendCaptcha();
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         mPhoneField.addTextChangedListener(mValidWatcher);
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         if (mCountryCodePickerDialog != null) {
             mCountryCodePickerDialog.dismiss();
         }
@@ -125,7 +139,8 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         mPhoneField.removeTextChangedListener(mValidWatcher);
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         SoftInputUtils.hideInput(mPhoneField);
     }
 }

@@ -13,10 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.data.local;
+package com.tomeokin.lspush.biz.main;
 
-public class UserPreference {
-    public static final String history_login_user = "user_preference";
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.BasePresenter;
+import com.tomeokin.lspush.data.local.UserManager;
+import com.tomeokin.lspush.injection.scope.PerActivity;
 
+import javax.inject.Inject;
 
+@PerActivity
+public class MainPresenter extends BasePresenter<BaseActionCallback> {
+    private final UserManager mUserManager;
+
+    @Inject
+    public MainPresenter(UserManager userManager) {
+        mUserManager = userManager;
+    }
+
+    public boolean hasLogin() {
+        return mUserManager.hasUserLogin();
+    }
 }

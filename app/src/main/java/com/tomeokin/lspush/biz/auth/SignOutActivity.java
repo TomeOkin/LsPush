@@ -19,16 +19,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.injection.component.DaggerAuthComponent;
-import com.tomeokin.lspush.injection.scope.PerActivity;
 
-@PerActivity
-public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent> {
+public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
+    private SignOutPresenter mPresenter;
 
     @Override public AuthComponent component() {
         if (mComponent == null) {
@@ -45,9 +46,27 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
         setContentView(R.layout.activity_register);
 
         component().inject(this);
+        mPresenter.attachView(this);
 
-        //boolean hasHistoryLogin = false;
-        //Navigator.moveTo(this, hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
-        Navigator.moveTo(this, RegisterFragment.class, null);
+        boolean hasHistoryLogin = mPresenter.hasHistoryLoginUser();
+        Navigator.moveTo(this, hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
+        //Navigator.moveTo(this, RegisterFragment.class, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachView();
+        mPresenter = null;
+    }
+
+    @Override
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
+
+    }
+
+    @Override
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+
     }
 }

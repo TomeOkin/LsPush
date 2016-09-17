@@ -50,7 +50,7 @@ public class LsPushApplication extends Application {
         LsPushConfig.init(this);
         BeeCrypto.init(this, LsPushConfig.getJaqKey());
         Crypto.init(LsPushConfig.getPublicKey());
-        initHawk(this);
+        //initHawk(this);
         NetworkUtils.init(this);
         SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();

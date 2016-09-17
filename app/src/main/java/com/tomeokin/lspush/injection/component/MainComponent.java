@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.injection.component;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import com.tomeokin.lspush.biz.main.MainActivity;
+import com.tomeokin.lspush.injection.module.ActivityModule;
+import com.tomeokin.lspush.injection.scope.PerActivity;
 
-public interface IFragment<T extends Fragment> {
-    Context getContext();
+import dagger.Component;
 
-    FragmentManager getFragmentManager();
-
-    T self();
+@PerActivity
+@Component(dependencies = AppComponent.class, modules = ActivityModule.class)
+public interface MainComponent extends ActivityComponent {
+    void inject(MainActivity mainActivity);
 }
