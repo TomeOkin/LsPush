@@ -253,6 +253,7 @@ public class RegisterFragment extends BaseFragment
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 保存 EditText 焦点
                 final int selection = mPasswordField.getSelectionEnd();
                 boolean passwordToggledVisible;
                 if (mPasswordField.getTransformationMethod() instanceof PasswordTransformationMethod) {
@@ -345,8 +346,8 @@ public class RegisterFragment extends BaseFragment
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again))
-                .setTitle(getString(R.string.settings_dialog_title))
+            new AppSettingsDialog.Builder(this, getString(R.string.rationale_ask_again)).setTitle(
+                getString(R.string.settings_dialog_title))
                 .setPositiveButton(getString(R.string.setting))
                 .setNegativeButton(getString(R.string.dialog_cancel), null /* click listener */)
                 .build()
@@ -434,13 +435,9 @@ public class RegisterFragment extends BaseFragment
                 }
 
                 Timber.i("crop-image result uri: %s", mUserAvatarFile.getAbsolutePath());
-                Glide.with(getContext())
-                    .load(mUserAvatarFile)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                Glide.with(getContext()).load(mUserAvatarFile).diskCacheStrategy(DiskCacheStrategy.ALL)
                     // when using transform or bitmapTransform, don't use fitCenter() or centerCrop()
-                    .transform(new CircleTransform(getContext()))
-                    .override(450, 450)
-                    .into(mUserAvatar);
+                    .transform(new CircleTransform(getContext())).override(450, 450).into(mUserAvatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
                 Timber.i(result.getError(), "crop image failure");

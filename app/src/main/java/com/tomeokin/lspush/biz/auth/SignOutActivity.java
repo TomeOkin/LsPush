@@ -33,7 +33,8 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
     private AuthComponent mComponent;
     @Inject SignOutPresenter mPresenter;
 
-    @Override public AuthComponent component() {
+    @Override
+    public AuthComponent component() {
         if (mComponent == null) {
             mComponent = DaggerAuthComponent.builder()
                 .appComponent(getAppComponent())
@@ -43,7 +44,8 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
         return mComponent;
     }
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 

@@ -114,10 +114,10 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
                 if (SystemClock.elapsedRealtime() - mLastSentTime <= mWaitingTime) {
                     SimpleDialogBuilder builder = new SimpleDialogBuilder(getContext(), getFragmentManager());
                     builder.setTitle(R.string.send_captcha_code)
-                           .setMessage(getResources().getString(R.string.send_captcha_dialog_notice,
-                               SystemClock.elapsedRealtime() - mLastSentTime))
-                           .setNeutralText(R.string.ok)
-                           .show();
+                        .setMessage(getResources().getString(R.string.send_captcha_dialog_notice,
+                            SystemClock.elapsedRealtime() - mLastSentTime))
+                        .setNeutralText(R.string.ok)
+                        .show();
                 } else {
                     mLastSentTime = SystemClock.elapsedRealtime();
                     mPresenter.sendCaptcha(mCaptchaRequest, mCountryCode);
@@ -275,7 +275,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         if (action == UserScene.ACTION_SEND_CAPTCHA) {
             mWaitingTime = DEFAULT_WAITING_TIME;
             Toast.makeText(getContext(), getResources().getString(R.string.receive_captcha_notice), Toast.LENGTH_SHORT)
-                 .show();
+                .show();
         } else if (action == UserScene.ACTION_CHECK_CAPTCHA) {
             mNextButtonAdapter.syncRevokeWaiting();
             Bundle bundle = RegisterFragment.prepareArgument(mCaptchaRequest, mCaptchaField.getText().toString());

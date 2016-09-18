@@ -56,7 +56,9 @@ public class LsPushApiModule {
         API_URL = LsPushConfig.getServerUrl();
     }
 
-    @Provides @Singleton public OkHttpClient provideOkHttpClient(final Application application) {
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient(final Application application) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         if (BuildConfig.DEBUG) {
@@ -86,7 +88,8 @@ public class LsPushApiModule {
 
     private HttpLoggingInterceptor provideHttpLoggingInterceptor() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override public void log(String message) {
+            @Override
+            public void log(String message) {
                 // for better see, change to normal
                 Log.d(UserScene.TAG_NETWORK, message);
             }
@@ -98,7 +101,8 @@ public class LsPushApiModule {
 
     public Interceptor provideCacheInterceptor() {
         return new Interceptor() {
-            @Override public Response intercept(Chain chain) throws IOException {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
                 Response response = chain.proceed(chain.request());
 
                 // re-write response header to force use of cache
@@ -114,7 +118,8 @@ public class LsPushApiModule {
 
     public Interceptor provideOfflineCacheInterceptor() {
         return new Interceptor() {
-            @Override public Response intercept(Chain chain) throws IOException {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
 
                 if (!NetworkUtils.ConnectingNetwork()) {
@@ -129,11 +134,15 @@ public class LsPushApiModule {
         };
     }
 
-    @Provides @Singleton public Gson provideGson() {
+    @Provides
+    @Singleton
+    public Gson provideGson() {
         return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
     }
 
-    @Provides @Singleton public LsPushService provideLsPushService(Gson gson, OkHttpClient okHttpClient) {
+    @Provides
+    @Singleton
+    public LsPushService provideLsPushService(Gson gson, OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))

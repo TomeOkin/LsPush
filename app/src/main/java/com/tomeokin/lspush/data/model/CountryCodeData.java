@@ -42,9 +42,11 @@ public class CountryCodeData implements Parcelable, Comparable<CountryCodeData> 
         return String.format("%s (+%s)", this.displayString, this.countryCode);
     }
 
-    @Override public int describeContents() { return 0; }
+    @Override
+    public int describeContents() { return 0; }
 
-    @Override public void writeToParcel(Parcel dest, int flags) {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.countryCode);
         dest.writeString(this.country);
         dest.writeString(this.displayString);
@@ -57,12 +59,15 @@ public class CountryCodeData implements Parcelable, Comparable<CountryCodeData> 
     }
 
     public static final Creator<CountryCodeData> CREATOR = new Creator<CountryCodeData>() {
-        @Override public CountryCodeData createFromParcel(Parcel source) {return new CountryCodeData(source);}
+        @Override
+        public CountryCodeData createFromParcel(Parcel source) {return new CountryCodeData(source);}
 
-        @Override public CountryCodeData[] newArray(int size) {return new CountryCodeData[size];}
+        @Override
+        public CountryCodeData[] newArray(int size) {return new CountryCodeData[size];}
     };
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -72,13 +77,15 @@ public class CountryCodeData implements Parcelable, Comparable<CountryCodeData> 
         return country != null ? country.equals(that.country) : that.country == null;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         int result = countryCode != null ? countryCode.hashCode() : 0;
         result = 31 * result + (country != null ? country.hashCode() : 0);
         return result;
     }
 
-    @Override public int compareTo(@NonNull CountryCodeData another) {
+    @Override
+    public int compareTo(@NonNull CountryCodeData another) {
         return displayString.compareTo(another.displayString);
     }
 }

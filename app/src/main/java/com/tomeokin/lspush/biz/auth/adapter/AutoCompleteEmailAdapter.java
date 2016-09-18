@@ -37,19 +37,23 @@ public class AutoCompleteEmailAdapter extends ArrayAdapter<String> {
         mHintList = hintList;
     }
 
-    @Override public int getCount() {
+    @Override
+    public int getCount() {
         return filteredList.size();
     }
 
-    @Override public Filter getFilter() {
+    @Override
+    public Filter getFilter() {
         return new EmailFilter(this, mEmptyList, mHintList);
     }
 
-    @Override public String getItem(int position) {
+    @Override
+    public String getItem(int position) {
         return filteredList.get(position);
     }
 
-    @Override public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         return super.getView(position, convertView, parent);
     }
 }

@@ -71,13 +71,15 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         mInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
-    @Override public void clearFocus() {
+    @Override
+    public void clearFocus() {
         setFocusableInTouchMode(false);
         super.clearFocus();
         setFocusableInTouchMode(true);
     }
 
-    @Override public boolean onTouchEvent(MotionEvent event) {
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
         if (mTextFilled
             && mClearButtonEnabled
             && event.getAction() == MotionEvent.ACTION_UP
@@ -91,7 +93,8 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         return super.onTouchEvent(event);
     }
 
-    @Override public boolean onPreDraw() {
+    @Override
+    public boolean onPreDraw() {
         boolean isEmpty = TextUtils.isEmpty(getSearchString());
         if (mTextFilled != isEmpty) {
             return super.onPreDraw();
@@ -101,14 +104,16 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         return false;
     }
 
-    @Override protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
         if (mOnFilterTextListener != null) {
             mOnFilterTextListener.onTextChanged(this, text, start, lengthBefore, lengthAfter);
         }
     }
 
-    @Override public boolean dispatchKeyEventPreIme(KeyEvent event) {
+    @Override
+    public boolean dispatchKeyEventPreIme(KeyEvent event) {
         if (mEnableQuickBackWhenEmpty
             && event.getKeyCode() == KeyEvent.KEYCODE_BACK
             && event.getAction() == KeyEvent.ACTION_DOWN
@@ -118,7 +123,8 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         return super.dispatchKeyEventPreIme(event);
     }
 
-    @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId != EditorInfo.IME_ACTION_GO && actionId != EditorInfo.IME_ACTION_SEARCH) {
             return false;
         }
@@ -129,7 +135,8 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         return true;
     }
 
-    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!TextUtils.isEmpty(getText()) && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER
                 || keyCode == KeyEvent.KEYCODE_ENTER
@@ -143,7 +150,8 @@ public class SearchEditText extends AppCompatEditText implements TextView.OnEdit
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!mHasLayout) {
             requestFocus();

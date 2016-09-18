@@ -31,7 +31,8 @@ public class UserIdFilter extends LoginFilter.UsernameFilterGeneric {
         mCallback = callback;
     }
 
-    @Override public boolean isAllowed(char c) {
+    @Override
+    public boolean isAllowed(char c) {
         if ('0' <= c && c <= '9') return true;
         if ('a' <= c && c <= 'z') return true;
         if ('A' <= c && c <= 'Z') return true;
@@ -39,7 +40,8 @@ public class UserIdFilter extends LoginFilter.UsernameFilterGeneric {
         return false;
     }
 
-    @Override public void onInvalidCharacter(char c) {
+    @Override
+    public void onInvalidCharacter(char c) {
         super.onInvalidCharacter(c);
         mCallback.onInvalidCharacter(mRequestId, c);
     }

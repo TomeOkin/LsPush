@@ -47,16 +47,18 @@ public final class EmailFieldViewHolder extends LifecycleListener {
     private final Context mContext;
     private final NextButtonAdapter mNextButtonAdapter;
 
-    public EmailFieldViewHolder(Context context, AutoCompleteTextView emailField, ImageView clearButton, TextView nextButton,
-        CaptchaView captchaView, NextButtonAdapter emailFieldStateAdapter) {
+    public EmailFieldViewHolder(Context context, AutoCompleteTextView emailField, ImageView clearButton,
+        TextView nextButton, CaptchaView captchaView, NextButtonAdapter emailFieldStateAdapter) {
         mEmailField = emailField;
         mEmptyWatcher = new BaseTextWatcher() {
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
                 mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
         };
         mValidWatcher = new BaseTextWatcher() {
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (mCaptchaView.isFieldValid()) {
                     mNextButtonAdapter.active();
                 } else {
@@ -72,7 +74,8 @@ public final class EmailFieldViewHolder extends LifecycleListener {
         mNextButtonAdapter = emailFieldStateAdapter;
     }
 
-    @Override public void onCreateView(View view) {
+    @Override
+    public void onCreateView(View view) {
         List<String> emails = mCaptchaView.getHistoryUserEmails();
         String[] emailHint = mContext.getResources().getStringArray(R.array.email_postfix);
         List<String> emailHintList = Arrays.asList(emailHint);
@@ -88,7 +91,8 @@ public final class EmailFieldViewHolder extends LifecycleListener {
         }
 
         mEmailField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT && mCaptchaView.isFieldValid()) {
                     onSendCaptcha();
                     return true;
@@ -99,13 +103,15 @@ public final class EmailFieldViewHolder extends LifecycleListener {
 
         mClearButton.setVisibility(mEmailField.length() > 0 ? View.VISIBLE : View.GONE);
         mClearButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEmailField.setText("");
                 mEmailField.requestFocus();
             }
         });
         mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 onSendCaptcha();
             }
         });
@@ -116,18 +122,21 @@ public final class EmailFieldViewHolder extends LifecycleListener {
         mCaptchaView.sendCaptcha();
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         mEmailField.addTextChangedListener(mEmptyWatcher);
         mEmailField.addTextChangedListener(mValidWatcher);
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         SoftInputUtils.hideInput(mEmailField);
         mEmailField.removeTextChangedListener(mEmptyWatcher);
         mEmailField.removeTextChangedListener(mValidWatcher);
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         SoftInputUtils.hideInput(mEmailField);
     }
 }

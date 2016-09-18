@@ -38,7 +38,8 @@ public class CaptchaRequest implements Parcelable {
         this.region = region;
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -46,18 +47,20 @@ public class CaptchaRequest implements Parcelable {
 
         if (!sendObject.equals(request.sendObject)) return false;
         return region != null ? region.equals(request.region) : request.region == null;
-
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         int result = sendObject.hashCode();
         result = 31 * result + (region != null ? region.hashCode() : 0);
         return result;
     }
 
-    @Override public int describeContents() { return 0; }
+    @Override
+    public int describeContents() { return 0; }
 
-    @Override public void writeToParcel(Parcel dest, int flags) {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.sendObject);
         dest.writeString(this.region);
     }
@@ -70,8 +73,10 @@ public class CaptchaRequest implements Parcelable {
     }
 
     public static final Parcelable.Creator<CaptchaRequest> CREATOR = new Parcelable.Creator<CaptchaRequest>() {
-        @Override public CaptchaRequest createFromParcel(Parcel source) {return new CaptchaRequest(source);}
+        @Override
+        public CaptchaRequest createFromParcel(Parcel source) {return new CaptchaRequest(source);}
 
-        @Override public CaptchaRequest[] newArray(int size) {return new CaptchaRequest[size];}
+        @Override
+        public CaptchaRequest[] newArray(int size) {return new CaptchaRequest[size];}
     };
 }

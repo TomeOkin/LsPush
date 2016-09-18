@@ -62,7 +62,8 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
 
     protected abstract T self();
 
-    @NonNull protected Bundle prepareArguments(Bundle args) {
+    @NonNull
+    protected Bundle prepareArguments(Bundle args) {
         return args;
     }
 
@@ -167,7 +168,8 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
         return self();
     }
 
-    @SuppressWarnings("unchecked") private F create() {
+    @SuppressWarnings("unchecked")
+    private F create() {
         final Bundle args = prepareArguments(mArgs);
         final F fragment = (F) Fragment.instantiate(mContext, mClazz.getName(), args);
 

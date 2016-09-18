@@ -25,7 +25,7 @@ public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
     private final FilterCallback mCallback;
 
     public PasswordFilter(int requestId, FilterCallback callback) {
-        this(requestId,  callback, false);
+        this(requestId, callback, false);
     }
 
     public PasswordFilter(int requestId, FilterCallback callback, boolean appendInvalid) {
@@ -34,7 +34,8 @@ public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
         mCallback = callback;
     }
 
-    @Override public boolean isAllowed(char c) {
+    @Override
+    public boolean isAllowed(char c) {
         // [a-zA-Z0-9\\.,;]
         if ('0' <= c && c <= '9') return true;
         if ('a' <= c && c <= 'z') return true;
@@ -44,7 +45,8 @@ public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
         return false;
     }
 
-    @Override public void onInvalidCharacter(char c) {
+    @Override
+    public void onInvalidCharacter(char c) {
         super.onInvalidCharacter(c);
         mCallback.onInvalidCharacter(mRequestId, c);
     }

@@ -38,7 +38,8 @@ public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> 
         mCountryCodeList = new ArrayList<>(list);
     }
 
-    @Override public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_menu_item, parent, false);
             convertView.setPadding(0, 0, 0, 0);

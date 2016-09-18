@@ -57,8 +57,8 @@ public class CountryCodePickerDialog extends BaseDialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getDialog().getWindow()
-                   .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-                       | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            .setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @SuppressLint("InflateParams")

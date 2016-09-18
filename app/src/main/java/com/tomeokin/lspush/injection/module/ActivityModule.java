@@ -32,9 +32,14 @@ public class ActivityModule {
         this.activity = activity;
     }
 
-    @Provides @PerActivity Activity activity() {
+    @Provides
+    @PerActivity
+    Activity activity() {
         return this.activity;
     }
 
-    @Provides @PerActivity @ActivityContext Context provideActivityContext() { return activity; }
+    @Provides
+    @PerActivity
+    @ActivityContext
+    Context provideActivityContext() { return activity; }
 }

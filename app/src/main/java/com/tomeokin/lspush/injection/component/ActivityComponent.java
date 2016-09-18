@@ -29,5 +29,6 @@ import dagger.Component;
 public interface ActivityComponent {
     Activity activity();
 
-    @ActivityContext Context context();
+    @ActivityContext
+    Context context();
 }

@@ -67,7 +67,8 @@ public class LandingRotatingBackgroundView extends View {
         tile = bitmap;
     }
 
-    @Override protected void onDraw(Canvas canvas) {
+    @Override
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // 相对于窗口左上角的偏移
         getLocationInWindow(location);

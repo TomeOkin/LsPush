@@ -45,9 +45,9 @@ public class ImageDialogFragment extends BaseDialogFragment {
     protected BaseDialogFragment.Builder config(@NonNull BaseDialogFragment.Builder builder) {
         ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.dialog_image, null);
         builder.setTitle(R.string.use_current_image)
-               .addCustomMessageView(imageView)
-               .addPositiveButton(R.string.dialog_ok, this)
-               .addNegativeButton(R.string.dialog_cancel, this);
+            .addCustomMessageView(imageView)
+            .addPositiveButton(R.string.dialog_ok, this)
+            .addNegativeButton(R.string.dialog_cancel, this);
 
         final String url = getArguments().getString(ARG_IMAGE_URL);
         final Uri uri = Uri.parse(url);
@@ -65,11 +65,11 @@ public class ImageDialogFragment extends BaseDialogFragment {
         lp.height = height + container.getPaddingTop() + container.getPaddingBottom();
 
         Glide.with(getContext())
-             .load(uri)
-             .diskCacheStrategy(DiskCacheStrategy.ALL)
-             .override(width, height)
-             .fitCenter()
-             .into(imageView);
+            .load(uri)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .override(width, height)
+            .fitCenter()
+            .into(imageView);
 
         return builder;
     }

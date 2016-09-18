@@ -34,7 +34,8 @@ public class EmailFilter extends Filter {
         mFilteredList = new ArrayList<>(mEmptyList.size() + mHintList.size());
     }
 
-    @Override protected FilterResults performFiltering(CharSequence constraint) {
+    @Override
+    protected FilterResults performFiltering(CharSequence constraint) {
         mFilteredList.clear();
         final FilterResults results = new FilterResults();
 
@@ -66,7 +67,8 @@ public class EmailFilter extends Filter {
         return results;
     }
 
-    @SuppressWarnings("unchecked") @Override
+    @SuppressWarnings("unchecked")
+    @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
         mAdapter.filteredList.clear();
         mAdapter.filteredList.addAll((List<String>) results.values);

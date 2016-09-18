@@ -34,7 +34,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, LsPushApiModule.class, UserModule.class, DbModule.class})
 public interface AppComponent {
-    @AppContext Context context();
+    @AppContext
+    Context context();
 
     Application application();
 

@@ -40,7 +40,8 @@ public class FieldAdapter extends BaseStateAdapter {
         mProgressBar = progressBar;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mValidButton = null;
         mProgressBar = null;

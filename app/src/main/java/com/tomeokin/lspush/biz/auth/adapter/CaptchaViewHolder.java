@@ -38,14 +38,17 @@ public final class CaptchaViewHolder extends LifecycleListener {
         mPhoneFieldSwitchAdapter = phoneFieldSwitchAdapter;
     }
 
-    @Override public void onCreateView(View view) {
+    @Override
+    public void onCreateView(View view) {
         mEmailTab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 switchShowEmail(true);
             }
         });
         mPhoneTab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 switchShowEmail(false);
             }
         });

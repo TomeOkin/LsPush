@@ -19,7 +19,8 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
     private MainComponent mComponent;
     @Inject MainPresenter mPresenter;
 
-    @Override public MainComponent component() {
+    @Override
+    public MainComponent component() {
         if (mComponent == null) {
             mComponent = DaggerMainComponent.builder()
                 .appComponent(getAppComponent())

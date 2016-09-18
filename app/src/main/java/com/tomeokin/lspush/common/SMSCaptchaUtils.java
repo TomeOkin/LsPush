@@ -78,12 +78,14 @@ public class SMSCaptchaUtils {
             mCallback = callback;
         }
 
-        @SuppressWarnings("unchecked") @Override
+        @SuppressWarnings("unchecked")
+        @Override
         public void afterEvent(final int event, final int result, final Object data) {
             if (result != SMSSDK.RESULT_COMPLETE) {
                 Timber.w((Throwable) data);
                 mHandler.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mCallback.onActionFailure(event, null, null);
                     }
                 });
@@ -93,13 +95,15 @@ public class SMSCaptchaUtils {
             if (event == GET_SUPPORTED_COUNTRIES) {
                 final HashMap<String, String> countryList = getCountryList((ArrayList<HashMap<String, Object>>) data);
                 mHandler.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mCallback.onActionSuccess(event, new SMSCountryListResponse(countryList));
                     }
                 });
             } else if (event == SEND_CAPTCHA) {
                 mHandler.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mCallback.onActionSuccess(event, new SMSSentCaptchaResponse((Boolean) data));
                     }
                 });
@@ -108,7 +112,8 @@ public class SMSCaptchaUtils {
                 final String phone = (String) map.get("phone");
                 final String countryCode = (String) map.get("country");
                 mHandler.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mCallback.onActionSuccess(event, new SMSCheckCaptchaResponse(phone, countryCode));
                     }
                 });

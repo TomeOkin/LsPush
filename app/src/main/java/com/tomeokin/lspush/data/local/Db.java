@@ -18,7 +18,6 @@ package com.tomeokin.lspush.data.local;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.model.User;
 
@@ -71,7 +70,7 @@ public class Db {
                 values.put(VALIDATE, user.getValidate());
                 values.put(AVATAR, user.getImage());
                 return values;
-            } catch (Exception e){
+            } catch (Exception e) {
                 return values;
             }
         }

@@ -35,7 +35,8 @@ public class NotificationBar extends AppCompatTextView {
     private Animation mSlideUpAnim;
     private int mState = 3;
     private final Runnable mHideRunnable = new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
             sideUp();
         }
     };

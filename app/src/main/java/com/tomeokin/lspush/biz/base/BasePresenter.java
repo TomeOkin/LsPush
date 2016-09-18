@@ -22,11 +22,15 @@ import retrofit2.Call;
 public class BasePresenter<T extends BaseActionCallback> implements Presenter<T> {
     private T mMvpView;
 
-    @CallSuper @Override public void attachView(T mvpView) {
+    @CallSuper
+    @Override
+    public void attachView(T mvpView) {
         mMvpView = mvpView;
     }
 
-    @CallSuper @Override public void detachView() {
+    @CallSuper
+    @Override
+    public void detachView() {
         mMvpView = null;
     }
 

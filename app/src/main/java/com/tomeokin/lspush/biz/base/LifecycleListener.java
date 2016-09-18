@@ -18,27 +18,33 @@ package com.tomeokin.lspush.biz.base;
 import android.view.View;
 
 public class LifecycleListener implements OnLifecycleListener {
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
 
     }
 
-    @Override public void onCreateView(View view) {
+    @Override
+    public void onCreateView(View view) {
 
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
 
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
 
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
 
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
 
     }
 }

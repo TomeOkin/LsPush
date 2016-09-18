@@ -31,8 +31,7 @@ public class ImageIntentUtils {
     };
 
     public static final String[] PERMISSION_TAKE_PHOTO = new String[] {
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     /**

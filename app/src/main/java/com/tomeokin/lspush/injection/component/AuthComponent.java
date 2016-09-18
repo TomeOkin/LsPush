@@ -17,6 +17,7 @@ package com.tomeokin.lspush.injection.component;
 
 import com.tomeokin.lspush.biz.auth.CaptchaConfirmationFragment;
 import com.tomeokin.lspush.biz.auth.CaptchaFragment;
+import com.tomeokin.lspush.biz.auth.LoginFragment;
 import com.tomeokin.lspush.biz.auth.RegisterFragment;
 import com.tomeokin.lspush.biz.auth.SignOutActivity;
 import com.tomeokin.lspush.injection.module.ActivityModule;
@@ -34,4 +35,6 @@ public interface AuthComponent extends ActivityComponent {
     void inject(CaptchaConfirmationFragment captchaConfirmationFragment);
 
     void inject(RegisterFragment registerFragment);
+
+    void inject(LoginFragment loginFragment);
 }

@@ -33,11 +33,16 @@ public class AppModule {
         this.application = application;
     }
 
-    @Provides @Singleton Application application() {
+    @Provides
+    @Singleton
+    Application application() {
         return application;
     }
 
-    @Provides @Singleton @AppContext Context provideAppContext() {
+    @Provides
+    @Singleton
+    @AppContext
+    Context provideAppContext() {
         return application;
     }
 }

@@ -60,7 +60,8 @@ public class MarginTextInputLayout extends TextInputLayout {
         attributes.recycle();
     }
 
-    @Override public void addView(View child, int index, ViewGroup.LayoutParams params) {
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
 
         if (child instanceof EditText && params instanceof android.widget.LinearLayout.LayoutParams) {
