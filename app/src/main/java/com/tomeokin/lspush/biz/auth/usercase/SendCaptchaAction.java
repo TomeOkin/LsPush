@@ -16,9 +16,7 @@
 package com.tomeokin.lspush.biz.auth.usercase;
 
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseAction;
@@ -41,8 +39,8 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
     private EventHandler mEventHandler;
     private Call<BaseResponse> mSendCaptchaCall;
 
-    public SendCaptchaAction(BaseActionCallback callback, Resources resources, LsPushService lsPushService) {
-        super(callback, resources);
+    public SendCaptchaAction(Resources resources, LsPushService lsPushService) {
+        super(resources);
         mLsPushService = lsPushService;
     }
 
@@ -58,7 +56,7 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
+        if (action == SMSCaptchaUtils.SEND_CAPTCHA && mCallback != null) {
             Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
             mCallback.onActionFailure(UserScene.ACTION_SEND_CAPTCHA, response,
                 mResource.getString(R.string.send_captcha_error));
@@ -67,22 +65,22 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
+        if (action == SMSCaptchaUtils.SEND_CAPTCHA && mCallback != null) {
             mCallback.onActionSuccess(UserScene.ACTION_SEND_CAPTCHA, response);
         }
     }
 
     @Override
-    public void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreate(view, savedInstanceState);
+    public void attach(BaseActionCallback callback) {
+        super.attach(callback);
         mHandler = new SMSCaptchaUtils.SMSHandler(this);
         mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler);
         SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void detach() {
+        super.detach();
         if (mHandler != null) {
             mHandler.removeAllMessage();
         }

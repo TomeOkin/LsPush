@@ -21,12 +21,13 @@ import com.tomeokin.lspush.biz.auth.LoginFragment;
 import com.tomeokin.lspush.biz.auth.RegisterFragment;
 import com.tomeokin.lspush.biz.auth.SignOutActivity;
 import com.tomeokin.lspush.injection.module.ActivityModule;
+import com.tomeokin.lspush.injection.module.AuthModule;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 
 import dagger.Component;
 
 @PerActivity
-@Component(dependencies = AppComponent.class, modules = ActivityModule.class)
+@Component(dependencies = AppComponent.class, modules = {ActivityModule.class, AuthModule.class})
 public interface AuthComponent extends ActivityComponent {
     void inject(SignOutActivity signOutActivity);
 

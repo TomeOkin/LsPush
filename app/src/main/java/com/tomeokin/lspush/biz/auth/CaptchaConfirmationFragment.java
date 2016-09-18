@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.usercase.AuthActionInjector;
 import com.tomeokin.lspush.biz.auth.usercase.CheckCaptchaAction;
 import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
@@ -69,9 +68,8 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     private NextButtonAdapter mNextButtonAdapter;
     private TextWatcher mValidWatcher;
 
-    @Inject AuthActionInjector mInjector;
-    private SendCaptchaAction mSendCaptchaAction;
-    private CheckCaptchaAction mCheckCaptchaAction;
+    @Inject SendCaptchaAction mSendCaptchaAction;
+    @Inject CheckCaptchaAction mCheckCaptchaAction;
 
     public static Bundle prepareArgument(CaptchaRequest captchaRequest, String countryCode) {
         Bundle bundle = new Bundle();
@@ -91,7 +89,6 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         }
 
         component(AuthComponent.class).inject(this);
-        //dispatchOnCreate(savedInstanceState);
     }
 
     @Nullable
@@ -175,10 +172,8 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSendCaptchaAction = mInjector.getSendCaptchaAction(this);
-        registerLifecycleListener(mSendCaptchaAction);
-        mCheckCaptchaAction = mInjector.getCheckCaptchaAction(this);
-        registerLifecycleListener(mCheckCaptchaAction);
+        mSendCaptchaAction.attach(this);
+        mCheckCaptchaAction.attach(this);
         dispatchOnViewCreate(view, savedInstanceState);
     }
 
@@ -214,16 +209,11 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         mValidWatcher = null;
         mCaptchaField.setOnEditorActionListener(null);
         mCaptchaField = null;
-        unregister(mSendCaptchaAction);
-        mSendCaptchaAction = null;
-        unregister(mCheckCaptchaAction);
-        mCheckCaptchaAction = null;
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //dispatchOnDestroy();
+        mSendCaptchaAction.detach();
+        mSendCaptchaAction = null;
+        mCheckCaptchaAction.detach();
+        mCheckCaptchaAction = null;
     }
 
     public void checkCaptcha() {

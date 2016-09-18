@@ -37,7 +37,6 @@ import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
-import com.tomeokin.lspush.biz.auth.usercase.AuthActionInjector;
 import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
@@ -74,8 +73,7 @@ public class CaptchaFragment extends BaseFragment
     private PhoneFieldViewHolder mPhoneFieldViewHolder;
     private CaptchaViewHolder mViewHolder;
 
-    @Inject AuthActionInjector mInjector;
-    private SendCaptchaAction mSendCaptchaAction;
+    @Inject SendCaptchaAction mSendCaptchaAction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,7 +86,7 @@ public class CaptchaFragment extends BaseFragment
         mShowEmail = true;
         mShowingEmailTab = true;
 
-        dispatchOnCreate(savedInstanceState);
+        //dispatchOnCreate(savedInstanceState);
     }
 
     @Nullable
@@ -176,8 +174,7 @@ public class CaptchaFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSendCaptchaAction = mInjector.getSendCaptchaAction(this);
-        registerLifecycleListener(mSendCaptchaAction);
+        mSendCaptchaAction.attach(this);
         dispatchOnViewCreate(view, savedInstanceState);
     }
 
@@ -211,7 +208,7 @@ public class CaptchaFragment extends BaseFragment
         mPhoneNextButtonAdapter = null;
         mPhoneFieldViewHolder = null;
         mViewHolder = null;
-        unregister(mSendCaptchaAction);
+        mSendCaptchaAction.detach();
         mSendCaptchaAction = null;
     }
 

@@ -26,6 +26,7 @@ import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.injection.component.DaggerAuthComponent;
+import com.tomeokin.lspush.injection.module.AuthModule;
 
 public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
@@ -37,6 +38,7 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
             mComponent = DaggerAuthComponent.builder()
                 .appComponent(getAppComponent())
                 .activityModule(getActivityModule())
+                .authModule(new AuthModule())
                 .build();
         }
         return mComponent;

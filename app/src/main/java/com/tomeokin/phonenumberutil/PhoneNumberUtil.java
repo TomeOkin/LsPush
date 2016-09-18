@@ -23,7 +23,7 @@ public class PhoneNumberUtil {
     private static PhoneNumberUtilCore core;
 
     private PhoneNumberUtil(Context context) {
-        MetadataLoader metadataLoader = new ZipMetadataLoader(context);
+        MetadataLoader metadataLoader = new ZipMetadataLoader(context.getApplicationContext());
         MetadataSource metadataSource = new MultiFileMetadataSourceImpl(metadataLoader);
         core = PhoneNumberUtilCore.getInstance(metadataSource);
     }

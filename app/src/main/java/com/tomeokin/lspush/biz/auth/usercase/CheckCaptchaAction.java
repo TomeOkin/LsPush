@@ -16,9 +16,7 @@
 package com.tomeokin.lspush.biz.auth.usercase;
 
 import android.content.res.Resources;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
@@ -46,9 +44,8 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
     private EventHandler mEventHandler;
     private Call<BaseResponse> mCheckCaptchaCall;
 
-    public CheckCaptchaAction(BaseActionCallback callback, Resources resources, LsPushService lsPushService,
-        Gson gson) {
-        super(callback, resources);
+    public CheckCaptchaAction(Resources resources, LsPushService lsPushService, Gson gson) {
+        super(resources);
         mLsPushService = lsPushService;
         mGson = gson;
     }
@@ -57,8 +54,7 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
         if (request.getSendObject().contains("@")) {
             checkCaptcha(request, authCode);
         } else {
-            SMSCaptchaUtils.submitCaptcha(countryCode, request.getSendObject(),
-                authCode);
+            SMSCaptchaUtils.submitCaptcha(countryCode, request.getSendObject(), authCode);
         }
     }
 
@@ -84,7 +80,7 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+        if (action == SMSCaptchaUtils.CHECK_CAPTCHA && mCallback != null) {
             Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(action));
             mCallback.onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, response,
                 mResource.getString(R.string.check_captcha_error));
@@ -93,22 +89,22 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+        if (action == SMSCaptchaUtils.CHECK_CAPTCHA && mCallback != null) {
             mCallback.onActionSuccess(UserScene.ACTION_CHECK_CAPTCHA, response);
         }
     }
 
     @Override
-    public void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreate(view, savedInstanceState);
+    public void attach(BaseActionCallback callback) {
+        super.attach(callback);
         mHandler = new SMSCaptchaUtils.SMSHandler(this);
         mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler);
         SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void detach() {
+        super.detach();
         SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
         mEventHandler = null;
         mHandler.removeAllMessage();

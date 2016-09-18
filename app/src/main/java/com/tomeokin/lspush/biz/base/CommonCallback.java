@@ -44,14 +44,20 @@ public class CommonCallback<T extends BaseResponse> implements Callback<T> {
         if (response.isSuccessful()) {
             BaseResponse baseResponse = response.body();
             if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
-                mCallback.onActionSuccess(mActionId, baseResponse);
+                if (mCallback != null) {
+                    mCallback.onActionSuccess(mActionId, baseResponse);
+                }
             } else {
-                mCallback.onActionFailure(mActionId, baseResponse, baseResponse.getResult());
+                if (mCallback != null) {
+                    mCallback.onActionFailure(mActionId, baseResponse, baseResponse.getResult());
+                }
             }
         } else {
             try {
                 Timber.tag(UserScene.TAG_NETWORK).w(response.errorBody().string());
-                mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.network_abnormal));
+                if (mCallback != null) {
+                    mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.network_abnormal));
+                }
             } catch (IOException e) {
                 // ignore
             }
@@ -61,6 +67,8 @@ public class CommonCallback<T extends BaseResponse> implements Callback<T> {
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         Timber.w(t);
-        mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.unexpected_error));
+        if (mCallback != null) {
+            mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.unexpected_error));
+        }
     }
 }

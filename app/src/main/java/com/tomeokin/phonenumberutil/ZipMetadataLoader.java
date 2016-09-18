@@ -25,7 +25,7 @@ import java.util.zip.ZipInputStream;
 public final class ZipMetadataLoader implements MetadataLoader {
     private final Context context;
 
-    public ZipMetadataLoader(Context context) {
+    public ZipMetadataLoader(final Context context) {
         this.context = context;
     }
 

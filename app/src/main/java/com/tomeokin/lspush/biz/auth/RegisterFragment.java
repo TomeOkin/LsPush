@@ -51,6 +51,10 @@ import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
+import com.tomeokin.lspush.biz.auth.usercase.CheckUIDAction;
+import com.tomeokin.lspush.biz.auth.usercase.RegisterAction;
+import com.tomeokin.lspush.biz.auth.usercase.UpdateLocalUserInfoAction;
+import com.tomeokin.lspush.biz.auth.usercase.UploadAvatarAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
@@ -132,7 +136,11 @@ public class RegisterFragment extends BaseFragment
     private File mUserAvatarFile = null;
     private BaseDialogFragment mBaseDialogFragment;
 
-    @Inject RegisterPresenter mPresenter;
+    //@Inject RegisterPresenter mPresenter;
+    @Inject CheckUIDAction mCheckUIDAction;
+    @Inject UploadAvatarAction mUploadAvatarAction;
+    @Inject RegisterAction mRegisterAction;
+    @Inject UpdateLocalUserInfoAction mUpdateLocalUserInfoAction;
 
     public static Bundle prepareArgument(CaptchaRequest captchaRequest, String authCode) {
         Bundle bundle = new Bundle();
@@ -158,7 +166,6 @@ public class RegisterFragment extends BaseFragment
         };
 
         component(AuthComponent.class).inject(this);
-        dispatchOnCreate(savedInstanceState);
     }
 
     @Nullable
@@ -187,7 +194,7 @@ public class RegisterFragment extends BaseFragment
                     // 如果用户修改了文本，此时如果处于加载状态，取消该状态，并进行状态同步，
                     // 同时取消已进行的网络请求
                     if (mUIDAdapter.getState() == FieldAdapter.WAITING) {
-                        mPresenter.cancel(UserScene.ACTION_CHECK_UID);
+                        mCheckUIDAction.cancel(UserScene.ACTION_CHECK_UID);
                     } else if (mUIDAdapter.getState() == FieldAdapter.INFO) {
                         mUIDAdapter.active();
                     }
@@ -207,7 +214,7 @@ public class RegisterFragment extends BaseFragment
                         && mUIDAdapter.getState() != FieldAdapter.INFO
                         && isValidUserId()) {
                         mUIDAdapter.waiting();
-                        mPresenter.checkUIDExist(mUserIdField.getText().toString());
+                        mCheckUIDAction.checkUIDExist(mUserIdField.getText().toString());
                     }
                 }
             }
@@ -383,12 +390,6 @@ public class RegisterFragment extends BaseFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mPresenter.attachView(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -448,6 +449,15 @@ public class RegisterFragment extends BaseFragment
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mCheckUIDAction.attach(this);
+        mUploadAvatarAction.attach(this);
+        mRegisterAction.attach(this);
+        mUpdateLocalUserInfoAction.attach(this);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         SoftInputUtils.hideInput(mPasswordField);
@@ -458,7 +468,15 @@ public class RegisterFragment extends BaseFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPresenter.detachView();
+        mCheckUIDAction.detach();
+        mCheckUIDAction = null;
+        mUploadAvatarAction.detach();
+        mUploadAvatarAction = null;
+        mRegisterAction.detach();
+        mRegisterAction = null;
+        mUpdateLocalUserInfoAction.detach();
+        mUpdateLocalUserInfoAction = null;
+
         if (mBaseDialogFragment != null) {
             mBaseDialogFragment.dismiss();
             mBaseDialogFragment = null;
@@ -488,17 +506,10 @@ public class RegisterFragment extends BaseFragment
         dispatchOnDestroyView();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter = null;
-        dispatchOnDestroy();
-    }
-
     public void register() {
         mNextButtonAdapter.waiting();
         if (mUserAvatarFile != null && TextUtils.isEmpty(mUserAvatarImage)) {
-            mPresenter.upload(mUserAvatarFile);
+            mUploadAvatarAction.upload(mUserAvatarFile);
             return;
         }
 
@@ -511,7 +522,7 @@ public class RegisterFragment extends BaseFragment
         mRegisterData.setNickname(mUserNameField.getText().toString());
         mRegisterData.setPassword(mPasswordField.getText().toString());
         mRegisterData.setUserAvatar(mUserAvatarImage);
-        mPresenter.register(mRegisterData);
+        mRegisterAction.register(mRegisterData);
     }
 
     public boolean isValidUserId() {
@@ -612,7 +623,7 @@ public class RegisterFragment extends BaseFragment
                 }
                 user.setImage(mRegisterData.getUserAvatar());
                 user.setPassword(mRegisterData.getPassword());
-                mPresenter.updateUserInfo(res, user);
+                mUpdateLocalUserInfoAction.updateUserInfo(res, user);
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();

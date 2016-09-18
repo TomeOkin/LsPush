@@ -25,6 +25,7 @@ import com.facebook.stetho.Stetho;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogInterceptor;
 import com.orhanobut.logger.Logger;
+import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
@@ -45,6 +46,7 @@ public class LsPushApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        LeakCanary.install(this);
         initLogger();
         initJAQ(this);
         LsPushConfig.init(this);

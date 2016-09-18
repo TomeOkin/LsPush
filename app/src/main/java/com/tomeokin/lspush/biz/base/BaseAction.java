@@ -16,16 +16,26 @@
 package com.tomeokin.lspush.biz.base;
 
 import android.content.res.Resources;
+import android.support.annotation.CallSuper;
 
 import retrofit2.Call;
 
-public class BaseAction extends LifecycleListener {
-    protected final BaseActionCallback mCallback;
+public class BaseAction {
     protected final Resources mResource;
+    protected BaseActionCallback mCallback;
 
-    public BaseAction(BaseActionCallback callback, Resources resources) {
-        mCallback = callback;
+    public BaseAction(Resources resources) {
         mResource = resources;
+    }
+
+    @CallSuper
+    public void attach(BaseActionCallback callback) {
+        mCallback = callback;
+    }
+
+    @CallSuper
+    public void detach() {
+        mCallback = null;
     }
 
     protected void checkAndCancel(Call<?> call) {
