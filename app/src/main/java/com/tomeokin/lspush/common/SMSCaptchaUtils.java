@@ -17,6 +17,7 @@ package com.tomeokin.lspush.common;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
@@ -69,55 +70,42 @@ public class SMSCaptchaUtils {
         SMSSDK.submitVerificationCode(countryCode, phone, captcha);
     }
 
-    public static final class CustomEventHandler extends EventHandler {
-        private final Handler mHandler;
+    // see http://wiki.mob.com/android-%E7%9F%AD%E4%BF%A1sdk%E6%93%8D%E4%BD%9C%E5%9B%9E%E8%B0%83/
+    // 由于 EventHandler 的回调有可能不是在 UI 线程，因此需要进行包装。
+    public static final class SMSHandler extends Handler {
         private final BaseActionCallback mCallback;
 
-        public CustomEventHandler(Handler handler, BaseActionCallback callback) {
-            mHandler = handler;
+        public SMSHandler(BaseActionCallback callback) {
             mCallback = callback;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public void afterEvent(final int event, final int result, final Object data) {
-            if (result != SMSSDK.RESULT_COMPLETE) {
-                Timber.w((Throwable) data);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCallback.onActionFailure(event, null, null);
-                    }
-                });
+        public void dispatchMessage(Message msg) {
+            if (msg.arg1 != SMSSDK.RESULT_COMPLETE) {
+                Timber.w((Throwable) msg.obj);
+                mCallback.onActionFailure(msg.what, null, null);
                 return;
             }
 
-            if (event == GET_SUPPORTED_COUNTRIES) {
-                final HashMap<String, String> countryList = getCountryList((ArrayList<HashMap<String, Object>>) data);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCallback.onActionSuccess(event, new SMSCountryListResponse(countryList));
-                    }
-                });
-            } else if (event == SEND_CAPTCHA) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCallback.onActionSuccess(event, new SMSSentCaptchaResponse((Boolean) data));
-                    }
-                });
-            } else if (event == CHECK_CAPTCHA) {
-                final HashMap<String, Object> map = (HashMap<String, Object>) data;
+            if (msg.what == GET_SUPPORTED_COUNTRIES) {
+                final HashMap<String, String> countryList =
+                    getCountryList((ArrayList<HashMap<String, Object>>) msg.obj);
+                mCallback.onActionSuccess(msg.what, new SMSCountryListResponse(countryList));
+            } else if (msg.what == SEND_CAPTCHA) {
+                mCallback.onActionSuccess(msg.what, new SMSSentCaptchaResponse((Boolean) msg.obj));
+            } else if (msg.what == CHECK_CAPTCHA) {
+                final HashMap<String, Object> map = (HashMap<String, Object>) msg.obj;
                 final String phone = (String) map.get("phone");
                 final String countryCode = (String) map.get("country");
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCallback.onActionSuccess(event, new SMSCheckCaptchaResponse(phone, countryCode));
-                    }
-                });
+                mCallback.onActionSuccess(msg.what, new SMSCheckCaptchaResponse(phone, countryCode));
             }
+        }
+
+        public void removeAllMessage() {
+            removeMessages(GET_SUPPORTED_COUNTRIES);
+            removeMessages(SEND_CAPTCHA);
+            removeMessages(CHECK_CAPTCHA);
         }
 
         // 解析国家列表
@@ -135,6 +123,20 @@ public class SMSCaptchaUtils {
                 countryRules.put(code, rule);
             }
             return countryRules;
+        }
+    }
+
+    public static final class CustomEventHandler extends EventHandler {
+        private final SMSHandler mHandler;
+
+        public CustomEventHandler(SMSHandler handler) {
+            mHandler = handler;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void afterEvent(final int event, final int result, final Object data) {
+            mHandler.obtainMessage(event, result, 0, data).sendToTarget();
         }
     }
 }

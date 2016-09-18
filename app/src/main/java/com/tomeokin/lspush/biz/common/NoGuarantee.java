@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.common;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface OnLifecycleListener {
-    void onCreate(); // y_
+import static java.lang.annotation.ElementType.METHOD;
 
-    void onCreateView(View view); // a
-
-    void onViewCreate(View view, @Nullable Bundle savedInstanceState);
-
-    void onResume(); // d
-
-    void onPause(); // F_
-
-    void onDestroyView(); // G_
-
-    void onDestroy(); // H_
-}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(value = {METHOD})
+public @interface NoGuarantee { }

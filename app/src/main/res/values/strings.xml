@@ -22,6 +22,7 @@
     <string name="uid_hint">User ID</string>
     <string name="username_hint">User Name</string>
     <string name="user_password_hint">Password</string>
+    <string name="user_account_hit">Account</string>
     <string name="uid_error">User ID length must not be less than %s numbers including letters.</string>
     <string name="username_error">Username length must not be less than %s numbers including letters.</string>
     <string name="user_password_error">Password length must not be less than %s numbers including letters.</string>

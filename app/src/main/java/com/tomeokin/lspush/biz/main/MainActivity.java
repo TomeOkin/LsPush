@@ -13,11 +13,9 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.DaggerMainComponent;
 import com.tomeokin.lspush.injection.component.MainComponent;
 
-import javax.inject.Inject;
-
 public class MainActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<MainComponent> {
     private MainComponent mComponent;
-    @Inject MainPresenter mPresenter;
+    //@Inject MainPresenter mPresenter;
 
     @Override
     public MainComponent component() {
@@ -36,8 +34,9 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
         setContentView(R.layout.activity_main);
 
         component().inject(this);
-        mPresenter.attachView(this);
-        boolean hasLogin = mPresenter.hasLogin();
+        //mPresenter.attachView(this);
+        //boolean hasLogin = mPresenter.hasLogin();
+        boolean hasLogin =false;
         if (!hasLogin) {
             Intent intent = new Intent(this, SignOutActivity.class);
             startActivity(intent);
@@ -56,8 +55,8 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.detachView();
-        mPresenter = null;
+        //mPresenter.detachView();
+        //mPresenter = null;
     }
 
     @Override

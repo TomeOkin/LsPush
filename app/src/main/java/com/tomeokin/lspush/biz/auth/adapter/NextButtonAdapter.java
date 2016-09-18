@@ -28,7 +28,7 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 public final class NextButtonAdapter extends BaseStateAdapter {
     TextView mNextButton;
     private ProgressBar mProgressBar;
-    private Context mContext;
+    private final Context mContext;
     private String mNextText;
 
     public NextButtonAdapter(int requestId, BaseStateCallback callback, Context context, TextView nextButton,
@@ -54,11 +54,6 @@ public final class NextButtonAdapter extends BaseStateAdapter {
         super.onDestroyView();
         mNextButton = null;
         mProgressBar = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        mContext = null;
     }
 
     public void setNextText(String nextText) {

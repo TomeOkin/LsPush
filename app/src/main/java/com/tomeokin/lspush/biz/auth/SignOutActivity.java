@@ -27,11 +27,9 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.injection.component.DaggerAuthComponent;
 
-import javax.inject.Inject;
-
 public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
-    @Inject SignOutPresenter mPresenter;
+    //@Inject SignOutPresenter mPresenter;
 
     @Override
     public AuthComponent component() {
@@ -49,10 +47,11 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        component().inject(this);
-        mPresenter.attachView(this);
+        //component().inject(this);
+        //mPresenter.attachView(this);
 
-        boolean hasHistoryLogin = mPresenter.hasHistoryLoginUser();
+        //boolean hasHistoryLogin = mPresenter.hasHistoryLoginUser();
+        boolean hasHistoryLogin = false;
         Navigator.moveTo(this, hasHistoryLogin ? LoginFragment.class : CaptchaFragment.class, null);
         //Navigator.moveTo(this, RegisterFragment.class, null);
     }
@@ -60,8 +59,8 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.detachView();
-        mPresenter = null;
+        //mPresenter.detachView();
+        //mPresenter = null;
     }
 
     @Override

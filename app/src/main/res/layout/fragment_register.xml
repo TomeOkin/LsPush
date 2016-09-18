@@ -16,8 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/register_header_bottom_margin"
-        android:layout_marginTop="@dimen/register_header_top_margin"
+        android:layout_marginBottom="@dimen/reg_login_header_bottom_margin"
+        android:layout_marginTop="@dimen/reg_login_header_top_margin"
         tools:src="@drawable/register_name" />
 
     <LinearLayout
@@ -56,7 +56,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
                 android:alpha="0.3"
-                android:background="@drawable/validation_positive"
+                android:background="@drawable/search_clear"
                 android:visibility="gone" />
 
             <ProgressBar
@@ -102,7 +102,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
                 android:alpha="0.3"
-                android:background="@drawable/validation_positive"
+                android:background="@drawable/search_clear"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -141,7 +141,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/register_next" />
+        <include layout="@layout/reg_login_next" />
 
     </LinearLayout>
 
@@ -150,6 +150,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/register_footer" />
+    <include layout="@layout/reg_login_footer" />
 
 </LinearLayout>

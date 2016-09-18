@@ -176,8 +176,8 @@ dependencies {
     compile releaseDependencies.dagger2
     apt releaseDependencies.dagger2Compiler
     // butterknife
-    compile releaseDependencies.butterknife
-    apt releaseDependencies.butterknifeCompiler
+//    compile releaseDependencies.butterknife
+//    apt releaseDependencies.butterknifeCompiler
     // network
     compile releaseDependencies.retrofit2
     compile releaseDependencies.okhttp3
@@ -186,8 +186,8 @@ dependencies {
     compile releaseDependencies.okhttp3Logging
     compile debugDependencies.stethoOkhttp3
     // binding
-    compile releaseDependencies.rxbindingV7
-    compile releaseDependencies.rxbindingRecyclerview
+//    compile releaseDependencies.rxbindingV7
+//    compile releaseDependencies.rxbindingRecyclerview
     // gson
     compile releaseDependencies.gson
     // image

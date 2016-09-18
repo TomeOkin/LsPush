@@ -23,6 +23,7 @@
     <string name="uid_hint">用户 ID</string>
     <string name="username_hint">用户名</string>
     <string name="user_password_hint">密码</string>
+    <string name="user_account_hit">帐号</string>
     <string name="uid_error">用户 ID 至少要有 %s 个字符或数字。</string>
     <string name="username_error">用户名至少要有 %s 个字符或数字。</string>
     <string name="user_password_error">密码至少要有 %s 个字符或数字。</string>

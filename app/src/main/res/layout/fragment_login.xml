@@ -1,27 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="#49a0b6">
 
-    <TextView
+    <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:padding="@dimen/row_padding"
-        android:textStyle="bold"
-        android:text="I'm LoginFragment" />
+        android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/startRegister"
+    <ImageView
+        android:id="@+id/image_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/reg_login_header_bottom_margin"
+        android:layout_marginTop="@dimen/reg_login_header_top_margin"
+        tools:src="@drawable/register_name" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reg_field_horizontal_margin"
+        android:layout_marginRight="@dimen/reg_field_horizontal_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/account_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_marginBottom="@dimen/row_padding"
+            android:background="@drawable/login_input_field"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/account_field"
+                style="@style/Widget.LsPush.EditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/user_account_hit"
+                android:inputType="text|textEmailAddress|phone"
+                android:paddingLeft="@dimen/row_padding"
+                android:paddingRight="@dimen/row_padding" />
+
+            <ImageView
+                android:id="@+id/account_clean_button"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/validation_positive"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:layout_marginBottom="@dimen/row_padding"
+            android:background="@drawable/login_input_field"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/password_field"
+                style="@style/Widget.LsPush.EditText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/user_password_hint"
+                android:inputType="textPassword"
+                android:paddingLeft="@dimen/row_padding"
+                android:paddingRight="@dimen/row_padding" />
+
+            <android.support.design.widget.CheckableImageButton
+                android:id="@+id/userPwd_toggle_button"
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:alpha="0.3"
+                android:background="@drawable/password_eye"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <include layout="@layout/reg_login_next" />
+
+    </LinearLayout>
+
+    <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:padding="@dimen/row_padding"
-        android:text="Start Register" />
+        android:layout_weight="1" />
+
+    <include layout="@layout/reg_login_footer" />
 
 </LinearLayout>

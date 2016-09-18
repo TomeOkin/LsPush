@@ -16,7 +16,6 @@
 package com.tomeokin.lspush.biz.auth;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -35,6 +34,9 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
+import com.tomeokin.lspush.biz.auth.usercase.AuthActionInjector;
+import com.tomeokin.lspush.biz.auth.usercase.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
@@ -42,7 +44,6 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.Navigator;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
@@ -51,8 +52,6 @@ import com.tomeokin.lspush.ui.widget.SearchEditText;
 import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
 
 import javax.inject.Inject;
-
-import cn.smssdk.EventHandler;
 
 public class CaptchaConfirmationFragment extends BaseFragment implements BaseActionCallback, BaseStateCallback {
     public static final int NEXT_BUTTON_ID = 0;
@@ -68,11 +67,11 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     private long mLastSentTime;
     private SearchEditText mCaptchaField;
     private NextButtonAdapter mNextButtonAdapter;
-    private EventHandler mEventHandler;
-    private Handler mHandler;
     private TextWatcher mValidWatcher;
 
-    @Inject CaptchaConfirmationPresenter mPresenter;
+    @Inject AuthActionInjector mInjector;
+    private SendCaptchaAction mSendCaptchaAction;
+    private CheckCaptchaAction mCheckCaptchaAction;
 
     public static Bundle prepareArgument(CaptchaRequest captchaRequest, String countryCode) {
         Bundle bundle = new Bundle();
@@ -92,7 +91,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         }
 
         component(AuthComponent.class).inject(this);
-        dispatchOnCreate(savedInstanceState);
+        //dispatchOnCreate(savedInstanceState);
     }
 
     @Nullable
@@ -120,7 +119,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
                         .show();
                 } else {
                     mLastSentTime = SystemClock.elapsedRealtime();
-                    mPresenter.sendCaptcha(mCaptchaRequest, mCountryCode);
+                    mSendCaptchaAction.sendCaptchaCode(mCaptchaRequest, mCountryCode);
                 }
             }
         });
@@ -176,10 +175,11 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.attachView(this);
-        mHandler = new Handler();
-        mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler, mPresenter);
-        SMSCaptchaUtils.registerEventHandler(mEventHandler);
+        mSendCaptchaAction = mInjector.getSendCaptchaAction(this);
+        registerLifecycleListener(mSendCaptchaAction);
+        mCheckCaptchaAction = mInjector.getCheckCaptchaAction(this);
+        registerLifecycleListener(mCheckCaptchaAction);
+        dispatchOnViewCreate(view, savedInstanceState);
     }
 
     @Override
@@ -207,34 +207,28 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPresenter.detachView();
+        dispatchOnDestroyView();
         unregister(mNextButtonAdapter);
         mNextButtonAdapter = null;
         mCaptchaField.removeTextChangedListener(mValidWatcher);
         mValidWatcher = null;
         mCaptchaField.setOnEditorActionListener(null);
         mCaptchaField = null;
-        SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
-        mEventHandler = null;
-        mHandler = null;
-        dispatchOnDestroyView();
+        unregister(mSendCaptchaAction);
+        mSendCaptchaAction = null;
+        unregister(mCheckCaptchaAction);
+        mCheckCaptchaAction = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter = null;
-        dispatchOnDestroy();
+        //dispatchOnDestroy();
     }
 
     public void checkCaptcha() {
         mNextButtonAdapter.waiting();
-        if (mCaptchaRequest.getSendObject().contains("@")) {
-            mPresenter.checkCaptcha(mCaptchaRequest, mCaptchaField.getText().toString());
-        } else {
-            SMSCaptchaUtils.submitCaptcha(mCountryCode, mCaptchaRequest.getSendObject(),
-                mCaptchaField.getText().toString());
-        }
+        mCheckCaptchaAction.checkCaptcha(mCaptchaRequest, mCaptchaField.getText().toString(), mCountryCode);
     }
 
     public boolean isFieldValid() {

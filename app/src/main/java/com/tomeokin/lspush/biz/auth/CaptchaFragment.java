@@ -16,7 +16,6 @@
 package com.tomeokin.lspush.biz.auth;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
@@ -38,6 +37,8 @@ import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
+import com.tomeokin.lspush.biz.auth.usercase.AuthActionInjector;
+import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
@@ -45,7 +46,6 @@ import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.Navigator;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.common.ValidateUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
@@ -56,8 +56,6 @@ import com.tomeokin.lspush.ui.widget.SearchEditText;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import cn.smssdk.EventHandler;
 
 public class CaptchaFragment extends BaseFragment
     implements CaptchaView, BaseActionCallback, BaseStateCallback, OnCountryCodeSelectedListener {
@@ -76,10 +74,8 @@ public class CaptchaFragment extends BaseFragment
     private PhoneFieldViewHolder mPhoneFieldViewHolder;
     private CaptchaViewHolder mViewHolder;
 
-    private EventHandler mEventHandler;
-    private Handler mHandler;
-
-    @Inject CaptchaPresenter mCaptchaPresenter;
+    @Inject AuthActionInjector mInjector;
+    private SendCaptchaAction mSendCaptchaAction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -180,10 +176,9 @@ public class CaptchaFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCaptchaPresenter.attachView(this);
-        mHandler = new Handler();
-        mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler, mCaptchaPresenter);
-        SMSCaptchaUtils.registerEventHandler(mEventHandler);
+        mSendCaptchaAction = mInjector.getSendCaptchaAction(this);
+        registerLifecycleListener(mSendCaptchaAction);
+        dispatchOnViewCreate(view, savedInstanceState);
     }
 
     @Override
@@ -203,7 +198,7 @@ public class CaptchaFragment extends BaseFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mCaptchaPresenter.detachView();
+        dispatchOnDestroyView();
         mEmailField = null;
         mPhoneField = null;
         unregister(mEmailNextButtonAdapter);
@@ -216,19 +211,15 @@ public class CaptchaFragment extends BaseFragment
         mPhoneNextButtonAdapter = null;
         mPhoneFieldViewHolder = null;
         mViewHolder = null;
-        SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
-        mEventHandler = null;
-        mHandler = null;
-        dispatchOnDestroyView();
+        unregister(mSendCaptchaAction);
+        mSendCaptchaAction = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mCaptchaPresenter = null;
         mCountryCodeData = null;
         mCaptchaRequest = null;
-        dispatchOnDestroy();
     }
 
     @Override
@@ -242,7 +233,7 @@ public class CaptchaFragment extends BaseFragment
 
     @Override
     public List<String> getHistoryUserEmails() {
-        return mCaptchaPresenter.getHistoryUserEmails();
+        return null;
     }
 
     @Override
@@ -258,7 +249,7 @@ public class CaptchaFragment extends BaseFragment
             mCaptchaRequest.setSendObject(phone);
             mCaptchaRequest.setRegion(mCountryCodeData.country);
         }
-        mCaptchaPresenter.sendCaptchaCode(mCaptchaRequest, mCountryCodeData.countryCode);
+        mSendCaptchaAction.sendCaptchaCode(mCaptchaRequest, mCountryCodeData.countryCode);
     }
 
     @Override

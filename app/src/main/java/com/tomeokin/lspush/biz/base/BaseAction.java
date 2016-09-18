@@ -15,43 +15,24 @@
  */
 package com.tomeokin.lspush.biz.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
+import android.content.res.Resources;
 
-public class LifecycleListener implements OnLifecycleListener {
-    @Override
-    public void onCreate() {
+import retrofit2.Call;
 
+public class BaseAction extends LifecycleListener {
+    protected final BaseActionCallback mCallback;
+    protected final Resources mResource;
+
+    public BaseAction(BaseActionCallback callback, Resources resources) {
+        mCallback = callback;
+        mResource = resources;
     }
 
-    @Override
-    public void onCreateView(View view) {
-
+    protected void checkAndCancel(Call<?> call) {
+        if (call != null && !call.isCanceled()) {
+            call.cancel();
+        }
     }
 
-    @Override
-    public void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public void onResume() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onDestroyView() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
+    public void cancel(int action) {}
 }

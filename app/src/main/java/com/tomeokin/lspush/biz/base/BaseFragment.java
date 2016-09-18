@@ -35,6 +35,7 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport = new LifecycleListenerSupport();
     }
 
+    @Deprecated
     public void dispatchOnCreate(@Nullable Bundle savedInstanceState) {
         listenerSupport.onCreate();
     }
@@ -42,6 +43,12 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
     public void dispatchOnCreateView(View view) {
         if (view != null) {
             listenerSupport.onCreateView(view);
+        }
+    }
+
+    public void dispatchOnViewCreate(View view, @Nullable Bundle savedInstanceState) {
+        if (view != null) {
+            listenerSupport.onViewCreate(view, savedInstanceState);
         }
     }
 
@@ -57,6 +64,7 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport.onDestroyView();
     }
 
+    @Deprecated
     public void dispatchOnDestroy() {
         listenerSupport.onDestroy();
     }

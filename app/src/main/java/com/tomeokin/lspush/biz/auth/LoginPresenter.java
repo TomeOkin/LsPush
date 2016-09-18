@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.auth;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
+import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.BasePresenter;
 
-public interface OnLifecycleListener {
-    void onCreate(); // y_
+//@PerActivity
+public class LoginPresenter extends BasePresenter<BaseActionCallback> {
+    //private final LsPushService mLsPushService;
+    //private final Resources mResource;
+    //private final Gson mGson;
+    //private final UserManager mUserManager;
 
-    void onCreateView(View view); // a
 
-    void onViewCreate(View view, @Nullable Bundle savedInstanceState);
-
-    void onResume(); // d
-
-    void onPause(); // F_
-
-    void onDestroyView(); // G_
-
-    void onDestroy(); // H_
 }

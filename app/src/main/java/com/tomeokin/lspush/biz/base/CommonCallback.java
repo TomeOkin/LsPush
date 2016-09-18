@@ -18,6 +18,7 @@ package com.tomeokin.lspush.biz.base;
 import android.content.res.Resources;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.model.BaseResponse;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class CommonCallback<T extends BaseResponse> implements Callback<T> {
             }
         } else {
             try {
-                Timber.tag("network").w(response.errorBody().string());
+                Timber.tag(UserScene.TAG_NETWORK).w(response.errorBody().string());
                 mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.network_abnormal));
             } catch (IOException e) {
                 // ignore

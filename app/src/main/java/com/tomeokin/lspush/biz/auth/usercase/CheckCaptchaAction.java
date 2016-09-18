@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth;
+package com.tomeokin.lspush.biz.auth.usercase;
 
-import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.biz.base.BaseAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
-import com.tomeokin.lspush.biz.base.BasePresenter;
 import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.common.NoGuarantee;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.data.crypt.Crypto;
@@ -32,37 +34,35 @@ import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.remote.LsPushService;
-import com.tomeokin.lspush.injection.qualifier.ActivityContext;
-import com.tomeokin.lspush.injection.scope.PerActivity;
 
-import javax.inject.Inject;
-
+import cn.smssdk.EventHandler;
 import retrofit2.Call;
 import timber.log.Timber;
 
-@PerActivity
-public class CaptchaConfirmationPresenter extends BasePresenter<BaseActionCallback> implements BaseActionCallback {
+public class CheckCaptchaAction extends BaseAction implements BaseActionCallback {
     private final LsPushService mLsPushService;
-    private final Resources mResource;
     private final Gson mGson;
+    private SMSCaptchaUtils.SMSHandler mHandler;
+    private EventHandler mEventHandler;
+    private Call<BaseResponse> mCheckCaptchaCall;
 
-    @Inject
-    public CaptchaConfirmationPresenter(LsPushService lsPushService, @ActivityContext Context context, Gson gson) {
+    public CheckCaptchaAction(BaseActionCallback callback, Resources resources, LsPushService lsPushService,
+        Gson gson) {
+        super(callback, resources);
         mLsPushService = lsPushService;
-        mResource = context.getResources();
         mGson = gson;
     }
 
-    public void sendCaptcha(CaptchaRequest request, String countryCode) {
+    public void checkCaptcha(CaptchaRequest request, String authCode, String countryCode) {
         if (request.getSendObject().contains("@")) {
-            Call<BaseResponse> call = mLsPushService.sendCaptcha(request);
-            call.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_SEND_CAPTCHA, getMvpView()));
+            checkCaptcha(request, authCode);
         } else {
-            SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
+            SMSCaptchaUtils.submitCaptcha(countryCode, request.getSendObject(),
+                authCode);
         }
     }
 
-    public void checkCaptcha(CaptchaRequest request, String authCode) {
+    private void checkCaptcha(CaptchaRequest request, String authCode) {
         RegisterData registerData = new RegisterData();
         registerData.setCaptchaRequest(request);
         registerData.setAuthCode(authCode);
@@ -72,33 +72,57 @@ public class CaptchaConfirmationPresenter extends BasePresenter<BaseActionCallba
             cryptoToken = Crypto.encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
-            getMvpView().onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, null,
+            mCallback.onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, null,
                 mResource.getString(R.string.unexpected_error));
             return;
         }
-        Call<BaseResponse> call = mLsPushService.checkCaptcha(cryptoToken);
-        call.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_CHECK_CAPTCHA, getMvpView()));
+
+        checkAndCancel(mCheckCaptchaCall);
+        mCheckCaptchaCall = mLsPushService.checkCaptcha(cryptoToken);
+        mCheckCaptchaCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_CHECK_CAPTCHA, mCallback));
     }
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
-            Timber.tag(UserScene.SEND_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(UserScene.ACTION_SEND_CAPTCHA, response,
-                mResource.getString(R.string.send_captcha_error));
-        } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+        if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
             Timber.tag(UserScene.CHECK_CAPTCHA).w(mResource.getString(action));
-            getMvpView().onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, response,
+            mCallback.onActionFailure(UserScene.ACTION_CHECK_CAPTCHA, response,
                 mResource.getString(R.string.check_captcha_error));
         }
     }
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == SMSCaptchaUtils.SEND_CAPTCHA) {
-            getMvpView().onActionSuccess(UserScene.ACTION_SEND_CAPTCHA, response);
-        } else if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
-            getMvpView().onActionSuccess(UserScene.ACTION_CHECK_CAPTCHA, response);
+        if (action == SMSCaptchaUtils.CHECK_CAPTCHA) {
+            mCallback.onActionSuccess(UserScene.ACTION_CHECK_CAPTCHA, response);
+        }
+    }
+
+    @Override
+    public void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreate(view, savedInstanceState);
+        mHandler = new SMSCaptchaUtils.SMSHandler(this);
+        mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler);
+        SMSCaptchaUtils.registerEventHandler(mEventHandler);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
+        mEventHandler = null;
+        mHandler.removeAllMessage();
+        mHandler = null;
+        checkAndCancel(mCheckCaptchaCall);
+        mCheckCaptchaCall = null;
+    }
+
+    @NoGuarantee
+    @Override
+    public void cancel(int action) {
+        super.cancel(action);
+        if (action == UserScene.ACTION_CHECK_CAPTCHA) {
+            checkAndCancel(mCheckCaptchaCall);
         }
     }
 }

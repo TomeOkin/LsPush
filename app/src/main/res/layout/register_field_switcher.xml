@@ -33,11 +33,11 @@
 
     <include
         android:id="@+id/next_button_1"
-        layout="@layout/register_next" />
+        layout="@layout/reg_login_next" />
 
     <include
         tools:visibility="gone"
         android:id="@+id/next_button_2"
-        layout="@layout/register_next" />
+        layout="@layout/reg_login_next" />
 
 </merge>

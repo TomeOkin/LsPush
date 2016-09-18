@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.base;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public final class LifecycleListenerSupport {
         listeners.remove(listener);
     }
 
+    @Deprecated
     public final void onCreate() {
         for (int i = listeners.size() - 1; i >= 0; i--) {
             listeners.get(i).onCreate();
@@ -47,6 +50,12 @@ public final class LifecycleListenerSupport {
     public final void onCreateView(View view) {
         for (int i = listeners.size() - 1; i >= 0; i--) {
             listeners.get(i).onCreateView(view);
+        }
+    }
+
+    public final void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
+        for (int i = listeners.size() - 1; i >= 0; i--) {
+            listeners.get(i).onViewCreate(view, savedInstanceState);
         }
     }
 
@@ -68,6 +77,7 @@ public final class LifecycleListenerSupport {
         }
     }
 
+    @Deprecated
     public final void onDestroy() {
         for (int i = listeners.size() - 1; i >= 0; i--) {
             listeners.get(i).onDestroy();
