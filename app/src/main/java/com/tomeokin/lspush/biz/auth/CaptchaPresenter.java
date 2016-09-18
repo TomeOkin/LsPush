@@ -39,7 +39,7 @@ import retrofit2.Call;
 import timber.log.Timber;
 
 @PerActivity
-public class CaptchaPresenter extends BasePresenter<CaptchaView> implements BaseActionCallback {
+public class CaptchaPresenter extends BasePresenter<BaseActionCallback> implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Resources mResource;
 

@@ -27,9 +27,11 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.injection.component.DaggerAuthComponent;
 
+import javax.inject.Inject;
+
 public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
-    private SignOutPresenter mPresenter;
+    @Inject SignOutPresenter mPresenter;
 
     @Override public AuthComponent component() {
         if (mComponent == null) {

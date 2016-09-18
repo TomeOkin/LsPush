@@ -73,7 +73,6 @@ public class RegisterPresenter extends BasePresenter<BaseActionCallback> {
 
     public void register(RegisterData registerData) {
         String data = mGson.toJson(registerData, RegisterData.class);
-        Timber.i("register-data %s", data);
         CryptoToken cryptoToken;
         try {
             cryptoToken = Crypto.encrypt(data);

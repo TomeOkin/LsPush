@@ -97,7 +97,8 @@ public class UserManager {
     }
 
     public boolean hasHistoryUser() {
-        return mUtils.get(HISTORY_LOGIN_USER, Boolean.class);
+        Boolean result = mUtils.get(HISTORY_LOGIN_USER, Boolean.class);
+        return result != null;
     }
 
     public boolean hasUserLogin() {

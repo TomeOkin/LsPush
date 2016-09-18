@@ -16,6 +16,7 @@
 package com.tomeokin.lspush.data.crypt;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityCipher;
@@ -37,18 +38,18 @@ public class BeeCrypto {
     }
 
     public static byte[] encrypt(byte[] data) throws JAQException {
-        return cipher.encryptBinary(data, jaqKey);
+        return data == null || data.length == 0 ? data : cipher.encryptBinary(data, jaqKey);
     }
 
     public static String encrypt(String data) throws JAQException {
-        return cipher.encryptString(data, jaqKey);
+        return TextUtils.isEmpty(data) ? data : cipher.encryptString(data, jaqKey);
     }
 
     public static byte[] decrypt(byte[] data) throws JAQException {
-        return cipher.decryptBinary(data, jaqKey);
+        return data == null || data.length == 0 ? data : cipher.decryptBinary(data, jaqKey);
     }
 
     public static String decrypt(String data) throws JAQException {
-        return cipher.decryptString(data, jaqKey);
+        return TextUtils.isEmpty(data) ? data : cipher.decryptString(data, jaqKey);
     }
 }

@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        component().inject(this);
         mPresenter.attachView(this);
         boolean hasLogin = mPresenter.hasLogin();
         if (!hasLogin) {
@@ -44,6 +45,11 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
 
         //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
         //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override

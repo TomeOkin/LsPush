@@ -65,8 +65,8 @@ public class Db {
             try {
                 values.put(UID, user.getUid());
                 values.put(NICKNAME, user.getNickname());
-                values.put(EMAIL, BeeCrypto.encrypt(StringUtils.emptyIfNull(user.getEmail())));
-                values.put(PHONE, BeeCrypto.encrypt(StringUtils.emptyIfNull(user.getPhone())));
+                values.put(EMAIL, BeeCrypto.encrypt(user.getEmail()));
+                values.put(PHONE, BeeCrypto.encrypt(user.getPhone()));
                 values.put(REGION, user.getRegion());
                 values.put(VALIDATE, user.getValidate());
                 values.put(AVATAR, user.getImage());
