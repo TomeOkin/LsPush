@@ -19,7 +19,12 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.biz.auth.usercase.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.auth.usercase.CheckUIDAction;
+import com.tomeokin.lspush.biz.auth.usercase.RegisterAction;
 import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
+import com.tomeokin.lspush.biz.auth.usercase.UpdateLocalUserInfoAction;
+import com.tomeokin.lspush.biz.auth.usercase.UploadAvatarAction;
+import com.tomeokin.lspush.data.local.UserManager;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -40,5 +45,31 @@ public class AuthModule {
     public CheckCaptchaAction provideCheckCaptchaAction(@ActivityContext Context context, LsPushService lsPushService,
         Gson gson) {
         return new CheckCaptchaAction(context.getResources(), lsPushService, gson);
+    }
+
+    @Provides
+    @PerActivity
+    public CheckUIDAction provideCheckUIDAction(@ActivityContext Context context, LsPushService lsPushService) {
+        return new CheckUIDAction(context.getResources(), lsPushService);
+    }
+
+    @Provides
+    @PerActivity
+    public UploadAvatarAction provideUploadAvatarAction(@ActivityContext Context context, LsPushService lsPushService) {
+        return new UploadAvatarAction(context.getResources(), lsPushService);
+    }
+
+    @Provides
+    @PerActivity
+    public RegisterAction provideRegisterAction(@ActivityContext Context context, LsPushService lsPushService,
+        Gson gson) {
+        return new RegisterAction(context.getResources(), lsPushService, gson);
+    }
+
+    @Provides
+    @PerActivity
+    public UpdateLocalUserInfoAction provideUpdateLocalUserInfoAction(@ActivityContext Context context,
+        UserManager userManager) {
+        return new UpdateLocalUserInfoAction(context.getResources(), userManager);
     }
 }
