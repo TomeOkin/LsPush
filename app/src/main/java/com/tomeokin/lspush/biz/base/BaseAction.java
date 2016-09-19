@@ -19,6 +19,7 @@ import android.content.res.Resources;
 import android.support.annotation.CallSuper;
 
 import retrofit2.Call;
+import rx.Subscription;
 
 public class BaseAction {
     protected final Resources mResource;
@@ -41,6 +42,12 @@ public class BaseAction {
     protected void checkAndCancel(Call<?> call) {
         if (call != null && !call.isCanceled()) {
             call.cancel();
+        }
+    }
+
+    protected void checkAndUnsubscribe(Subscription subscription) {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
         }
     }
 

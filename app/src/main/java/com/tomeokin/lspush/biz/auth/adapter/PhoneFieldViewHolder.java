@@ -138,9 +138,4 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         SoftInputUtils.hideInput(mPhoneField);
         mPhoneField.removeTextChangedListener(mValidWatcher);
     }
-
-    @Override
-    public void onDestroyView() {
-        SoftInputUtils.hideInput(mPhoneField);
-    }
 }

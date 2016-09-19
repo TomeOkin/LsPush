@@ -30,7 +30,6 @@ import com.tomeokin.lspush.injection.module.AuthModule;
 
 public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
-    //@Inject SignOutPresenter mPresenter;
 
     @Override
     public AuthComponent component() {
@@ -50,7 +49,6 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
         setContentView(R.layout.activity_register);
 
         //component().inject(this);
-        //mPresenter.attachView(this);
 
         //boolean hasHistoryLogin = mPresenter.hasHistoryLoginUser();
         boolean hasHistoryLogin = false;
@@ -61,8 +59,6 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //mPresenter.detachView();
-        //mPresenter = null;
     }
 
     @Override

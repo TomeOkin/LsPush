@@ -134,9 +134,4 @@ public final class EmailFieldViewHolder extends LifecycleListener {
         mEmailField.removeTextChangedListener(mEmptyWatcher);
         mEmailField.removeTextChangedListener(mValidWatcher);
     }
-
-    @Override
-    public void onDestroyView() {
-        SoftInputUtils.hideInput(mEmailField);
-    }
 }

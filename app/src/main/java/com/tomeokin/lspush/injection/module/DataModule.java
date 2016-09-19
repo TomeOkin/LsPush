@@ -16,11 +16,16 @@
 package com.tomeokin.lspush.injection.module;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.facebook.android.crypto.keychain.AndroidConceal;
+import com.google.gson.Gson;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.common.PreferenceUtils;
+import com.tomeokin.lspush.data.crypt.BeeConcealKeyChain;
 import com.tomeokin.lspush.data.local.DbOpenHelper;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
@@ -32,7 +37,9 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 @Module
-public class DbModule {
+public class DataModule {
+    public static final String USER_PREFERENCE = "lspush_user";
+
     @Provides
     @Singleton
     public SQLiteOpenHelper provideDbOpenHelper(@AppContext Context context) {
@@ -56,5 +63,22 @@ public class DbModule {
         BriteDatabase db = sqlBrite.wrapDatabaseHelper(helper, Schedulers.io());
         db.setLoggingEnabled(true);
         return db;
+    }
+
+    @Provides @Singleton
+    SharedPreferences provideSharedPreferences(@AppContext Context context) {
+        return context.getSharedPreferences(USER_PREFERENCE, Context.MODE_PRIVATE);
+    }
+
+    @Provides @Singleton
+    com.facebook.crypto.Crypto provideCrypto(@AppContext Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(USER_PREFERENCE, Context.MODE_PRIVATE);
+        BeeConcealKeyChain keyChain = new BeeConcealKeyChain(context);
+        return AndroidConceal.get().createCrypto256Bits(keyChain);
+    }
+
+    @Provides @Singleton
+    PreferenceUtils providePreferenceUtils(Gson gson, SharedPreferences prefs, com.facebook.crypto.Crypto crypto) {
+        return new PreferenceUtils(gson, prefs, crypto);
     }
 }

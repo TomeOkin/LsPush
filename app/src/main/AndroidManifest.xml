@@ -54,6 +54,7 @@
             android:name=".biz.auth.SignOutActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
+            android:exported="false"
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity

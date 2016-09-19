@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.injection.module;
+package com.tomeokin.lspush.data.model.internal;
 
-import android.content.Context;
+import com.tomeokin.lspush.data.model.BaseResponse;
 
-import com.google.gson.Gson;
-import com.squareup.sqlbrite.BriteDatabase;
-import com.tomeokin.lspush.data.local.UserManager;
-import com.tomeokin.lspush.injection.qualifier.AppContext;
+import java.util.List;
 
-import javax.inject.Singleton;
+public class ListResponse<T> extends BaseResponse {
+    private List<T> list;
 
-import dagger.Module;
-import dagger.Provides;
+    public ListResponse(List<T> list) {
+        this.list = list;
+    }
 
-@Module
-public class UserModule {
-    @Provides
-    @Singleton
-    public UserManager provideUserPreference(@AppContext Context context, Gson gson, BriteDatabase briteDatabase) {
-        return UserManager.get(context, gson, briteDatabase);
+    public ListResponse(int resultCode, String result, List<T> list) {
+        super(resultCode, result);
+        this.list = list;
+    }
+
+    public List<T> getList() {
+        return list;
+    }
+
+    public void setList(List<T> list) {
+        this.list = list;
     }
 }

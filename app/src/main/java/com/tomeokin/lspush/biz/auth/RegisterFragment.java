@@ -52,8 +52,8 @@ import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
 import com.tomeokin.lspush.biz.auth.usercase.CheckUIDAction;
+import com.tomeokin.lspush.biz.auth.usercase.LocalUserInfoAction;
 import com.tomeokin.lspush.biz.auth.usercase.RegisterAction;
-import com.tomeokin.lspush.biz.auth.usercase.UpdateLocalUserInfoAction;
 import com.tomeokin.lspush.biz.auth.usercase.UploadAvatarAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
@@ -140,7 +140,7 @@ public class RegisterFragment extends BaseFragment
     @Inject CheckUIDAction mCheckUIDAction;
     @Inject UploadAvatarAction mUploadAvatarAction;
     @Inject RegisterAction mRegisterAction;
-    @Inject UpdateLocalUserInfoAction mUpdateLocalUserInfoAction;
+    @Inject LocalUserInfoAction mLocalUserInfoAction;
 
     public static Bundle prepareArgument(CaptchaRequest captchaRequest, String authCode) {
         Bundle bundle = new Bundle();
@@ -454,7 +454,7 @@ public class RegisterFragment extends BaseFragment
         mCheckUIDAction.attach(this);
         mUploadAvatarAction.attach(this);
         mRegisterAction.attach(this);
-        mUpdateLocalUserInfoAction.attach(this);
+        mLocalUserInfoAction.attach(this);
     }
 
     @Override
@@ -474,8 +474,8 @@ public class RegisterFragment extends BaseFragment
         mUploadAvatarAction = null;
         mRegisterAction.detach();
         mRegisterAction = null;
-        mUpdateLocalUserInfoAction.detach();
-        mUpdateLocalUserInfoAction = null;
+        mLocalUserInfoAction.detach();
+        mLocalUserInfoAction = null;
 
         if (mBaseDialogFragment != null) {
             mBaseDialogFragment.dismiss();
@@ -623,7 +623,7 @@ public class RegisterFragment extends BaseFragment
                 }
                 user.setImage(mRegisterData.getUserAvatar());
                 user.setPassword(mRegisterData.getPassword());
-                mUpdateLocalUserInfoAction.updateUserInfo(res, user);
+                mLocalUserInfoAction.userLogin(res, user);
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();

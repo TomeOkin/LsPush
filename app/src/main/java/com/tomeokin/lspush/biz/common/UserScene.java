@@ -30,4 +30,9 @@ public class UserScene {
     public static final int ACTION_REGISTER = 3;
     public static final int ACTION_LOGIN = 4;
     public static final int ACTION_UPLOAD = 5;
+    public static final int ACTION_DATA_USER_LOGIN = 6;
+    public static final int ACTION_DATA_USER_LOGOUT = 7;
+    public static final int ACTION_GET_ACCESS_RESPONSE = 8;
+    public static final int ACTION_UPDATE_ACCESS_RESPONSE = 9;
+    public static final int ACTION_GET_HISTORY_LOGIN_USER = 10;
 }

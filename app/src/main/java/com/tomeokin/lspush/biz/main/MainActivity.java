@@ -30,6 +30,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         boolean hasLogin =false;
         if (!hasLogin) {
@@ -38,7 +39,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
             finish();
         }
 
-        setContentView(R.layout.activity_main);
+
 
         //component().inject(this);
         //mPresenter.attachView(this);

@@ -221,6 +221,8 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino
