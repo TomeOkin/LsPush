@@ -19,6 +19,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.module.AppModule;
 import com.tomeokin.lspush.injection.module.DataModule;
@@ -40,4 +42,8 @@ public interface AppComponent {
     LsPushService lspushService();
 
     Gson gson();
+
+    BriteDatabase briteDatabase();
+
+    PreferenceUtils preferenceUtils();
 }

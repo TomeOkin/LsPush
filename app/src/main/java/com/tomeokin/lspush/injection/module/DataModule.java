@@ -38,17 +38,17 @@ import timber.log.Timber;
 
 @Module
 public class DataModule {
-    public static final String USER_PREFERENCE = "lspush_user";
+    private static final String USER_PREFERENCE = "lspush_user";
 
     @Provides
     @Singleton
-    public SQLiteOpenHelper provideDbOpenHelper(@AppContext Context context) {
+    SQLiteOpenHelper provideDbOpenHelper(@AppContext Context context) {
         return new DbOpenHelper(context);
     }
 
     @Provides
     @Singleton
-    public SqlBrite provideSqlBrite() {
+    SqlBrite provideSqlBrite() {
         return SqlBrite.create(new SqlBrite.Logger() {
             @Override
             public void log(String message) {
@@ -59,7 +59,7 @@ public class DataModule {
 
     @Provides
     @Singleton
-    public BriteDatabase provideBriteDatabase(SqlBrite sqlBrite, SQLiteOpenHelper helper) {
+    BriteDatabase provideBriteDatabase(SqlBrite sqlBrite, SQLiteOpenHelper helper) {
         BriteDatabase db = sqlBrite.wrapDatabaseHelper(helper, Schedulers.io());
         db.setLoggingEnabled(true);
         return db;
@@ -72,7 +72,6 @@ public class DataModule {
 
     @Provides @Singleton
     com.facebook.crypto.Crypto provideCrypto(@AppContext Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(USER_PREFERENCE, Context.MODE_PRIVATE);
         BeeConcealKeyChain keyChain = new BeeConcealKeyChain(context);
         return AndroidConceal.get().createCrypto256Bits(keyChain);
     }

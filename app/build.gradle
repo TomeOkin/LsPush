@@ -84,7 +84,6 @@ android {
 
     dexOptions {
         preDexLibraries !Boolean.valueOf(System.getenv("TRAVIS"))
-        incremental true
     }
 
     productFlavors {
