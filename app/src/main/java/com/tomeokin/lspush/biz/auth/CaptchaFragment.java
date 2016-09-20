@@ -37,7 +37,7 @@ import com.tomeokin.lspush.biz.auth.adapter.FieldSwitchAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PhoneFieldViewHolder;
 import com.tomeokin.lspush.biz.auth.listener.OnCountryCodeSelectedListener;
-import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.usercase;
+package com.tomeokin.lspush.biz.usercase;
 
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -22,8 +22,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.base.BaseAction;
 import com.tomeokin.lspush.biz.base.CommonSubscriber;
-import com.tomeokin.lspush.biz.common.NoGuarantee;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.state.LsPushUserState;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
 import com.tomeokin.lspush.data.model.AccessResponse;
@@ -41,21 +41,24 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class LocalUserInfoAction extends BaseAction {
-    public static final String ACCESS_RESPONSE = "access.response";
-    public static final String LOGIN_USER_PASSWORD = "login.user.password";
+    private static final String ACCESS_RESPONSE = "access.response";
+    private static final String LOGIN_USER_PASSWORD = "login.user.password";
 
     private final BriteDatabase mBriteDatabase;
     private final PreferenceUtils mPreferenceUtils;
+    private final LsPushUserState mLsPushUserState;
     private Subscription mUserLoginSubscription;
     private Subscription mUserLogoutSubscription;
     private Subscription mGetAccessResponseSubscription;
     private Subscription mUpdateAccessResponseSubscription;
     private Subscription mGetHistoryLoginUserSubscription;
 
-    public LocalUserInfoAction(Resources resources, BriteDatabase briteDatabase, PreferenceUtils preferenceUtils) {
+    public LocalUserInfoAction(Resources resources, BriteDatabase briteDatabase, PreferenceUtils preferenceUtils,
+        LsPushUserState lsPushUserState) {
         super(resources);
         mBriteDatabase = briteDatabase;
         mPreferenceUtils = preferenceUtils;
+        mLsPushUserState = lsPushUserState;
     }
 
     public void userLogin(final AccessResponse accessResponse, final User user) {
@@ -64,12 +67,14 @@ public class LocalUserInfoAction extends BaseAction {
             @Override
             public void call(Subscriber<? super BaseResponse> subscriber) {
                 try {
+                    mLsPushUserState.setAccessResponse(accessResponse);
+
                     mPreferenceUtils.put(ACCESS_RESPONSE, accessResponse);
                     mPreferenceUtils.put(LOGIN_USER_PASSWORD, user.getPassword());
 
                     ContentValues values = Db.UserTable.toContentValues(user);
                     mBriteDatabase.insert(Db.UserTable.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
-                    if (!mUserLogoutSubscription.isUnsubscribed()) {
+                    if (!subscriber.isUnsubscribed()) {
                         subscriber.onNext(null);
                     }
                 } catch (Exception e) {
@@ -89,8 +94,10 @@ public class LocalUserInfoAction extends BaseAction {
         mUserLogoutSubscription = Observable.create(new Observable.OnSubscribe<BaseResponse>() {
             @Override
             public void call(Subscriber<? super BaseResponse> subscriber) {
+                mLsPushUserState.setAccessResponse(null);
+
                 boolean result = mPreferenceUtils.clearAll();
-                if (!mUserLogoutSubscription.isUnsubscribed()) {
+                if (!subscriber.isUnsubscribed()) {
                     if (result) {
                         subscriber.onNext(null);
                     } else {
@@ -104,13 +111,17 @@ public class LocalUserInfoAction extends BaseAction {
             .subscribe(new CommonSubscriber<>(mResource, UserScene.ACTION_DATA_USER_LOGOUT, mCallback));
     }
 
-    public void getAccessResponse() {
+    public AccessResponse getAccessResponse() {
+        if (mLsPushUserState.getAccessResponse() != null) {
+            return mLsPushUserState.getAccessResponse();
+        }
+
         checkAndUnsubscribe(mGetAccessResponseSubscription);
         mGetAccessResponseSubscription = Observable.create(new Observable.OnSubscribe<AccessResponse>() {
             @Override
             public void call(Subscriber<? super AccessResponse> subscriber) {
                 AccessResponse response = mPreferenceUtils.get(ACCESS_RESPONSE, AccessResponse.class);
-                if (!mGetHistoryLoginUserSubscription.isUnsubscribed()) {
+                if (!subscriber.isUnsubscribed()) {
                     subscriber.onNext(response);
                 }
             }
@@ -118,6 +129,7 @@ public class LocalUserInfoAction extends BaseAction {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new CommonSubscriber<>(mResource, UserScene.ACTION_GET_ACCESS_RESPONSE, mCallback));
+        return null;
     }
 
     public void updateAccessResponse(final AccessResponse accessResponse) {
@@ -126,8 +138,10 @@ public class LocalUserInfoAction extends BaseAction {
             @Override
             public void call(Subscriber<? super BaseResponse> subscriber) {
                 try {
+                    mLsPushUserState.setAccessResponse(accessResponse);
+
                     mPreferenceUtils.put(ACCESS_RESPONSE, accessResponse);
-                    if (!mUpdateAccessResponseSubscription.isUnsubscribed()) {
+                    if (!subscriber.isUnsubscribed()) {
                         subscriber.onNext(null);
                     }
                 } catch (Exception e) {
@@ -171,7 +185,6 @@ public class LocalUserInfoAction extends BaseAction {
         mGetHistoryLoginUserSubscription = null;
     }
 
-    @NoGuarantee
     @Override
     public void cancel(int action) {
         super.cancel(action);

@@ -64,7 +64,7 @@ public class ImageDialogFragment extends BaseDialogFragment {
         lp.width = width + container.getPaddingLeft() + container.getPaddingRight();
         lp.height = height + container.getPaddingTop() + container.getPaddingBottom();
 
-        Glide.with(getContext())
+        Glide.with(this)
             .load(uri)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .override(width, height)

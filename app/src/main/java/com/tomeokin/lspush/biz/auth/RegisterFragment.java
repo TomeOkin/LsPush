@@ -51,10 +51,10 @@ import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
 import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
-import com.tomeokin.lspush.biz.auth.usercase.CheckUIDAction;
-import com.tomeokin.lspush.biz.auth.usercase.LocalUserInfoAction;
-import com.tomeokin.lspush.biz.auth.usercase.RegisterAction;
-import com.tomeokin.lspush.biz.auth.usercase.UploadAvatarAction;
+import com.tomeokin.lspush.biz.usercase.CheckUIDAction;
+import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.RegisterAction;
+import com.tomeokin.lspush.biz.usercase.UploadAvatarAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
@@ -436,7 +436,7 @@ public class RegisterFragment extends BaseFragment
                 }
 
                 Timber.i("crop-image result uri: %s", mUserAvatarFile.getAbsolutePath());
-                Glide.with(getContext()).load(mUserAvatarFile).diskCacheStrategy(DiskCacheStrategy.ALL)
+                Glide.with(this).load(mUserAvatarFile).diskCacheStrategy(DiskCacheStrategy.ALL)
                     // when using transform or bitmapTransform, don't use fitCenter() or centerCrop()
                     .transform(new CircleTransform(getContext())).override(450, 450).into(mUserAvatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

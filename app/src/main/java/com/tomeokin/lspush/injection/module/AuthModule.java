@@ -18,14 +18,11 @@ package com.tomeokin.lspush.injection.module;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.squareup.sqlbrite.BriteDatabase;
-import com.tomeokin.lspush.biz.auth.usercase.CheckCaptchaAction;
-import com.tomeokin.lspush.biz.auth.usercase.CheckUIDAction;
-import com.tomeokin.lspush.biz.auth.usercase.LocalUserInfoAction;
-import com.tomeokin.lspush.biz.auth.usercase.RegisterAction;
-import com.tomeokin.lspush.biz.auth.usercase.SendCaptchaAction;
-import com.tomeokin.lspush.biz.auth.usercase.UploadAvatarAction;
-import com.tomeokin.lspush.common.PreferenceUtils;
+import com.tomeokin.lspush.biz.usercase.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.CheckUIDAction;
+import com.tomeokin.lspush.biz.usercase.RegisterAction;
+import com.tomeokin.lspush.biz.usercase.SendCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.UploadAvatarAction;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -65,12 +62,5 @@ public class AuthModule {
     public RegisterAction provideRegisterAction(@ActivityContext Context context, LsPushService lsPushService,
         Gson gson) {
         return new RegisterAction(context.getResources(), lsPushService, gson);
-    }
-
-    @Provides
-    @PerActivity
-    public LocalUserInfoAction provideLocalUserInfoAction(@ActivityContext Context context,
-        BriteDatabase briteDatabase, PreferenceUtils preferenceUtils) {
-        return new LocalUserInfoAction(context.getResources(), briteDatabase, preferenceUtils);
     }
 }

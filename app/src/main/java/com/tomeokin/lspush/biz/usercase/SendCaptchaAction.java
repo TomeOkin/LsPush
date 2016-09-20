@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.usercase;
+package com.tomeokin.lspush.biz.usercase;
 
 import android.content.res.Resources;
 import android.support.annotation.Nullable;

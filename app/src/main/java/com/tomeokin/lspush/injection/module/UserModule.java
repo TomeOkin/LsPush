@@ -13,44 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.injection.component;
+package com.tomeokin.lspush.injection.module;
 
-import android.app.Application;
 import android.content.Context;
 
-import com.google.gson.Gson;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.state.LsPushUserState;
 import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
 import com.tomeokin.lspush.common.PreferenceUtils;
-import com.tomeokin.lspush.data.remote.LsPushService;
-import com.tomeokin.lspush.injection.module.AppModule;
-import com.tomeokin.lspush.injection.module.DataModule;
-import com.tomeokin.lspush.injection.module.LsPushApiModule;
-import com.tomeokin.lspush.injection.module.UserModule;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
 import javax.inject.Singleton;
 
-import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 
-@Singleton
-@Component(modules = {AppModule.class, LsPushApiModule.class, DataModule.class, UserModule.class})
-public interface AppComponent {
-    @AppContext
-    Context context();
-
-    Application application();
-
-    LsPushService lspushService();
-
-    Gson gson();
-
-    BriteDatabase briteDatabase();
-
-    PreferenceUtils preferenceUtils();
-
-    LsPushUserState lspushUserState();
-
-    LocalUserInfoAction localUserInfoAction();
+@Module
+public class UserModule {
+    @Provides
+    @Singleton
+    public LocalUserInfoAction provideLocalUserInfoAction(@AppContext Context context,
+        BriteDatabase briteDatabase, PreferenceUtils preferenceUtils, LsPushUserState lsPushUserState) {
+        return new LocalUserInfoAction(context.getResources(), briteDatabase, preferenceUtils, lsPushUserState);
+    }
 }

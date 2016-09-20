@@ -28,35 +28,65 @@ import android.support.v4.app.FragmentTransaction;
 import com.tomeokin.lspush.R;
 
 public class Navigator {
-    private Navigator() {}
-
-    public static final int INVALID_CONTAINER_ID = -1;
+    @IdRes private static final int DEFAULT_LAYOUT_ID = R.id.fragment_container;
+    private static final boolean DEFAULT_ADD_TO_BACK_STACK = true;
     public static final int REQUEST_CODE = 72;
 
+    private Navigator() {}
+
     public static void moveTo(Fragment base, Class<? extends Fragment> fragment, Bundle args) {
-        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, INVALID_CONTAINER_ID);
+        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, DEFAULT_LAYOUT_ID,
+            DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(Fragment base, Class<? extends Fragment> fragment, Bundle args, boolean addToBackStack) {
+        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, DEFAULT_LAYOUT_ID, addToBackStack);
     }
 
     public static void moveTo(Fragment base, Class<? extends Fragment> fragment, Bundle args, @IdRes int id) {
-        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, id);
+        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, id, DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(Fragment base, Class<? extends Fragment> fragment, Bundle args, @IdRes int id,
+        boolean addToBackStack) {
+        moveTo(base.getContext(), base.getFragmentManager(), fragment, args, id, addToBackStack);
     }
 
     public static void moveTo(FragmentActivity base, Class<? extends Fragment> fragment, Bundle args) {
-        moveTo(base, base.getSupportFragmentManager(), fragment, args, INVALID_CONTAINER_ID);
+        moveTo(base, base.getSupportFragmentManager(), fragment, args, DEFAULT_LAYOUT_ID, DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(FragmentActivity base, Class<? extends Fragment> fragment, Bundle args,
+        boolean addToBackStack) {
+        moveTo(base, base.getSupportFragmentManager(), fragment, args, DEFAULT_LAYOUT_ID, addToBackStack);
     }
 
     public static void moveTo(FragmentActivity base, Class<? extends Fragment> fragment, Bundle args, @IdRes int id) {
-        moveTo(base, base.getSupportFragmentManager(), fragment, args, id);
+        moveTo(base, base.getSupportFragmentManager(), fragment, args, id, DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(FragmentActivity base, Class<? extends Fragment> fragment, Bundle args, @IdRes int id,
+        boolean addToBackStack) {
+        moveTo(base, base.getSupportFragmentManager(), fragment, args, id, addToBackStack);
     }
 
     public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
         Bundle args) {
-        moveTo(context, fragmentManager, fragment, args, INVALID_CONTAINER_ID);
+        moveTo(context, fragmentManager, fragment, args, DEFAULT_LAYOUT_ID, DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
+        Bundle args, boolean addToBackStack) {
+        moveTo(context, fragmentManager, fragment, args, DEFAULT_LAYOUT_ID, addToBackStack);
     }
 
     public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
         Bundle args, @IdRes int id) {
-        final @IdRes int containerId = id > 0 ? id : R.id.fragment_container;
+        moveTo(context, fragmentManager, fragment, args, id, DEFAULT_ADD_TO_BACK_STACK);
+    }
+
+    public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
+        Bundle args, @IdRes int containerId, boolean addToBackStack) {
         final String tag = fragment.getName();
         Fragment current = fragmentManager.findFragmentById(containerId);
         Fragment target = fragmentManager.findFragmentByTag(tag);
@@ -77,7 +107,9 @@ public class Navigator {
             } else {
                 transaction.replace(containerId, target, tag);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.addToBackStack(tag);
+                if (addToBackStack) {
+                    transaction.addToBackStack(tag);
+                }
             }
             transaction.commit();
         } else {

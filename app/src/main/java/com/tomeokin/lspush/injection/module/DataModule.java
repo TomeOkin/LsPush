@@ -65,18 +65,21 @@ public class DataModule {
         return db;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     SharedPreferences provideSharedPreferences(@AppContext Context context) {
         return context.getSharedPreferences(USER_PREFERENCE, Context.MODE_PRIVATE);
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     com.facebook.crypto.Crypto provideCrypto(@AppContext Context context) {
         BeeConcealKeyChain keyChain = new BeeConcealKeyChain(context);
         return AndroidConceal.get().createCrypto256Bits(keyChain);
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     PreferenceUtils providePreferenceUtils(Gson gson, SharedPreferences prefs, com.facebook.crypto.Crypto crypto) {
         return new PreferenceUtils(gson, prefs, crypto);
     }

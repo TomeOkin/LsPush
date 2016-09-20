@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.data.model;
 
+import android.os.Parcel;
+
 public class AccessResponse extends BaseResponse {
     // 表示截至的访问时间，超过该时间后 expireToken 无效，需要使用 refreshToken 来获取新的 expireToken，否则用户需要重新登录。
     private long expireTime;
@@ -73,4 +75,34 @@ public class AccessResponse extends BaseResponse {
     public void setRefreshToken(CryptoToken refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeLong(this.expireTime);
+        dest.writeLong(this.refreshTime);
+        dest.writeString(this.userId);
+        dest.writeParcelable(this.expireToken, flags);
+        dest.writeParcelable(this.refreshToken, flags);
+    }
+
+    protected AccessResponse(Parcel in) {
+        super(in);
+        this.expireTime = in.readLong();
+        this.refreshTime = in.readLong();
+        this.userId = in.readString();
+        this.expireToken = in.readParcelable(CryptoToken.class.getClassLoader());
+        this.refreshToken = in.readParcelable(CryptoToken.class.getClassLoader());
+    }
+
+    public static final Creator<AccessResponse> CREATOR = new Creator<AccessResponse>() {
+        @Override
+        public AccessResponse createFromParcel(Parcel source) {return new AccessResponse(source);}
+
+        @Override
+        public AccessResponse[] newArray(int size) {return new AccessResponse[size];}
+    };
 }
