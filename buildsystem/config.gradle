@@ -51,7 +51,7 @@ ext {
             design               : "com.android.support:design:${supportVersion}",
 
             // log
-            timber               : "com.jakewharton.timber:timber:4.3.0",
+            timber               : "com.jakewharton.timber:timber:4.3.1",
             logger               : "com.orhanobut:logger:1.15",
 
             // rx
