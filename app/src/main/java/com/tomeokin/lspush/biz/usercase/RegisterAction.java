@@ -20,7 +20,6 @@ import android.content.res.Resources;
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.crypt.Crypto;
@@ -47,7 +46,7 @@ public class RegisterAction extends BaseAction {
         String data = mGson.toJson(registerData, RegisterData.class);
         CryptoToken cryptoToken;
         try {
-            cryptoToken = Crypto.encrypt(data);
+            cryptoToken = Crypto.get().encrypt(data);
         } catch (Exception e) {
             Timber.w(e);
             mCallback.onActionFailure(UserScene.ACTION_REGISTER, null, mResource.getString(R.string.unexpected_error));
@@ -57,11 +56,6 @@ public class RegisterAction extends BaseAction {
         checkAndCancel(mRegisterCall);
         mRegisterCall = mLsPushService.register(cryptoToken);
         mRegisterCall.enqueue(new CommonCallback<AccessResponse>(mResource, UserScene.ACTION_REGISTER, mCallback));
-    }
-
-    @Override
-    public void attach(BaseActionCallback callback) {
-        super.attach(callback);
     }
 
     @Override

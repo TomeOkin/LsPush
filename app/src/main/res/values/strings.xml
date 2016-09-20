@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="email_hint">Email</string>
     <string name="phone_hint">Phone</string>
     <string name="email">Email</string>
@@ -14,7 +14,7 @@
     <string name="resend_captcha_code">Please enter the confirmation code you are received.<br />Not received ? <b>Resend confirmation code</b></string>
     <string name="send_captcha_code">Send Confirmation Code</string>
     <string name="ok">OK</string>
-    <string name="send_captcha_dialog_notice">Please waiting %d second for resend the confirmation code.</string>
+    <string name="send_captcha_dialog_notice">Please waiting %d seconds for resend the confirmation code.</string>
     <string name="receive_captcha_notice">Confirmation code sent successfully, please pay attention to the reception.</string>
     <string name="send_captcha_error">Fail sent confirmation code, please try it later.</string>
     <string name="check_captcha_error">Please checking your confirmation code input currently.</string>
@@ -33,7 +33,7 @@
     <string name="web_image_click" translatable="false">
     <![CDATA[
         javascript: (function() {
-            var obj=document.elementFromPoint(%1$s, %2$s);
+            var obj=document.elementFromPoint(%1$f, %2$f);
             if (obj.src!=null) { window.imageClick.click(obj.src, obj.width, obj.height); }
         })()
     ]]>

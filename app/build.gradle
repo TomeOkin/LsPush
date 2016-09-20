@@ -115,8 +115,8 @@ android {
         // rhino, okio and retrofit2, https://github.com/square/okio/issues/58
         warning 'InvalidPackage'
 
-        // We using "AES/CBC/PKCS5Padding" now.
-        //disable "TrulyRandom"
+        // We using "AES/CBC/PKCS5Padding" now. (lint has not recognized context)
+        disable "TrulyRandom"
         // We might want to index our app later
         disable "GoogleAppIndexingApiWarning"
         // update sdk version until new sdk source ability
@@ -130,6 +130,7 @@ android {
 //                "IconExpectedSize", // Using the material icons provided from Google
 //                "ResourceType", // Annotation binding
 //                "GradleDependency"
+        disable "PluralsCandidate"
 
     }
 

@@ -209,12 +209,12 @@ public class CaptchaFragment extends BaseFragment
         mPhoneFieldViewHolder = null;
         mViewHolder = null;
         mSendCaptchaAction.detach();
-        mSendCaptchaAction = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mSendCaptchaAction = null;
         mCountryCodeData = null;
         mCaptchaRequest = null;
     }

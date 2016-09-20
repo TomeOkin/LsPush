@@ -42,19 +42,4 @@ public class LoginFragment extends BaseFragment {
 
         return view;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

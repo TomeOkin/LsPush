@@ -20,12 +20,13 @@ import android.widget.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EmailFilter extends Filter {
-    private AutoCompleteEmailAdapter mAdapter;
+    private final AutoCompleteEmailAdapter mAdapter;
     private final List<String> mEmptyList;
     private final List<String> mHintList;
-    private List<String> mFilteredList;
+    private final List<String> mFilteredList;
 
     public EmailFilter(AutoCompleteEmailAdapter adapter, List<String> emptyList, List<String> hintList) {
         mAdapter = adapter;
@@ -42,10 +43,10 @@ public class EmailFilter extends Filter {
         if (TextUtils.isEmpty(constraint)) {
             mFilteredList.addAll(mEmptyList);
         } else {
-            final String filterPattern = constraint.toString().toLowerCase().trim();
+            final String filterPattern = constraint.toString().toLowerCase(Locale.ENGLISH).trim();
 
             for (final String history : mEmptyList) {
-                if (history.toLowerCase().contains(filterPattern)) {
+                if (history.toLowerCase(Locale.ENGLISH).contains(filterPattern)) {
                     mFilteredList.add(history);
                 }
             }

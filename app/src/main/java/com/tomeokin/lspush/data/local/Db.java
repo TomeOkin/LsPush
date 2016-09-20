@@ -28,7 +28,7 @@ public class Db {
     private Db() {}
 
     public static class DatabaseException extends RuntimeException {
-        private int errorCode;
+        private final int errorCode;
 
         public DatabaseException(int errorCode) {
             this.errorCode = errorCode;
@@ -89,8 +89,8 @@ public class Db {
             ContentValues values = new ContentValues();
             values.put(UID, user.getUid());
             values.put(NICKNAME, user.getNickname());
-            values.put(EMAIL, BeeCrypto.encrypt(user.getEmail()));
-            values.put(PHONE, BeeCrypto.encrypt(user.getPhone()));
+            values.put(EMAIL, BeeCrypto.get().encrypt(user.getEmail()));
+            values.put(PHONE, BeeCrypto.get().encrypt(user.getPhone()));
             values.put(REGION, user.getRegion());
             values.put(VALIDATE, user.getValidate());
             values.put(AVATAR, user.getImage());
@@ -112,8 +112,8 @@ public class Db {
             User user = new User();
             user.setUid(cursor.getString(cursor.getColumnIndex(UID)));
             user.setNickname(cursor.getString(cursor.getColumnIndex(NICKNAME)));
-            user.setEmail(BeeCrypto.decrypt(cursor.getString(cursor.getColumnIndex(EMAIL))));
-            user.setPhone(BeeCrypto.decrypt(cursor.getString(cursor.getColumnIndex(PHONE))));
+            user.setEmail(BeeCrypto.get().decrypt(cursor.getString(cursor.getColumnIndex(EMAIL))));
+            user.setPhone(BeeCrypto.get().decrypt(cursor.getString(cursor.getColumnIndex(PHONE))));
             user.setRegion(cursor.getString(cursor.getColumnIndex(REGION)));
             user.setValidate(cursor.getInt(cursor.getColumnIndex(VALIDATE)));
             user.setImage(cursor.getString(cursor.getColumnIndex(AVATAR)));

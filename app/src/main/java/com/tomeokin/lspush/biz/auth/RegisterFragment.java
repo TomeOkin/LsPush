@@ -469,14 +469,9 @@ public class RegisterFragment extends BaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         mCheckUIDAction.detach();
-        mCheckUIDAction = null;
         mUploadAvatarAction.detach();
-        mUploadAvatarAction = null;
         mRegisterAction.detach();
-        mRegisterAction = null;
         mLocalUserInfoAction.detach();
-        mLocalUserInfoAction = null;
-
         if (mBaseDialogFragment != null) {
             mBaseDialogFragment.dismiss();
             mBaseDialogFragment = null;
@@ -504,6 +499,15 @@ public class RegisterFragment extends BaseFragment
         mUserNameAdapter = null;
         mNextButtonAdapter = null;
         dispatchOnDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCheckUIDAction = null;
+        mUploadAvatarAction = null;
+        mRegisterAction = null;
+        mLocalUserInfoAction = null;
     }
 
     public void register() {

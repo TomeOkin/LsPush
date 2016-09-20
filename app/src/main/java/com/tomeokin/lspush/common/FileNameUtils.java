@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileNameUtils {
     private FileNameUtils() {}
 
-    private static AtomicInteger sIndex = new AtomicInteger(0);
+    private static final AtomicInteger sIndex = new AtomicInteger(0);
 
     public static File getJPEGFile(Context context) {
         // don't use getCacheDir(), otherwise camera will fail to put data into it.

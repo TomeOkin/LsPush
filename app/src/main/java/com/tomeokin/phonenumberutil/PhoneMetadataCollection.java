@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PhoneMetadataCollection implements Externalizable {
-    List<PhoneMetadata> metadata;
+    final List<PhoneMetadata> metadata;
 
     public PhoneMetadataCollection() {
         metadata = new ArrayList<>();

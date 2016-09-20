@@ -23,8 +23,8 @@ import com.alibaba.wireless.security.jaq.SecurityCipher;
 
 public class BeeCrypto {
     private static BeeCrypto beeCrypto;
-    private static SecurityCipher cipher;
-    private static String jaqKey;
+    private final SecurityCipher mCipher;
+    private final String mJaqKey;
 
     public static void init(Context context, final String jqaKey) {
         if (beeCrypto == null) {
@@ -32,24 +32,28 @@ public class BeeCrypto {
         }
     }
 
+    public static BeeCrypto get() {
+        return beeCrypto;
+    }
+
     private BeeCrypto(Context context, final String jaqKey) {
-        BeeCrypto.jaqKey = jaqKey;
-        cipher = new SecurityCipher(context);
+        mJaqKey = jaqKey;
+        mCipher = new SecurityCipher(context);
     }
 
-    public static byte[] encrypt(byte[] data) throws JAQException {
-        return data == null || data.length == 0 ? data : cipher.encryptBinary(data, jaqKey);
+    public byte[] encrypt(byte[] data) throws JAQException {
+        return data == null || data.length == 0 ? data : mCipher.encryptBinary(data, mJaqKey);
     }
 
-    public static String encrypt(String data) throws JAQException {
-        return TextUtils.isEmpty(data) ? data : cipher.encryptString(data, jaqKey);
+    public String encrypt(String data) throws JAQException {
+        return TextUtils.isEmpty(data) ? data : mCipher.encryptString(data, mJaqKey);
     }
 
-    public static byte[] decrypt(byte[] data) throws JAQException {
-        return data == null || data.length == 0 ? data : cipher.decryptBinary(data, jaqKey);
+    public byte[] decrypt(byte[] data) throws JAQException {
+        return data == null || data.length == 0 ? data : mCipher.decryptBinary(data, mJaqKey);
     }
 
-    public static String decrypt(String data) throws JAQException {
-        return TextUtils.isEmpty(data) ? data : cipher.decryptString(data, jaqKey);
+    public String decrypt(String data) throws JAQException {
+        return TextUtils.isEmpty(data) ? data : mCipher.decryptString(data, mJaqKey);
     }
 }

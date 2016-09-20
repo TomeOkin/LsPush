@@ -16,8 +16,7 @@
 package com.tomeokin.lspush.biz.auth.adapter;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
@@ -29,7 +28,7 @@ import java.util.List;
 public class AutoCompleteEmailAdapter extends ArrayAdapter<String> {
     private final List<String> mEmptyList;
     private final List<String> mHintList;
-    List<String> filteredList = new ArrayList<>();
+    final List<String> filteredList = new ArrayList<>();
 
     public AutoCompleteEmailAdapter(Context context, List<String> emptyList, List<String> hintList) {
         super(context, R.layout.row_autocomplete_email, emptyList);
@@ -42,6 +41,7 @@ public class AutoCompleteEmailAdapter extends ArrayAdapter<String> {
         return filteredList.size();
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new EmailFilter(this, mEmptyList, mHintList);
@@ -50,10 +50,5 @@ public class AutoCompleteEmailAdapter extends ArrayAdapter<String> {
     @Override
     public String getItem(int position) {
         return filteredList.get(position);
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return super.getView(position, convertView, parent);
     }
 }

@@ -63,5 +63,6 @@ public class NativeBlurUtil {
         return bitmapOut;
     }
 
+    @SuppressWarnings("JniMissingFunction")
     private static native void functionToBlur(Bitmap bitmapOut, int radius, int threadCount);
 }

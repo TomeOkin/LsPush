@@ -65,6 +65,8 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
         mWebView = (WebView) view.findViewById(R.id.webview);
         mWebView.loadUrl(mUrl);
         mWebView.getSettings().setJavaScriptEnabled(true);
+        // https://labs.mwrinfosecurity.com/blog/webview-addjavascriptinterface-remote-code-execution/
+        // FIXME: 2016/9/20 fix it later
         mWebView.addJavascriptInterface(new JsInterface(getContext(), this),
             getString(R.string.web_image_click_target));
         // http://blog.csdn.net/u013107656/article/details/51729398
@@ -87,8 +89,8 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
     }
 
     private class JsInterface {
-        private Context mContext;
-        private Fragment mInstance;
+        private final Context mContext;
+        private final Fragment mInstance;
         private ImageDialogFragment dialog;
 
         public JsInterface(Context context, Fragment instance) {

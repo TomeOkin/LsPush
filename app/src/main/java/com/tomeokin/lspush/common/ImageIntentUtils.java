@@ -26,13 +26,28 @@ import java.io.File;
 public class ImageIntentUtils {
     private ImageIntentUtils() {}
 
-    public static final String[] PERMISSION_PICK_IMAGE = new String[] {
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    };
+    public static final String[] PERMISSION_PICK_IMAGE;
+    public static final String[] PERMISSION_TAKE_PHOTO;
 
-    public static final String[] PERMISSION_TAKE_PHOTO = new String[] {
-        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-    };
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            PERMISSION_PICK_IMAGE = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
+            PERMISSION_TAKE_PHOTO = new String[] {
+                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+            };
+        } else {
+            PERMISSION_PICK_IMAGE = new String[] {};
+            PERMISSION_TAKE_PHOTO = new String[] { Manifest.permission.CAMERA };
+        }
+    }
+
+    //public static final String[] PERMISSION_PICK_IMAGE = new String[] {
+    //    Manifest.permission.READ_EXTERNAL_STORAGE
+    //};
+
+    //public static final String[] PERMISSION_TAKE_PHOTO = new String[] {
+    //    Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+    //};
 
     /**
      * With Build.VERSION_CODES.KITKAT and above, we can see a document and we can select another app in drawer.

@@ -122,7 +122,7 @@ public class LsPushApiModule {
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
 
-                if (!NetworkUtils.ConnectingNetwork()) {
+                if (!NetworkUtils.connectingNetwork()) {
                     Timber.w("is connecting network");
                     CacheControl cacheControl = new CacheControl.Builder().maxStale(7, TimeUnit.DAYS).build();
 

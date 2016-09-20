@@ -74,8 +74,8 @@ public final class PhoneMetadata implements Externalizable {
     String nationalPrefixTransformRule;
     boolean sameMobileAndFixedLinePattern; // always
     
-    List<NumberFormat> numberFormats;
-    List<NumberFormat> intlNumberFormat;
+    final List<NumberFormat> numberFormats;
+    final List<NumberFormat> intlNumberFormat;
     
     boolean mainCountryForCode; // always
     boolean hasLeadingDigits;

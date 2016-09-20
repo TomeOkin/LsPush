@@ -265,19 +265,19 @@ public class BaseDialogFragment extends DialogFragment
      * provide it to config the default layout
      */
     protected class Builder {
-        private Context mContext;
-        private Dialog mDialog;
-        private FrameLayout mDialogTitleContainer;
-        private TextView mDialogTitle;
-        private View mDialogHeaderDivider;
-        private ScrollView mMessageScrollView;
-        private TextView mMessage;
-        private FrameLayout mCustomViewHolder;
-        private ListView mListView;
-        private FrameLayout mDialogFooterContainer;
-        private TextView mBlueButton;
-        private ViewStub mDialogTwoButtonStub;
-        private ViewStub mDialogThreeButtonStub;
+        private final Context mContext;
+        private final Dialog mDialog;
+        private final FrameLayout mDialogTitleContainer;
+        private final TextView mDialogTitle;
+        private final View mDialogHeaderDivider;
+        private final ScrollView mMessageScrollView;
+        private final TextView mMessage;
+        private final FrameLayout mCustomViewHolder;
+        private final ListView mListView;
+        private final FrameLayout mDialogFooterContainer;
+        private final TextView mBlueButton;
+        private final ViewStub mDialogTwoButtonStub;
+        private final ViewStub mDialogThreeButtonStub;
         private CharSequence mNeutralText;
         private CharSequence mNegativeText;
         private CharSequence mPositiveText;

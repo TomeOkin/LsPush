@@ -27,7 +27,6 @@ import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;
-import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.injection.component.AppComponent;
 import com.tomeokin.lspush.injection.component.DaggerAppComponent;
 import com.tomeokin.lspush.injection.module.AppModule;
@@ -46,7 +45,7 @@ public class LsPushApplication extends Application {
         initJAQ(this);
         LsPushConfig.init(this);
         BeeCrypto.init(this, LsPushConfig.getJaqKey());
-        Crypto.init(LsPushConfig.getPublicKey());
+        //Crypto.init(LsPushConfig.getPublicKey());
         initHawk(this);
         NetworkUtils.init(this);
         SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());

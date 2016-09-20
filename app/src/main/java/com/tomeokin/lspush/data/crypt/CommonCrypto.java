@@ -17,7 +17,8 @@ package com.tomeokin.lspush.data.crypt;
 
 import android.util.Base64;
 
-import java.nio.charset.StandardCharsets;
+import com.tomeokin.lspush.common.CharsetsSupport;
+
 import java.security.MessageDigest;
 
 import timber.log.Timber;
@@ -30,7 +31,7 @@ public class CommonCrypto {
     public static String hashPrefKey(String prefKey) {
         try {
             final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] bytes = prefKey.getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = prefKey.getBytes(CharsetsSupport.UTF_8);
             digest.update(bytes, 0, bytes.length);
             return Base64.encodeToString(digest.digest(), Base64.NO_WRAP);
         } catch (Exception e) {

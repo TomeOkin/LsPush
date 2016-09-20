@@ -48,7 +48,7 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //component().inject(this);
+        component().inject(this);
 
         //boolean hasHistoryLogin = mPresenter.hasHistoryLoginUser();
         boolean hasHistoryLogin = false;

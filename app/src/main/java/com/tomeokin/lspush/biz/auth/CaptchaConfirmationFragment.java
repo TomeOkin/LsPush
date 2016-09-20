@@ -209,10 +209,14 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         mValidWatcher = null;
         mCaptchaField.setOnEditorActionListener(null);
         mCaptchaField = null;
-
         mSendCaptchaAction.detach();
-        mSendCaptchaAction = null;
         mCheckCaptchaAction.detach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSendCaptchaAction = null;
         mCheckCaptchaAction = null;
     }
 

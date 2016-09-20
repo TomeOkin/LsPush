@@ -25,8 +25,8 @@ import com.facebook.android.crypto.keychain.FixedSecureRandom;
 import com.facebook.crypto.CryptoConfig;
 import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.crypto.keychain.KeyChain;
+import com.tomeokin.lspush.common.CharsetsSupport;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class BeeConcealKeyChain implements KeyChain {
@@ -51,7 +51,7 @@ public class BeeConcealKeyChain implements KeyChain {
         String salt = mSharedPreferences.getString(CommonCrypto.hashPrefKey(key), "");
         if (!TextUtils.isEmpty(salt)) {
             try {
-                data = BeeCrypto.decrypt(salt.getBytes(StandardCharsets.UTF_8));
+                data = BeeCrypto.get().decrypt(salt.getBytes(CharsetsSupport.UTF_8));
             } catch (Exception e) {
                 data = generateKeyAndSave(key, length);
             }
@@ -63,10 +63,10 @@ public class BeeConcealKeyChain implements KeyChain {
     }
 
     @SuppressLint("CommitPrefEdits")
-    private byte[] generateKeyAndSave(String key, int length) throws KeyChainException, JAQException {
+    private byte[] generateKeyAndSave(String key, int length) throws JAQException {
         byte[] random = new byte[length];
         mSecureRandom.nextBytes(random);
-        String data = BeeCrypto.encrypt(new String(random, StandardCharsets.UTF_8));
+        String data = BeeCrypto.get().encrypt(new String(random, CharsetsSupport.UTF_8));
         mSharedPreferences.edit().putString(CommonCrypto.hashPrefKey(key), data).commit();
         return random;
     }

@@ -18,7 +18,6 @@ package com.tomeokin.lspush.biz.usercase;
 import android.content.res.Resources;
 
 import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.model.BaseResponse;
@@ -39,11 +38,6 @@ public class CheckUIDAction extends BaseAction {
         checkAndCancel(mCheckUIDCall);
         mCheckUIDCall = mLsPushService.checkUIDExisted(uid);
         mCheckUIDCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_CHECK_UID, mCallback));
-    }
-
-    @Override
-    public void attach(BaseActionCallback callback) {
-        super.attach(callback);
     }
 
     @Override

@@ -18,9 +18,10 @@ package com.tomeokin.lspush.data.crypt;
 import android.util.Base64;
 
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.model.CryptoToken;
 
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -45,14 +46,15 @@ public class Crypto {
     private static Crypto crypto;
     private static PublicKey pubKey;
 
-    public static void init(final String pubKey) {
+    public static Crypto get() {
         if (crypto == null) {
             try {
-                crypto = new Crypto(pubKey);
+                crypto = new Crypto(LsPushConfig.getPublicKey());
             } catch (Exception e) {
                 Timber.tag(UserScene.TAG_APP).wtf(e, "generate crypto instance failure");
             }
         }
+        return crypto;
     }
 
     /**
@@ -64,16 +66,16 @@ public class Crypto {
     }
 
     private void initKey(final String pubKey)
-        throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+        throws NoSuchAlgorithmException, InvalidKeySpecException {
         final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         final X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(Base64.decode(pubKey, Base64.NO_WRAP));
         Crypto.pubKey = keyFactory.generatePublic(pubKeySpec);
     }
 
-    public static CryptoToken encrypt(String data)
+    public CryptoToken encrypt(String data)
         throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException,
         BadPaddingException, NoSuchProviderException, InvalidAlgorithmParameterException {
-        return encrypt(data.getBytes(StandardCharsets.UTF_8));
+        return encrypt(data.getBytes(CharsetsSupport.UTF_8));
     }
 
     /**
@@ -91,7 +93,7 @@ public class Crypto {
      * @see <a href="http://qiita.com/f_nishio/items/485490dea126dbbb5001">a example of
      * RSA/ECB/OAEPWithSHA-256AndMGF1Padding</a>
      */
-    public static CryptoToken encrypt(byte[] data)
+    public CryptoToken encrypt(byte[] data)
         throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException,
         InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         // get a AES key for encrypt

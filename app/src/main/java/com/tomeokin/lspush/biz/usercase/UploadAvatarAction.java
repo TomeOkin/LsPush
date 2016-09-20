@@ -18,7 +18,6 @@ package com.tomeokin.lspush.biz.usercase;
 import android.content.res.Resources;
 
 import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.model.UploadResponse;
@@ -58,11 +57,6 @@ public class UploadAvatarAction extends BaseAction {
         if (action == UserScene.ACTION_UPLOAD) {
             checkAndCancel(mUploadCall);
         }
-    }
-
-    @Override
-    public void attach(BaseActionCallback callback) {
-        super.attach(callback);
     }
 
     @Override

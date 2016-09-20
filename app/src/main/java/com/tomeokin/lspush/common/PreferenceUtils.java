@@ -28,7 +28,6 @@ import com.tomeokin.lspush.data.crypt.CommonCrypto;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 
 public class PreferenceUtils {
     private final Gson mGson;
@@ -63,7 +62,7 @@ public class PreferenceUtils {
             if (old != null) {
                 Entity entity = Entity.create(key);
                 byte[] data = mCrypto.decrypt(Base64.decode(old, Base64.NO_WRAP), entity);
-                value = mGson.fromJson(new String(data, StandardCharsets.UTF_8), type);
+                value = mGson.fromJson(new String(data, CharsetsSupport.UTF_8), type);
             }
         } catch (Exception e) {
             return null;
@@ -78,7 +77,7 @@ public class PreferenceUtils {
     private void put(String key, String hashKey, String value)
         throws KeyChainException, CryptoInitializationException, IOException {
         Entity entity = Entity.create(key); // original key
-        byte[] data = mCrypto.encrypt(value.getBytes(StandardCharsets.UTF_8), entity);
+        byte[] data = mCrypto.encrypt(value.getBytes(CharsetsSupport.UTF_8), entity);
         mPreference.edit().putString(hashKey, Base64.encodeToString(data, Base64.NO_WRAP)).apply();
     }
 }

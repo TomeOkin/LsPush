@@ -23,6 +23,7 @@ import android.os.Bundle;
 
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityCipher;
+import com.tomeokin.lspush.common.CharsetsSupport;
 import com.tomeokin.lspush.data.crypt.CommonCrypto;
 
 import java.io.BufferedReader;
@@ -35,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import timber.log.Timber;
@@ -89,7 +89,7 @@ public final class LsPushConfig {
         Properties properties = new Properties();
         SecurityCipher cipher = new SecurityCipher(context);
         InputStream in = context.getAssets().open(LSPUSH_OK, Context.MODE_PRIVATE);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, CharsetsSupport.UTF_8));
         properties.load(reader);
         publicKey = cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(PUBLIC_KEY)), jaqKey);
         mobSMSId = cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(MOB_SMS_ID)), jaqKey);
@@ -136,7 +136,7 @@ public final class LsPushConfig {
         properties.setProperty(CommonCrypto.hashPrefKey(MOB_SMS_KEY), cipher.encryptString(mobSMSKey, jaqKey));
         File file = getFile(context, "secure", LSPUSH_OK);
         OutputStream out = new FileOutputStream(file);
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, CharsetsSupport.UTF_8));
         properties.store(writer, "lspush.ok version 3");
         out.close();
         writer.close();
@@ -147,7 +147,7 @@ public final class LsPushConfig {
         SecurityCipher cipher = new SecurityCipher(context);
         File file = getFile(context, "secure", LSPUSH_OK);
         InputStream in = new FileInputStream(file);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, CharsetsSupport.UTF_8));
         properties.load(reader);
         Timber.d("key: %s, value: %s", PUBLIC_KEY,
             cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(PUBLIC_KEY)), jaqKey));

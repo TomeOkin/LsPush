@@ -28,11 +28,9 @@ import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;
-import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.injection.component.AppComponent;
 import com.tomeokin.lspush.injection.component.DaggerAppComponent;
 import com.tomeokin.lspush.injection.module.AppModule;
@@ -51,10 +49,9 @@ public class LsPushApplication extends Application {
         initJAQ(this);
         LsPushConfig.init(this);
         BeeCrypto.init(this, LsPushConfig.getJaqKey());
-        Crypto.init(LsPushConfig.getPublicKey());
         //initHawk(this);
         NetworkUtils.init(this);
-        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
+        //SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();
         initializeStetho(this);
     }
@@ -71,7 +68,7 @@ public class LsPushApplication extends Application {
         Hawk.init(context).setEncryption(new BeeEncryption(context)).setLogInterceptor(new LogInterceptor() {
             @Override
             public void onLog(String message) {
-                Log.d(UserScene.TAG_APP, message);
+                Log.d("Hawk", message);
             }
         }).build();
     }
@@ -83,7 +80,6 @@ public class LsPushApplication extends Application {
     private void initLogger() {
         Logger.init(UserScene.TAG_APP).methodOffset(5).methodCount(1);
         Timber.plant(new Timber.DebugTree() {
-
             @Override
             protected void log(int priority, String tag, String message, Throwable t) {
                 Logger.log(priority, tag, message, t);

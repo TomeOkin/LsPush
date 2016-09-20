@@ -44,29 +44,30 @@ public class SMSCaptchaUtils {
         SMSSDK.initSDK(context, smsId, smsKey);
     }
 
-    public static void init(Context context, String smsId, String smsKey) {
+    public static SMSCaptchaUtils init(Context context, String smsId, String smsKey) {
         if (sInstance == null) {
             sInstance = new SMSCaptchaUtils(context, smsId, smsKey);
         }
+        return sInstance;
     }
 
-    public static void registerEventHandler(EventHandler eventHandler) {
+    public void registerEventHandler(EventHandler eventHandler) {
         SMSSDK.registerEventHandler(eventHandler);
     }
 
-    public static void unregisterEventHandler(EventHandler eventHandler) {
+    public void unregisterEventHandler(EventHandler eventHandler) {
         SMSSDK.unregisterEventHandler(eventHandler);
     }
 
-    public static void getSupportCountry() {
+    public void getSupportCountry() {
         SMSSDK.getSupportedCountries();
     }
 
-    public static void sendCaptcha(String country, String phone) {
+    public void sendCaptcha(String country, String phone) {
         SMSSDK.getVerificationCode(country, phone);
     }
 
-    public static void submitCaptcha(String countryCode, String phone, String captcha) {
+    public void submitCaptcha(String countryCode, String phone, String captcha) {
         SMSSDK.submitVerificationCode(countryCode, phone, captcha);
     }
 

@@ -50,7 +50,7 @@ public abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T, F>, F ext
     private Fragment mTargetFragment;
     private int mRequestCode;
     private String mTag;
-    protected Bundle mArgs;
+    protected final Bundle mArgs;
 
     public BaseDialogBuilder(Context context, FragmentManager fragmentManager,
         Class<? extends BaseDialogFragment> clazz) {

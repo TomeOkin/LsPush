@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -56,9 +57,11 @@ public class CountryCodePickerDialog extends BaseDialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow()
-            .setSoftInputMode(
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            window.setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
     }
 
     @SuppressLint("InflateParams")

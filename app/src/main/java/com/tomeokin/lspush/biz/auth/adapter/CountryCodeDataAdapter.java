@@ -16,6 +16,7 @@
 package com.tomeokin.lspush.biz.auth.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +39,17 @@ public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> 
         mCountryCodeList = new ArrayList<>(list);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_menu_item, parent, false);
             convertView.setPadding(0, 0, 0, 0);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.row_simple_text_textview);
-        tv.setText(getItem(position).formatWithDescription());
+        if (getItem(position) != null) {
+            tv.setText(getItem(position).formatWithDescription());
+        }
         return convertView;
     }
 
