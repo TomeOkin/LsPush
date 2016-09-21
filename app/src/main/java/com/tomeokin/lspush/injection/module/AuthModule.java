@@ -18,11 +18,11 @@ package com.tomeokin.lspush.injection.module;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.tomeokin.lspush.biz.usercase.CheckCaptchaAction;
-import com.tomeokin.lspush.biz.usercase.CheckUIDAction;
-import com.tomeokin.lspush.biz.usercase.RegisterAction;
-import com.tomeokin.lspush.biz.usercase.SendCaptchaAction;
-import com.tomeokin.lspush.biz.usercase.UploadAvatarAction;
+import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
+import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
+import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.auth.UploadAvatarAction;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -35,14 +35,14 @@ public class AuthModule {
     @Provides
     @PerActivity
     public SendCaptchaAction provideSendCaptchaAction(@ActivityContext Context context, LsPushService lsPushService) {
-        return new SendCaptchaAction(context.getResources(), lsPushService);
+        return new SendCaptchaAction(context, lsPushService);
     }
 
     @Provides
     @PerActivity
     public CheckCaptchaAction provideCheckCaptchaAction(@ActivityContext Context context, LsPushService lsPushService,
         Gson gson) {
-        return new CheckCaptchaAction(context.getResources(), lsPushService, gson);
+        return new CheckCaptchaAction(context, lsPushService, gson);
     }
 
     @Provides

@@ -21,7 +21,6 @@ import android.content.Context;
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityInit;
 import com.orhanobut.hawk.Hawk;
-import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
@@ -40,13 +39,13 @@ public class LsPushApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        LeakCanary.install(this);
         initLogger(this);
         initJAQ(this);
         LsPushConfig.init(this);
+        //initHawk(this);
         BeeCrypto.init(this, LsPushConfig.getJaqKey());
         //Crypto.init(LsPushConfig.getPublicKey());
-        initHawk(this);
+
         NetworkUtils.init(this);
         SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();

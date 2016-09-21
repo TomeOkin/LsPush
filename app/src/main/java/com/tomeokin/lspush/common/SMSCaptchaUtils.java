@@ -21,6 +21,7 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.model.SMSCheckCaptchaResponse;
 import com.tomeokin.lspush.data.model.SMSCountryListResponse;
 import com.tomeokin.lspush.data.model.SMSSentCaptchaResponse;
@@ -48,6 +49,10 @@ public class SMSCaptchaUtils {
         if (sInstance == null) {
             sInstance = new SMSCaptchaUtils(context, smsId, smsKey);
         }
+    }
+
+    public static void init(Context context) {
+        init(context, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
     }
 
     public static void registerEventHandler(EventHandler eventHandler) {

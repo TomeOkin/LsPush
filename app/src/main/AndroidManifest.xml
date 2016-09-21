@@ -47,8 +47,11 @@
             android:name=".biz.main.MainActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTop">
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,8 +63,10 @@
             android:name=".biz.auth.SignOutActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false" />
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Auth" />
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

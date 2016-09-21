@@ -145,4 +145,13 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="AppTheme.Auth">
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <!-- see http://saulmm.github.io/avoding-android-cold-starts -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_background</item>
+    </style>
+
 </resources>

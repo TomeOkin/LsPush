@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.usercase;
+package com.tomeokin.lspush.biz.usercase.auth;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -45,8 +45,9 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
     private EventHandler mEventHandler;
     private Call<BaseResponse> mCheckCaptchaCall;
 
-    public CheckCaptchaAction(Resources resources, LsPushService lsPushService, Gson gson) {
-        super(resources);
+    public CheckCaptchaAction(Context context, LsPushService lsPushService, Gson gson) {
+        super(context.getResources());
+        SMSCaptchaUtils.init(context);
         mLsPushService = lsPushService;
         mGson = gson;
     }

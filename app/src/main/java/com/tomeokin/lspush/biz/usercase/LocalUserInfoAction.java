@@ -23,7 +23,7 @@ import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.base.BaseAction;
 import com.tomeokin.lspush.biz.base.CommonSubscriber;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.state.LsPushUserState;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
 import com.tomeokin.lspush.data.model.AccessResponse;

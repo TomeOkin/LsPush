@@ -15,7 +15,6 @@
  */
 package com.tomeokin.lspush.biz.main;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -46,7 +45,7 @@ public class SplashFragment extends BaseFragment {
         try {
             //InputStream in = getContext().getAssets().open("splash.png");
             Glide.with(this)
-                .load(Uri.parse("file:///android_asset/splash.png"))
+                .load(R.drawable.launcher_background)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .fitCenter()
                 .into(imageView);

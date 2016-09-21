@@ -23,7 +23,9 @@ import android.os.Bundle;
 
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityCipher;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.CommonCrypto;
 
 import java.io.BufferedReader;
@@ -64,16 +66,23 @@ public final class LsPushConfig {
 
     private LsPushConfig(Context context) {
         try {
-            load(context);
+            loadMetadata(context);
             //loadConfig(context);
             //write(context);
             //read(context);
         } catch (Exception e) {
-            Timber.tag("app").w("loading config failure");
+            Timber.tag(UserScene.TAG_APP).w("load metadata failure");
         }
     }
 
-    private void load(Context context) throws PackageManager.NameNotFoundException, IOException, JAQException {
+    public static LsPushConfig get() {
+        return sInstance;
+    }
+
+    /**
+     * load when init
+     */
+    private void loadMetadata(Context context) throws PackageManager.NameNotFoundException, IOException, JAQException {
         PackageManager packageManager = context.getPackageManager();
         ApplicationInfo appInfo =
             packageManager.getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -81,19 +90,28 @@ public final class LsPushConfig {
             final Bundle metaData = appInfo.metaData;
             serverUrl = metaData.getString(SERVER_URL);
             jaqKey = metaData.getString(JAQ_KEY);
-            loadData(context, jaqKey);
         }
     }
 
-    private void loadData(Context context, String jaqKey) throws IOException, JAQException {
+    public void loadProperty(Context context) {
+        try {
+            loadPropertyData(context);
+        } catch (Exception e) {
+            Timber.tag(UserScene.TAG_APP).w("load property failure");
+        }
+    }
+
+    /**
+     * load after BeeCrypto init
+     */
+    public void loadPropertyData(Context context) throws IOException, JAQException {
         Properties properties = new Properties();
-        SecurityCipher cipher = new SecurityCipher(context);
         InputStream in = context.getAssets().open(LSPUSH_OK, Context.MODE_PRIVATE);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in, CharsetsSupport.UTF_8));
         properties.load(reader);
-        publicKey = cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(PUBLIC_KEY)), jaqKey);
-        mobSMSId = cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(MOB_SMS_ID)), jaqKey);
-        mobSMSKey = cipher.decryptString(properties.getProperty(CommonCrypto.hashPrefKey(MOB_SMS_KEY)), jaqKey);
+        publicKey = BeeCrypto.get().decrypt(properties.getProperty(CommonCrypto.hashPrefKey(PUBLIC_KEY)));
+        mobSMSId = BeeCrypto.get().decrypt(properties.getProperty(CommonCrypto.hashPrefKey(MOB_SMS_ID)));
+        mobSMSKey = BeeCrypto.get().decrypt(properties.getProperty(CommonCrypto.hashPrefKey(MOB_SMS_KEY)));
     }
 
     public static String getServerUrl() {

@@ -34,8 +34,8 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.usercase.CheckCaptchaAction;
-import com.tomeokin.lspush.biz.usercase.SendCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;

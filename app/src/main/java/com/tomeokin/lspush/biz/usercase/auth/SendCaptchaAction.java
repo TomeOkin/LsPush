@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.usercase;
+package com.tomeokin.lspush.biz.usercase.auth;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.tomeokin.lspush.R;
@@ -40,8 +40,9 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
     private EventHandler mEventHandler;
     private Call<BaseResponse> mSendCaptchaCall;
 
-    public SendCaptchaAction(Resources resources, LsPushService lsPushService) {
-        super(resources);
+    public SendCaptchaAction(Context context, LsPushService lsPushService) {
+        super(context.getResources());
+        SMSCaptchaUtils.init(context);
         mLsPushService = lsPushService;
     }
 

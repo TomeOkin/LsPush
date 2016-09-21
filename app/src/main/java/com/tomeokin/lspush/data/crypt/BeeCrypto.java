@@ -20,6 +20,10 @@ import android.text.TextUtils;
 
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityCipher;
+import com.alibaba.wireless.security.jaq.SecurityInit;
+import com.tomeokin.lspush.config.LsPushConfig;
+
+import timber.log.Timber;
 
 public class BeeCrypto {
     private static BeeCrypto beeCrypto;
@@ -32,11 +36,20 @@ public class BeeCrypto {
         }
     }
 
+    public static void init(Context context) {
+        init(context, LsPushConfig.getJaqKey());
+    }
+
     public static BeeCrypto get() {
         return beeCrypto;
     }
 
     private BeeCrypto(Context context, final String jaqKey) {
+        try {
+            SecurityInit.Initialize(context);
+        } catch (JAQException e) {
+            Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
+        }
         mJaqKey = jaqKey;
         mCipher = new SecurityCipher(context);
     }

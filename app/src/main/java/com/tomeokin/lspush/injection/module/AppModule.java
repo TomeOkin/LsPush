@@ -18,7 +18,7 @@ package com.tomeokin.lspush.injection.module;
 import android.app.Application;
 import android.content.Context;
 
-import com.tomeokin.lspush.biz.state.LsPushUserState;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
 import javax.inject.Singleton;

@@ -19,8 +19,6 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import com.alibaba.wireless.security.jaq.JAQException;
-import com.alibaba.wireless.security.jaq.SecurityInit;
 import com.facebook.stetho.Stetho;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogInterceptor;
@@ -28,7 +26,6 @@ import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;
@@ -45,24 +42,17 @@ public class LsPushApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        LeakCanary.install(this);
-        initLogger();
-        initJAQ(this);
-        LsPushConfig.init(this);
-        BeeCrypto.init(this, LsPushConfig.getJaqKey());
-        //initHawk(this);
-        NetworkUtils.init(this);
-        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
-        initAppComponent();
-        initializeStetho(this);
-    }
-
-    private void initJAQ(final Context context) {
-        try {
-            SecurityInit.Initialize(context);
-        } catch (JAQException e) {
-            Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
         }
+
+        // https://github.com/square/leakcanary/issues/322
+        // https://medium.com/@amitshekhar/android-memory-leaks-inputmethodmanager-solved-a6f2fe1d1348#.i060weodr
+        LeakCanary.install(this);
+        initializeStetho(this);
+        initLogger();
     }
 
     private void initHawk(final Context context) {
@@ -74,8 +64,20 @@ public class LsPushApplication extends Application {
         }).build();
     }
 
-    private void initAppComponent() {
-        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+    public LsPushApplication get(Context context) {
+        return (LsPushApplication) context.getApplicationContext();
+    }
+
+    public AppComponent appComponent() {
+        if (appComponent == null) {
+            LsPushConfig.init(this);
+            BeeCrypto.init(this);
+            //initHawk(this);
+            LsPushConfig.get().loadProperty(this);
+            NetworkUtils.init(this);
+            appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+        }
+        return appComponent;
     }
 
     private void initLogger() {
@@ -94,9 +96,5 @@ public class LsPushApplication extends Application {
          * or https://github.com/facebook/stetho/blob/master/stetho-sample/src/debug/java/com/facebook/stetho/sample/SampleDebugApplication.java
          */
         Stetho.initializeWithDefaults(context);
-    }
-
-    public AppComponent appComponent() {
-        return appComponent;
     }
 }

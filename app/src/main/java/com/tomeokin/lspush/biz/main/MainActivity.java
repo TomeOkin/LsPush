@@ -7,10 +7,10 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.SignOutActivity;
-import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
         mLocalUserInfoAction.attach(this);
         AccessResponse accessResponse = mLocalUserInfoAction.getAccessResponse();
         if (accessResponse == null) {
-            Navigator.moveTo(this, SplashFragment.class, null, false);
+            //Navigator.moveTo(this, SplashFragment.class, null, false);
             return;
         }
 
@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_GET_ACCESS_RESPONSE) {
             AccessResponse accessResponse = (AccessResponse) response;
+            setTheme(R.style.AppTheme);
             if (accessResponse != null) {
                 Navigator.moveTo(this, MainFragment.class, null);
             } else {
