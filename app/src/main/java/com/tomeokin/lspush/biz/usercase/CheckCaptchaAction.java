@@ -40,25 +40,22 @@ import timber.log.Timber;
 public class CheckCaptchaAction extends BaseAction implements BaseActionCallback {
     private final LsPushService mLsPushService;
     private final Gson mGson;
-    private final SMSCaptchaUtils mSmsCaptchaUtils;
 
     private SMSCaptchaUtils.SMSHandler mHandler;
     private EventHandler mEventHandler;
     private Call<BaseResponse> mCheckCaptchaCall;
 
-    public CheckCaptchaAction(Resources resources, LsPushService lsPushService, Gson gson,
-        SMSCaptchaUtils smsCaptchaUtils) {
+    public CheckCaptchaAction(Resources resources, LsPushService lsPushService, Gson gson) {
         super(resources);
         mLsPushService = lsPushService;
         mGson = gson;
-        mSmsCaptchaUtils = smsCaptchaUtils;
     }
 
     public void checkCaptcha(CaptchaRequest request, String authCode, String countryCode) {
         if (request.getSendObject().contains("@")) {
             checkCaptcha(request, authCode);
         } else {
-            mSmsCaptchaUtils.submitCaptcha(countryCode, request.getSendObject(), authCode);
+            SMSCaptchaUtils.submitCaptcha(countryCode, request.getSendObject(), authCode);
         }
     }
 
@@ -103,13 +100,13 @@ public class CheckCaptchaAction extends BaseAction implements BaseActionCallback
         super.attach(callback);
         mHandler = new SMSCaptchaUtils.SMSHandler(this);
         mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler);
-        mSmsCaptchaUtils.registerEventHandler(mEventHandler);
+        SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
     @Override
     public void detach() {
         super.detach();
-        mSmsCaptchaUtils.unregisterEventHandler(mEventHandler);
+        SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
         mEventHandler = null;
         mHandler.removeAllMessage();
         mHandler = null;

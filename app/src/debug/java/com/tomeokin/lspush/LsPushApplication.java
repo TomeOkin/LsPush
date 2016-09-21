@@ -28,6 +28,7 @@ import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;
@@ -51,7 +52,7 @@ public class LsPushApplication extends Application {
         BeeCrypto.init(this, LsPushConfig.getJaqKey());
         //initHawk(this);
         NetworkUtils.init(this);
-        //SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
+        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
         initAppComponent();
         initializeStetho(this);
     }

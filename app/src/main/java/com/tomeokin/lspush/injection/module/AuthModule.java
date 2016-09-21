@@ -23,8 +23,6 @@ import com.tomeokin.lspush.biz.usercase.CheckUIDAction;
 import com.tomeokin.lspush.biz.usercase.RegisterAction;
 import com.tomeokin.lspush.biz.usercase.SendCaptchaAction;
 import com.tomeokin.lspush.biz.usercase.UploadAvatarAction;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
-import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -36,22 +34,15 @@ import dagger.Provides;
 public class AuthModule {
     @Provides
     @PerActivity
-    public SMSCaptchaUtils provideSMSCaptchaUtils(@ActivityContext Context context) {
-        return SMSCaptchaUtils.init(context, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
-    }
-
-    @Provides
-    @PerActivity
-    public SendCaptchaAction provideSendCaptchaAction(@ActivityContext Context context, LsPushService lsPushService,
-        SMSCaptchaUtils smsCaptchaUtils) {
-        return new SendCaptchaAction(context.getResources(), lsPushService, smsCaptchaUtils);
+    public SendCaptchaAction provideSendCaptchaAction(@ActivityContext Context context, LsPushService lsPushService) {
+        return new SendCaptchaAction(context.getResources(), lsPushService);
     }
 
     @Provides
     @PerActivity
     public CheckCaptchaAction provideCheckCaptchaAction(@ActivityContext Context context, LsPushService lsPushService,
-        Gson gson, SMSCaptchaUtils smsCaptchaUtils) {
-        return new CheckCaptchaAction(context.getResources(), lsPushService, gson, smsCaptchaUtils);
+        Gson gson) {
+        return new CheckCaptchaAction(context.getResources(), lsPushService, gson);
     }
 
     @Provides

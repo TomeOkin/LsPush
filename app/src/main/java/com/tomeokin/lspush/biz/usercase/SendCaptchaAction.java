@@ -35,16 +35,14 @@ import timber.log.Timber;
 
 public class SendCaptchaAction extends BaseAction implements BaseActionCallback {
     private final LsPushService mLsPushService;
-    private final SMSCaptchaUtils mSmsCaptchaUtils;
 
     private SMSCaptchaUtils.SMSHandler mHandler;
     private EventHandler mEventHandler;
     private Call<BaseResponse> mSendCaptchaCall;
 
-    public SendCaptchaAction(Resources resources, LsPushService lsPushService, SMSCaptchaUtils smsCaptchaUtils) {
+    public SendCaptchaAction(Resources resources, LsPushService lsPushService) {
         super(resources);
         mLsPushService = lsPushService;
-        mSmsCaptchaUtils = smsCaptchaUtils;
     }
 
     public void sendCaptchaCode(CaptchaRequest request, String countryCode) {
@@ -53,7 +51,7 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
             mSendCaptchaCall = mLsPushService.sendCaptcha(request);
             mSendCaptchaCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_SEND_CAPTCHA, mCallback));
         } else {
-            mSmsCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
+            SMSCaptchaUtils.sendCaptcha(countryCode, request.getSendObject());
         }
     }
 
@@ -78,7 +76,7 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
         super.attach(callback);
         mHandler = new SMSCaptchaUtils.SMSHandler(this);
         mEventHandler = new SMSCaptchaUtils.CustomEventHandler(mHandler);
-        mSmsCaptchaUtils.registerEventHandler(mEventHandler);
+        SMSCaptchaUtils.registerEventHandler(mEventHandler);
     }
 
     @Override
@@ -88,7 +86,7 @@ public class SendCaptchaAction extends BaseAction implements BaseActionCallback 
             mHandler.removeAllMessage();
         }
         mHandler = null;
-        mSmsCaptchaUtils.unregisterEventHandler(mEventHandler);
+        SMSCaptchaUtils.unregisterEventHandler(mEventHandler);
         mEventHandler = null;
         checkAndCancel(mSendCaptchaCall);
         mSendCaptchaCall = null;
