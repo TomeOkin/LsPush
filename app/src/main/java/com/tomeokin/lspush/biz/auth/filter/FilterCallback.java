@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.adapter;
+package com.tomeokin.lspush.biz.auth.filter;
 
 public interface FilterCallback {
     void onInvalidCharacter(int requestId, char c);

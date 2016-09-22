@@ -156,7 +156,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, getContext(), nextButton, progressBar);
         registerLifecycleListener(mNextButtonAdapter);
 
-        TextView loginButton = (TextView) view.findViewById(R.id.login_button);
+        TextView loginButton = (TextView) view.findViewById(R.id.reg_login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

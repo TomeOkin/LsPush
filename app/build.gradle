@@ -44,15 +44,18 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
+        buildConfigField 'String', 'LSPUSH_SERVER_URL', "\"${metadata.lspushServerUrl}\""
+        buildConfigField 'String', 'JAQ_KEY', "\"${metadata.jaqKey}\""
+
+        // only use them when build LsPush.ok
+        buildConfigField 'String', 'LSPUSH_PUBLIC_KEY', "\"${metadata.lspushPublicKey}\""
+        buildConfigField 'String', 'MOB_SMS_ID', "\"${metadata.mobSMSId}\""
+        buildConfigField 'String', 'MOB_SMS_KEY', "\"${metadata.mobSMSKey}\""
+
         manifestPlaceholders = [
                 BUGLY_APPID       : metadata.buglyAppId,
                 BUGLY_APP_VERSION : metadata.buglyAppVersion,
                 BUGLY_ENABLE_DEBUG: metadata.buglyEnableDebug,
-                LSPUSH_SERVER_URL : metadata.lspushServerUrl,
-//                LSPUSH_PUBLIC_KEY : metadata.lspushPublicKey,
-//                MOB_SMS_ID        : metadata.mobSMSId,
-//                MOB_SMS_KEY       : metadata.mobSMSKey,
-                JAQ_KEY           : metadata.jaqKey
         ]
 
         ndk {
@@ -176,8 +179,8 @@ dependencies {
     compile releaseDependencies.dagger2
     apt releaseDependencies.dagger2Compiler
     // butterknife
-//    compile releaseDependencies.butterknife
-//    apt releaseDependencies.butterknifeCompiler
+    compile releaseDependencies.butterknife
+    apt releaseDependencies.butterknifeCompiler
     // network
     compile releaseDependencies.retrofit2
     compile releaseDependencies.okhttp3

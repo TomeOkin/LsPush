@@ -47,14 +47,10 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.FilterCallback;
+import com.tomeokin.lspush.biz.auth.filter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.adapter.PasswordFilter;
-import com.tomeokin.lspush.biz.auth.adapter.UserIdFilter;
-import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
-import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
-import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
-import com.tomeokin.lspush.biz.usercase.auth.UploadAvatarAction;
+import com.tomeokin.lspush.biz.auth.filter.PasswordFilter;
+import com.tomeokin.lspush.biz.auth.filter.UserIdFilter;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
@@ -63,12 +59,15 @@ import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.main.MainActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
+import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
+import com.tomeokin.lspush.biz.usercase.auth.UploadAvatarAction;
 import com.tomeokin.lspush.common.FileNameUtils;
 import com.tomeokin.lspush.common.ImageIntentUtils;
 import com.tomeokin.lspush.common.MimeTypeUtils;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
-import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
@@ -101,6 +100,9 @@ public class RegisterFragment extends BaseFragment
     public static final int UID_ADAPTER_ID = 3;
     public static final int USER_NAME_ADAPTER_ID = 4;
 
+    public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
+    public static final String EXTRA_CAPTCHA_AUTH_CODE = "extra.captcha.auth.code";
+
     private static final int REQUEST_PERMISSION_PICK_IMAGE = 101;
     private static final int REQUEST_PERMISSION_TAKE_PHOTO = 102;
 
@@ -109,9 +111,6 @@ public class RegisterFragment extends BaseFragment
     private static final int REQUEST_TAKE_PHOTO = 2;
 
     private static String[] SELECT_IMAGE_SOURCE;
-
-    public static final String EXTRA_CAPTCHA_REQUEST = "extra.captcha.request";
-    public static final String EXTRA_CAPTCHA_AUTH_CODE = "extra.captcha.auth.code";
 
     private CaptchaRequest mCaptchaRequest = null;
     private String mAuthCode;
@@ -136,7 +135,6 @@ public class RegisterFragment extends BaseFragment
     private File mUserAvatarFile = null;
     private BaseDialogFragment mBaseDialogFragment;
 
-    //@Inject RegisterPresenter mPresenter;
     @Inject CheckUIDAction mCheckUIDAction;
     @Inject UploadAvatarAction mUploadAvatarAction;
     @Inject RegisterAction mRegisterAction;
@@ -174,6 +172,10 @@ public class RegisterFragment extends BaseFragment
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
         inflater.inflate(R.layout.fragment_register, (ViewGroup) view.findViewById(R.id.content_container), true);
+
+        mNotificationBar = (NotificationBar) view.findViewById(R.id.notification_bar);
+
+        // region: User Avatar
         mUserAvatar = (ImageView) view.findViewById(R.id.image_icon);
         mUserAvatar.setBackgroundResource(R.drawable.register_name);
         mUserAvatar.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +188,9 @@ public class RegisterFragment extends BaseFragment
                         .show();
             }
         });
+        // endregion
 
+        // region: TextWatcher and FocusChange Listener
         mValidWatcher = new BaseTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -219,9 +223,9 @@ public class RegisterFragment extends BaseFragment
                 }
             }
         };
+        // endregion
 
-        mNotificationBar = (NotificationBar) view.findViewById(R.id.notification_bar);
-
+        // region: UID Field
         mUserIdFieldLayout = view.findViewById(R.id.userId_layout);
         mUserIdField = (EditText) view.findViewById(R.id.userId_field);
         ImageView uidValidButton = (ImageView) view.findViewById(R.id.userId_validation_button);
@@ -229,17 +233,23 @@ public class RegisterFragment extends BaseFragment
         mUserIdField.setFilters(new InputFilter[] {
             new UserIdFilter(UID_FILTER_ID, this), new InputFilter.LengthFilter(UserInfoModel.USER_ID_MAX_LENGTH)
         });
+        mUserIdField.requestFocus();
         mUserIdField.setOnFocusChangeListener(mFocusChangeValidChecker);
         mUIDAdapter = new FieldAdapter(UID_ADAPTER_ID, this, uidValidButton, uidProgressBar);
         registerLifecycleListener(mUIDAdapter);
+        // endregion
 
+        // region: UserName Field
         mUserNameFieldLayout = view.findViewById(R.id.userName_layout);
         mUserNameField = (EditText) view.findViewById(R.id.userName_field);
         ImageView userNameValidButton = (ImageView) view.findViewById(R.id.userName_validation_button);
-        mUserNameField.setFilters(new InputFilter[] {new InputFilter.LengthFilter(UserInfoModel.USER_NAME_MAX_LENGTH)});
+        mUserNameField.setFilters(
+            new InputFilter[] { new InputFilter.LengthFilter(UserInfoModel.USER_NAME_MAX_LENGTH) });
         mUserNameAdapter = new FieldAdapter(USER_NAME_ADAPTER_ID, this, userNameValidButton, null);
         registerLifecycleListener(mUserNameAdapter);
+        // endregion
 
+        // region: Password Field
         mPasswordFieldLayout = view.findViewById(R.id.userPwd_layout);
         mPasswordField = (EditText) view.findViewById(R.id.userPwd_field);
         mPasswordField.setFilters(new InputFilter[] {
@@ -274,7 +284,9 @@ public class RegisterFragment extends BaseFragment
                 mPasswordField.setSelection(selection);
             }
         });
+        // endregion
 
+        // region: NextButton
         TextView nextButton = (TextView) view.findViewById(R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,8 +297,10 @@ public class RegisterFragment extends BaseFragment
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.next_progress);
         mNextButtonAdapter = new NextButtonAdapter(NEXT_BUTTON_ID, this, getContext(), nextButton, progressBar);
         registerLifecycleListener(mNextButtonAdapter);
+        // endregion
 
-        TextView loginButton = (TextView) view.findViewById(R.id.login_button);
+        // region: Bottom Login Link
+        TextView loginButton = (TextView) view.findViewById(R.id.reg_login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,6 +308,7 @@ public class RegisterFragment extends BaseFragment
                 Navigator.moveTo(getContext(), getFragmentManager(), LoginFragment.class, null);
             }
         });
+        // endregion
 
         dispatchOnCreateView(view);
         return view;
@@ -362,6 +377,13 @@ public class RegisterFragment extends BaseFragment
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     // 根据 uri 裁剪图片
     private void cropImage(@NonNull Uri input) {
         Timber.i("Uri.toString: %s", input.toString());
@@ -383,21 +405,78 @@ public class RegisterFragment extends BaseFragment
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mUserIdField.addTextChangedListener(mValidWatcher);
-        mUserIdField.requestFocus();
         mUserNameField.addTextChangedListener(mValidWatcher);
         mPasswordField.addTextChangedListener(mValidWatcher);
         dispatchOnResume();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mCheckUIDAction.attach(this);
+        mUploadAvatarAction.attach(this);
+        mRegisterAction.attach(this);
+        mLocalUserInfoAction.attach(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SoftInputUtils.hideInput(mPasswordField);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
+        dispatchOnPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // region: Detach Action
+        mCheckUIDAction.detach();
+        mUploadAvatarAction.detach();
+        mRegisterAction.detach();
+        mLocalUserInfoAction.detach();
+        // endregion
+
+        if (mBaseDialogFragment != null) {
+            mBaseDialogFragment.dismiss();
+            mBaseDialogFragment = null;
+        }
+
+        mUserIdFieldLayout = null;
+        mUserNameFieldLayout = null;
+        mPasswordFieldLayout = null;
+        mUserIdField.removeTextChangedListener(mValidWatcher);
+        mUserNameField.removeTextChangedListener(mValidWatcher);
+        mPasswordField.removeTextChangedListener(mValidWatcher);
+        mUserIdField.setOnFocusChangeListener(null);
+        mFocusChangeValidChecker = null;
+        mPasswordField.setOnEditorActionListener(null);
+        mValidWatcher = null;
+        mUserIdField = null;
+        mUserNameField = null;
+        mUserAvatar = null;
+
+        dispatchOnDestroyView();
+        unregister(mUIDAdapter);
+        unregister(mUserNameAdapter);
+        unregister(mNextButtonAdapter);
+        mUIDAdapter = null;
+        mUserNameAdapter = null;
+        mNextButtonAdapter = null;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCheckUIDAction = null;
+        mUploadAvatarAction = null;
+        mRegisterAction = null;
+        mLocalUserInfoAction = null;
     }
 
     @Override
@@ -448,68 +527,6 @@ public class RegisterFragment extends BaseFragment
         }
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mCheckUIDAction.attach(this);
-        mUploadAvatarAction.attach(this);
-        mRegisterAction.attach(this);
-        mLocalUserInfoAction.attach(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        SoftInputUtils.hideInput(mPasswordField);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
-        dispatchOnPause();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCheckUIDAction.detach();
-        mUploadAvatarAction.detach();
-        mRegisterAction.detach();
-        mLocalUserInfoAction.detach();
-        if (mBaseDialogFragment != null) {
-            mBaseDialogFragment.dismiss();
-            mBaseDialogFragment = null;
-        }
-        mUserIdFieldLayout = null;
-        mUserNameFieldLayout = null;
-        mPasswordFieldLayout = null;
-        mUserIdField.removeTextChangedListener(mValidWatcher);
-        mUserNameField.removeTextChangedListener(mValidWatcher);
-        mPasswordField.removeTextChangedListener(mValidWatcher);
-        mUserIdField.setOnFocusChangeListener(null);
-        mUserNameField.setOnFocusChangeListener(null);
-        mPasswordField.setOnFocusChangeListener(null);
-        mFocusChangeValidChecker = null;
-        mPasswordField.setOnEditorActionListener(null);
-        mValidWatcher = null;
-        mUserIdField = null;
-        mUserNameField = null;
-        mPasswordField = null;
-        mUserAvatar = null;
-        unregister(mUIDAdapter);
-        unregister(mUserNameAdapter);
-        unregister(mNextButtonAdapter);
-        mUIDAdapter = null;
-        mUserNameAdapter = null;
-        mNextButtonAdapter = null;
-        dispatchOnDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mCheckUIDAction = null;
-        mUploadAvatarAction = null;
-        mRegisterAction = null;
-        mLocalUserInfoAction = null;
-    }
-
     public void register() {
         mNextButtonAdapter.waiting();
         if (mUserAvatarFile != null && TextUtils.isEmpty(mUserAvatarImage)) {
@@ -539,22 +556,7 @@ public class RegisterFragment extends BaseFragment
     }
 
     public boolean isValidPassword() {
-        return mPasswordField.getText().toString().trim().length() >= UserInfoModel.USER_PASSWORD_MIN_LENGTH
-            && quickFallPasswordStrength(mPasswordField.getText());
-    }
-
-    public boolean quickFallPasswordStrength(CharSequence password) {
-        int result = StringUtils.indexDigest(password) >= 0 ? 1 : 0;
-        result += StringUtils.indexLowerLetter(password) >= 0 ? 1 : 0;
-        if (result == 2) {
-            return true;
-        }
-        result += StringUtils.indexUpperLetter(password) >= 0 ? 1 : 0;
-        if (result >= 2) {
-            return true;
-        }
-        result += StringUtils.indexSpecial(UserInfoModel.PASSWORD_SPECIAL_SORT, password);
-        return result >= 2;
+        return UserInfoModel.isValidPassword(mPasswordField.getText());
     }
 
     public boolean isFieldValid() {

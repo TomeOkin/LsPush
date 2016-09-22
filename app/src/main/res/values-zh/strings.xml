@@ -49,4 +49,6 @@
     <string name="settings_dialog_title">权限请求</string>
     <string name="rationale_ask_again">缺少该权限，应用可能无法正常工作。 打开设置以修改应用权限。</string>
     <string name="open_camera_failure">无法打开照相机。</string>
+
+    <string name="don_not_have_an_account_register">没有帐户？<b>请注册。</b></string>
 </resources>

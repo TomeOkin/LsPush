@@ -19,7 +19,7 @@ import android.content.Context;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
-import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 

@@ -85,8 +85,6 @@ public class CaptchaFragment extends BaseFragment
         mCountryCodeData = CountryCodeUtils.getDefault(getContext());
         mShowEmail = true;
         mShowingEmailTab = true;
-
-        //dispatchOnCreate(savedInstanceState);
     }
 
     @Nullable
@@ -158,7 +156,7 @@ public class CaptchaFragment extends BaseFragment
             new CaptchaViewHolder(this, emailTab, phoneTab, mShowingEmailTab, emailSwitchAdapter, phoneSwitchAdapter);
         registerLifecycleListener(mViewHolder);
 
-        TextView loginButton = (TextView) view.findViewById(R.id.login_button);
+        TextView loginButton = (TextView) view.findViewById(R.id.reg_login_button);
         loginButton.setText(getString(R.string.already_have_an_account_log_in));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

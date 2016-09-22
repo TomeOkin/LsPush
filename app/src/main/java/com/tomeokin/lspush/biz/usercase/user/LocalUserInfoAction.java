@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.usercase;
+package com.tomeokin.lspush.biz.usercase.user;
 
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -23,7 +23,6 @@ import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.base.BaseAction;
 import com.tomeokin.lspush.biz.base.CommonSubscriber;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
 import com.tomeokin.lspush.data.model.AccessResponse;

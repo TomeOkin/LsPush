@@ -55,25 +55,15 @@ public class LsPushApplication extends Application {
         initLogger();
     }
 
-    private void initHawk(final Context context) {
-        Hawk.init(context).setEncryption(new BeeEncryption(context)).setLogInterceptor(new LogInterceptor() {
-            @Override
-            public void onLog(String message) {
-                Log.d("Hawk", message);
-            }
-        }).build();
-    }
-
     public LsPushApplication get(Context context) {
         return (LsPushApplication) context.getApplicationContext();
     }
 
     public AppComponent appComponent() {
         if (appComponent == null) {
-            LsPushConfig.init(this);
             BeeCrypto.init(this);
+            LsPushConfig.init(this);
             //initHawk(this);
-            LsPushConfig.get().loadProperty(this);
             NetworkUtils.init(this);
             appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
         }
@@ -88,6 +78,15 @@ public class LsPushApplication extends Application {
                 Logger.log(priority, tag, message, t);
             }
         });
+    }
+
+    private void initHawk(final Context context) {
+        Hawk.init(context).setEncryption(new BeeEncryption(context)).setLogInterceptor(new LogInterceptor() {
+            @Override
+            public void onLog(String message) {
+                Log.d("Hawk", message);
+            }
+        }).build();
     }
 
     private void initializeStetho(final Context context) {

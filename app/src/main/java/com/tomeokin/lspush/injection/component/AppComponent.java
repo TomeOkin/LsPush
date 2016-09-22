@@ -21,7 +21,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
-import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.module.AppModule;

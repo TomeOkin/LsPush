@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.model;
 
+import com.tomeokin.lspush.common.StringUtils;
+
 import java.util.Arrays;
 
 public class UserInfoModel {
@@ -30,5 +32,23 @@ public class UserInfoModel {
 
     static {
         Arrays.sort(PASSWORD_SPECIAL_SORT);
+    }
+
+    public static boolean isValidPassword(CharSequence password) {
+        return password.toString().trim().length() >= USER_PASSWORD_MIN_LENGTH && quickFallPasswordStrength(password);
+    }
+
+    public static boolean quickFallPasswordStrength(CharSequence password) {
+        int result = StringUtils.indexDigest(password) >= 0 ? 1 : 0;
+        result += StringUtils.indexLowerLetter(password) >= 0 ? 1 : 0;
+        if (result == 2) {
+            return true;
+        }
+        result += StringUtils.indexUpperLetter(password) >= 0 ? 1 : 0;
+        if (result >= 2) {
+            return true;
+        }
+        result += StringUtils.indexSpecial(UserInfoModel.PASSWORD_SPECIAL_SORT, password);
+        return result >= 2;
     }
 }

@@ -21,36 +21,35 @@ import android.text.TextUtils;
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.alibaba.wireless.security.jaq.SecurityCipher;
 import com.alibaba.wireless.security.jaq.SecurityInit;
-import com.tomeokin.lspush.config.LsPushConfig;
+import com.tomeokin.lspush.BuildConfig;
 
 import timber.log.Timber;
 
 public class BeeCrypto {
     private static BeeCrypto beeCrypto;
     private final SecurityCipher mCipher;
-    private final String mJaqKey;
+    private static final String mJaqKey;
 
-    public static void init(Context context, final String jqaKey) {
-        if (beeCrypto == null) {
-            beeCrypto = new BeeCrypto(context.getApplicationContext(), jqaKey);
-        }
+    static {
+        mJaqKey = BuildConfig.JAQ_KEY;
     }
 
     public static void init(Context context) {
-        init(context, LsPushConfig.getJaqKey());
+        if (beeCrypto == null) {
+            beeCrypto = new BeeCrypto(context.getApplicationContext());
+        }
     }
 
     public static BeeCrypto get() {
         return beeCrypto;
     }
 
-    private BeeCrypto(Context context, final String jaqKey) {
+    private BeeCrypto(Context context) {
         try {
             SecurityInit.Initialize(context);
         } catch (JAQException e) {
             Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
         }
-        mJaqKey = jaqKey;
         mCipher = new SecurityCipher(context);
     }
 

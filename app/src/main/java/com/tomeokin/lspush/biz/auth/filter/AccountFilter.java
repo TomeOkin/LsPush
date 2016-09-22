@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.auth.adapter;
+package com.tomeokin.lspush.biz.auth.filter;
 
 import android.text.LoginFilter;
 
-import com.tomeokin.lspush.biz.model.UserInfoModel;
-
-public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
-    private static final String mAllowed = UserInfoModel.PASSWORD_SPECIAL; // Additional characters
+public class AccountFilter extends LoginFilter.UsernameFilterGeneric {
+    private static final String mAllowed = ".@"; // Additional characters
     private final int mRequestId;
     private final FilterCallback mCallback;
 
-    public PasswordFilter(int requestId, FilterCallback callback) {
+    public AccountFilter(int requestId, FilterCallback callback) {
         this(requestId, callback, false);
     }
 
-    public PasswordFilter(int requestId, FilterCallback callback, boolean appendInvalid) {
+    public AccountFilter(int requestId, FilterCallback callback, boolean appendInvalid) {
         super(appendInvalid);
         mRequestId = requestId;
         mCallback = callback;
@@ -36,7 +34,6 @@ public class PasswordFilter extends LoginFilter.PasswordFilterGMail {
 
     @Override
     public boolean isAllowed(char c) {
-        // [a-zA-Z0-9\\.,;]
         if ('0' <= c && c <= '9') return true;
         if ('a' <= c && c <= 'z') return true;
         if ('A' <= c && c <= 'Z') return true;

@@ -24,7 +24,6 @@ import com.google.gson.GsonBuilder;
 import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
-import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import java.io.File;
@@ -53,7 +52,7 @@ public class LsPushApiModule {
     private static final String CACHE_DIR = "http-cache-lspush";
 
     static {
-        API_URL = LsPushConfig.getServerUrl();
+        API_URL = BuildConfig.LSPUSH_SERVER_URL;
     }
 
     @Provides

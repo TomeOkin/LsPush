@@ -8,7 +8,7 @@
         android:background="@color/white_20_transparent" />
 
     <TextView
-        android:id="@+id/login_button"
+        android:id="@+id/reg_login_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_height_small"
         android:background="@color/white_5_transparent"

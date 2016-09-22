@@ -18,11 +18,8 @@ package com.tomeokin.lspush;
 import android.app.Application;
 import android.content.Context;
 
-import com.alibaba.wireless.security.jaq.JAQException;
-import com.alibaba.wireless.security.jaq.SecurityInit;
 import com.orhanobut.hawk.Hawk;
 import com.tomeokin.lspush.common.NetworkUtils;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;
@@ -38,40 +35,29 @@ public class LsPushApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         initLogger(this);
-        initJAQ(this);
-        LsPushConfig.init(this);
-        //initHawk(this);
-        BeeCrypto.init(this, LsPushConfig.getJaqKey());
-        //Crypto.init(LsPushConfig.getPublicKey());
-
-        NetworkUtils.init(this);
-        SMSCaptchaUtils.init(this, LsPushConfig.getMobSMSId(), LsPushConfig.getMobSMSKey());
-        initAppComponent();
     }
 
-    private void initJAQ(final Context context) {
-        try {
-            SecurityInit.Initialize(context);
-        } catch (JAQException e) {
-            Timber.wtf("init jaq failure, errorCode = %d", e.getErrorCode());
+    public LsPushApplication get(Context context) {
+        return (LsPushApplication) context.getApplicationContext();
+    }
+
+    public AppComponent appComponent() {
+        if (appComponent == null) {
+            BeeCrypto.init(this);
+            LsPushConfig.init(this);
+            //initHawk(this);
+            NetworkUtils.init(this);
+            appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
         }
+        return appComponent;
     }
 
     private void initHawk(final Context context) {
         Hawk.init(context).setEncryption(new BeeEncryption(context)).build();
     }
 
-    private void initAppComponent() {
-        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-    }
-
     private void initLogger(final Context context) {
         Timber.plant(new CrashReportingTree(context));
-    }
-
-    public AppComponent appComponent() {
-        return appComponent;
     }
 }

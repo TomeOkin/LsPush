@@ -27,38 +27,49 @@
         android:layout_marginRight="@dimen/reg_field_horizontal_margin"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/account_layout"
+        <com.tomeokin.lspush.ui.widget.SearchEditText
+            android:id="@+id/account_field"
+            style="@style/Widget.LsPush.ClearEditText"
             android:layout_width="match_parent"
             android:layout_height="@dimen/row_height_small"
             android:layout_marginBottom="@dimen/row_padding"
-            android:background="@drawable/login_input_field"
-            android:orientation="horizontal">
+            android:hint="@string/user_account_hit"
+            android:inputType="text|textEmailAddress|phone"
+            android:paddingLeft="@dimen/row_padding"
+            android:paddingRight="@dimen/row_padding" />
 
-            <EditText
-                android:id="@+id/account_field"
-                style="@style/Widget.LsPush.EditText"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="@string/user_account_hit"
-                android:inputType="text|textEmailAddress|phone"
-                android:paddingLeft="@dimen/row_padding"
-                android:paddingRight="@dimen/row_padding" />
+        <!--<LinearLayout-->
+            <!--android:id="@+id/account_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/row_height_small"-->
+            <!--android:layout_marginBottom="@dimen/row_padding"-->
+            <!--android:background="@drawable/login_input_field"-->
+            <!--android:orientation="horizontal">-->
 
-            <ImageView
-                android:id="@+id/account_clean_button"
-                android:layout_width="16dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/validation_positive"
-                android:visibility="gone" />
+            <!--<EditText-->
+                <!--android:id="@+id/account_field"-->
+                <!--style="@style/Widget.LsPush.EditText"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@null"-->
+                <!--android:hint="@string/user_account_hit"-->
+                <!--android:inputType="text|textEmailAddress|phone"-->
+                <!--android:paddingLeft="@dimen/row_padding"-->
+                <!--android:paddingRight="@dimen/row_padding" />-->
 
-        </LinearLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/account_clean_button"-->
+                <!--android:layout_width="16dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:layout_marginRight="8dp"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--android:background="@drawable/validation_positive"-->
+                <!--android:visibility="gone" />-->
+
+        <!--</LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/password_layout"

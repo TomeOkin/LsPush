@@ -10,7 +10,7 @@ import com.tomeokin.lspush.biz.auth.SignOutActivity;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.usercase.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
