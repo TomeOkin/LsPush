@@ -23,8 +23,8 @@
     <dimen name="logo_icon_top_margin_small">20dp</dimen>
     <dimen name="logo_icon_bottom_margin">20dp</dimen>
     <dimen name="reg_field_horizontal_margin">28dp</dimen>
-    <dimen name="reg_login_header_top_margin">48dp</dimen>
-    <dimen name="reg_login_header_bottom_margin">24dp</dimen>
+    <dimen name="auth_header_top_margin">48dp</dimen>
+    <dimen name="auth_header_bottom_margin">24dp</dimen>
     <dimen name="error_text_view_padding">6dp</dimen>
 
     <dimen name="alert_dialog_checkbox_padding">32dp</dimen>

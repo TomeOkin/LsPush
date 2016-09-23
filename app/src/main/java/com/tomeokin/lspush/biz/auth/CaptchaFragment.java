@@ -94,7 +94,7 @@ public class CaptchaFragment extends BaseFragment
         View view = inflater.inflate(R.layout.auth_container, container, false);
         inflater.inflate(R.layout.fragment_captcha, (ViewGroup) view.findViewById(R.id.content_container), true);
         ImageView imageIcon = (ImageView) view.findViewById(R.id.image_icon);
-        imageIcon.setBackgroundResource(R.drawable.register_name);
+        imageIcon.setBackgroundResource(R.drawable.auth_avatar);
 
         ViewGroup emailTab, phoneTab;
         if (mShowEmail) {

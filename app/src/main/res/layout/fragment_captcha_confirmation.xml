@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/logo_icon_bottom_margin"
-        android:layout_marginTop="@dimen/reg_login_header_top_margin" />
+        android:layout_marginTop="@dimen/auth_header_top_margin" />
 
     <TextView
         android:id="@+id/field_title"
@@ -54,7 +54,7 @@
             android:paddingRight="@dimen/row_padding"
             tools:hint="@string/captcha_hint" />
 
-        <include layout="@layout/reg_login_next" />
+        <include layout="@layout/auth_next" />
 
     </LinearLayout>
 
@@ -63,6 +63,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/reg_login_footer" />
+    <include layout="@layout/auth_footer" />
 
 </merge>

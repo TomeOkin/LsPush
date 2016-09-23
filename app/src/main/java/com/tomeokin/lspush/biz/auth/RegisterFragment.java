@@ -177,7 +177,7 @@ public class RegisterFragment extends BaseFragment
 
         // region: User Avatar
         mUserAvatar = (ImageView) view.findViewById(R.id.image_icon);
-        mUserAvatar.setBackgroundResource(R.drawable.register_name);
+        mUserAvatar.setBackgroundResource(R.drawable.auth_avatar);
         mUserAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

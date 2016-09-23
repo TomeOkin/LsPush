@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,9 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/reg_login_header_bottom_margin"
-        android:layout_marginTop="@dimen/reg_login_header_top_margin"
-        tools:src="@drawable/register_name" />
+        android:layout_marginBottom="@dimen/auth_header_bottom_margin"
+        tools:src="@drawable/auth_avatar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,39 +37,6 @@
             android:inputType="text|textEmailAddress|phone"
             android:paddingLeft="@dimen/row_padding"
             android:paddingRight="@dimen/row_padding" />
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/account_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/row_height_small"-->
-            <!--android:layout_marginBottom="@dimen/row_padding"-->
-            <!--android:background="@drawable/login_input_field"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/account_field"-->
-                <!--style="@style/Widget.LsPush.EditText"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@null"-->
-                <!--android:hint="@string/user_account_hit"-->
-                <!--android:inputType="text|textEmailAddress|phone"-->
-                <!--android:paddingLeft="@dimen/row_padding"-->
-                <!--android:paddingRight="@dimen/row_padding" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/account_clean_button"-->
-                <!--android:layout_width="16dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:layout_marginRight="8dp"-->
-                <!--android:layout_marginTop="16dp"-->
-                <!--android:background="@drawable/validation_positive"-->
-                <!--android:visibility="gone" />-->
-
-        <!--</LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/password_layout"
@@ -105,7 +72,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/reg_login_next" />
+        <include layout="@layout/auth_next" />
 
     </LinearLayout>
 
@@ -114,6 +81,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/reg_login_footer" />
+    <include layout="@layout/auth_footer" />
 
 </LinearLayout>

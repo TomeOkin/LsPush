@@ -99,7 +99,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         inflater.inflate(R.layout.fragment_captcha_confirmation, (ViewGroup) view.findViewById(R.id.content_container),
             true);
 
-        view.findViewById(R.id.image_icon).setBackgroundResource(R.drawable.register_name);
+        view.findViewById(R.id.image_icon).setBackgroundResource(R.drawable.auth_avatar);
         ((TextView) view.findViewById(R.id.field_title)).setText(R.string.enter_captcha_code);
         TextView fieldDetail = (TextView) view.findViewById(R.id.field_detail);
         fieldDetail.setText(R.string.resend_captcha_code);

@@ -9,6 +9,7 @@ buildscript {
         }
     }
     dependencies {
+        // https://developer.android.com/studio/releases/gradle-plugin.html
         classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.tencent.bugly:symtabfileuploader:2.0.4'

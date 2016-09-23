@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.auth.SignOutActivity;
+import com.tomeokin.lspush.biz.auth.AuthActivity;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.common.UserScene;
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
             if (accessResponse != null) {
                 Navigator.moveTo(this, MainFragment.class, null);
             } else {
-                Intent intent = new Intent(this, SignOutActivity.class);
+                Intent intent = new Intent(this, AuthActivity.class);
                 startActivity(intent);
                 finish();
             }

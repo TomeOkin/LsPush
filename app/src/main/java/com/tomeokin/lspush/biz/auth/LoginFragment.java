@@ -83,7 +83,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_container, container, false);
-        inflater.inflate(R.layout.fragment_register, (ViewGroup) view.findViewById(R.id.content_container), true);
+        inflater.inflate(R.layout.fragment_login, (ViewGroup) view.findViewById(R.id.content_container), true);
         mUnBinder = ButterKnife.bind(this, view);
 
         mValidWatcher = new BaseTextWatcher() {
@@ -93,7 +93,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
             }
         };
 
-        mUserAvatar.setBackgroundResource(R.drawable.register_name);
+        mUserAvatar.setBackgroundResource(R.drawable.auth_avatar);
 
         // region: Account Field
         mAccountField.setFilters(
@@ -151,11 +151,11 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
 
         // region: Bottom Register Link
         TextView loginButton = ButterKnife.findById(view, R.id.reg_login_button);
-        loginButton.setText(getString(R.string.already_have_an_account_log_in));
+        loginButton.setText(getString(R.string.don_not_have_an_account_register));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigator.moveTo(getContext(), getFragmentManager(), LoginFragment.class, null);
+                Navigator.moveTo(getContext(), getFragmentManager(), CaptchaFragment.class, null);
             }
         });
         // endregion

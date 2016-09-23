@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".biz.auth.SignOutActivity"
+            android:name=".biz.auth.AuthActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"

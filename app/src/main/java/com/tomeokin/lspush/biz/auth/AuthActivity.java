@@ -28,7 +28,7 @@ import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.injection.component.DaggerAuthComponent;
 import com.tomeokin.lspush.injection.module.AuthModule;
 
-public class SignOutActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
+public class AuthActivity extends BaseActivity implements ProvideComponent<AuthComponent>, BaseActionCallback {
     private AuthComponent mComponent;
 
     @Override
@@ -46,7 +46,7 @@ public class SignOutActivity extends BaseActivity implements ProvideComponent<Au
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_auth);
 
         component().inject(this);
 

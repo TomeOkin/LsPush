@@ -75,6 +75,7 @@ android {
         release {
             resValue "string", "app_name", "LsPush"
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
         }
@@ -83,6 +84,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     dexOptions {

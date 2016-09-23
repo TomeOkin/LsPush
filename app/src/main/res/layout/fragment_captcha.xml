@@ -38,6 +38,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/reg_login_footer" />
+    <include layout="@layout/auth_footer" />
 
 </merge>
