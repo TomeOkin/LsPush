@@ -27,7 +27,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.tomeokin.lspush.R;
 
-import timber.log.Timber;
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 public class Navigator {
     @IdRes private static final int DEFAULT_LAYOUT_ID = R.id.fragment_container;
@@ -109,6 +109,9 @@ public class Navigator {
             } else {
                 transaction.replace(containerId, target, tag);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                if (addToBackStack) {
+                    transaction.addToBackStack(tag);
+                }
             }
             /**
              * There has a problem: If we don't add the first Fragment into back stack, we can't popBackStackImmediate to it.
@@ -116,9 +119,7 @@ public class Navigator {
              * For support *->a, we need to override the onBackPressed behavior, when the getBackStackEntryCount is 1,
              * meaning not any fragment we put to it, so we can finish the activity.
              */
-            if (addToBackStack) {
-                transaction.addToBackStack(tag);
-            }
+
             transaction.commit();
         } else {
             if (current == target) {
@@ -130,9 +131,13 @@ public class Navigator {
                 intent.putExtras(args);
             }
             target.onActivityResult(REQUEST_CODE, Activity.RESULT_OK, intent);
-            Timber.i("do it ?");
             boolean result = fragmentManager.popBackStackImmediate(tag, 0);
-            Timber.i("popBackStackImmediate result: %b", result);
+            //Timber.i("popBackStackImmediate result: %b", result);
+            //Timber.i("stackCount : %d", fragmentManager.getBackStackEntryCount());
+            if (!result) {
+                fragmentManager.popBackStackImmediate(0, POP_BACK_STACK_INCLUSIVE);
+            }
+            //Timber.i("stackCount : %d", fragmentManager.getBackStackEntryCount());
         }
     }
 }
