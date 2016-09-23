@@ -113,13 +113,6 @@ public class Navigator {
                     transaction.addToBackStack(tag);
                 }
             }
-            /**
-             * There has a problem: If we don't add the first Fragment into back stack, we can't popBackStackImmediate to it.
-             * That mean, for example, we have a->b->c->d, we can do any such as a->c, c->d, d->b, d->c, but not do any *->a.
-             * For support *->a, we need to override the onBackPressed behavior, when the getBackStackEntryCount is 1,
-             * meaning not any fragment we put to it, so we can finish the activity.
-             */
-
             transaction.commit();
         } else {
             if (current == target) {
@@ -132,12 +125,9 @@ public class Navigator {
             }
             target.onActivityResult(REQUEST_CODE, Activity.RESULT_OK, intent);
             boolean result = fragmentManager.popBackStackImmediate(tag, 0);
-            //Timber.i("popBackStackImmediate result: %b", result);
-            //Timber.i("stackCount : %d", fragmentManager.getBackStackEntryCount());
             if (!result) {
                 fragmentManager.popBackStackImmediate(0, POP_BACK_STACK_INCLUSIVE);
             }
-            //Timber.i("stackCount : %d", fragmentManager.getBackStackEntryCount());
         }
     }
 }
