@@ -20,6 +20,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
 import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
+import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
 import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.biz.usercase.auth.UploadAvatarAction;
@@ -62,5 +63,11 @@ public class AuthModule {
     public RegisterAction provideRegisterAction(@ActivityContext Context context, LsPushService lsPushService,
         Gson gson) {
         return new RegisterAction(context.getResources(), lsPushService, gson);
+    }
+
+    @Provides
+    @PerActivity
+    public LoginAction provideLoginAction(@ActivityContext Context context, LsPushService lsPushService, Gson gson) {
+        return new LoginAction(context.getResources(), lsPushService, gson);
     }
 }

@@ -15,15 +15,13 @@
  */
 package com.tomeokin.lspush.data.model;
 
-import android.os.Parcel;
-
 public class AccessResponse extends BaseResponse {
     // 表示截至的访问时间，超过该时间后 expireToken 无效，需要使用 refreshToken 来获取新的 expireToken，否则用户需要重新登录。
     private long expireTime;
     // 超过该刷新时间后，refreshToken 也需要重新获取一个新的，更新 refreshToken 需要以旧换新。
     private long refreshTime;
-    // 提供 userId 供后续使用
-    private String userId;
+    // 提供 user 供后续使用
+    private User user;
 
     private CryptoToken expireToken;
     private CryptoToken refreshToken;
@@ -34,6 +32,14 @@ public class AccessResponse extends BaseResponse {
 
     public AccessResponse(int errorCode, String result) {
         super(errorCode, result);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public long getExpireTime() {
@@ -52,14 +58,6 @@ public class AccessResponse extends BaseResponse {
         this.refreshTime = refreshTime;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public CryptoToken getExpireToken() {
         return expireToken;
     }
@@ -75,34 +73,4 @@ public class AccessResponse extends BaseResponse {
     public void setRefreshToken(CryptoToken refreshToken) {
         this.refreshToken = refreshToken;
     }
-
-    @Override
-    public int describeContents() { return 0; }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeLong(this.expireTime);
-        dest.writeLong(this.refreshTime);
-        dest.writeString(this.userId);
-        dest.writeParcelable(this.expireToken, flags);
-        dest.writeParcelable(this.refreshToken, flags);
-    }
-
-    protected AccessResponse(Parcel in) {
-        super(in);
-        this.expireTime = in.readLong();
-        this.refreshTime = in.readLong();
-        this.userId = in.readString();
-        this.expireToken = in.readParcelable(CryptoToken.class.getClassLoader());
-        this.refreshToken = in.readParcelable(CryptoToken.class.getClassLoader());
-    }
-
-    public static final Creator<AccessResponse> CREATOR = new Creator<AccessResponse>() {
-        @Override
-        public AccessResponse createFromParcel(Parcel source) {return new AccessResponse(source);}
-
-        @Override
-        public AccessResponse[] newArray(int size) {return new AccessResponse[size];}
-    };
 }

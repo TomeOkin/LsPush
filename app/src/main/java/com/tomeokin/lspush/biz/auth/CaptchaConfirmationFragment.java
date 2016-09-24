@@ -34,14 +34,14 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
-import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
+import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
@@ -122,7 +122,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         });
         mCaptchaField = (SearchEditText) view.findViewById(R.id.captcha_field);
         mCaptchaField.requestFocus();
-        mCaptchaField.setFilters(new InputFilter[] {new InputFilter.LengthFilter(6)});
+        mCaptchaField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(6) });
         mCaptchaField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

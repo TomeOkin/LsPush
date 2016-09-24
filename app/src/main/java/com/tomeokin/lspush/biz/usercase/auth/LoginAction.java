@@ -18,11 +18,18 @@ package com.tomeokin.lspush.biz.usercase.auth;
 import android.content.res.Resources;
 
 import com.google.gson.Gson;
+import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseAction;
+import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.data.model.AccessResponse;
+import com.tomeokin.lspush.data.model.CryptoToken;
+import com.tomeokin.lspush.data.model.LoginData;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import retrofit2.Call;
+import timber.log.Timber;
 
 public class LoginAction extends BaseAction {
     private final LsPushService mLsPushService;
@@ -35,5 +42,34 @@ public class LoginAction extends BaseAction {
         mGson = gson;
     }
 
+    public void login(LoginData loginData) {
+        String data = mGson.toJson(loginData, LoginData.class);
+        CryptoToken cryptoToken;
+        try {
+            cryptoToken = Crypto.get().encrypt(data);
+        } catch (Exception e) {
+            Timber.w(e);
+            mCallback.onActionFailure(UserScene.ACTION_REGISTER, null, mResource.getString(R.string.unexpected_error));
+            return;
+        }
 
+        checkAndCancel(mLoginCall);
+        mLoginCall = mLsPushService.login(cryptoToken);
+        mLoginCall.enqueue(new CommonCallback<AccessResponse>(mResource, UserScene.ACTION_LOGIN, mCallback));
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        checkAndCancel(mLoginCall);
+        mLoginCall = null;
+    }
+
+    @Override
+    public void cancel(int action) {
+        super.cancel(action);
+        if (action == UserScene.ACTION_LOGIN) {
+            checkAndCancel(mLoginCall);
+        }
+    }
 }

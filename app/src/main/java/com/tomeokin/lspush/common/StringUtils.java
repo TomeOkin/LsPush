@@ -110,7 +110,7 @@ public class StringUtils {
      * @param chars sort characters
      */
     public static int indexSpecial(char[] chars, CharSequence sequence) {
-        int length = sequence.length();
+        final int length = sequence.length();
         for (int i = 0; i < length; i++) {
             if (Arrays.binarySearch(chars, sequence.charAt(i)) >= 0) {
                 return i;

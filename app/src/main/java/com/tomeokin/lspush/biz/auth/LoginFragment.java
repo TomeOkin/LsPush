@@ -15,6 +15,7 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CheckableImageButton;
@@ -35,40 +36,54 @@ import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
-import com.tomeokin.lspush.biz.auth.filter.AccountFilter;
 import com.tomeokin.lspush.biz.auth.filter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.filter.PasswordFilter;
+import com.tomeokin.lspush.biz.auth.filter.UserIdFilter;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
+import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.main.MainActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
+import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
+import com.tomeokin.lspush.data.model.LoginData;
+import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.injection.component.AuthComponent;
 import com.tomeokin.lspush.ui.widget.NotificationBar;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 public class LoginFragment extends BaseFragment implements BaseActionCallback, BaseStateCallback, FilterCallback {
     public static final int NEXT_BUTTON_ID = 0;
-    public static final int ACCOUNT_FILTER_ID = 1;
+    public static final int UID_FILTER_ID = 1;
     public static final int PWD_FILTER_ID = 2;
 
     private Unbinder mUnBinder;
     @BindView(R.id.image_icon) ImageView mUserAvatar;
-    @BindView(R.id.account_field) SearchEditText mAccountField;
+    @BindView(R.id.account_field) SearchEditText mUidField;
     @BindView(R.id.password_layout) View mPasswordLayout;
     @BindView(R.id.password_field) EditText mPasswordField;
     @BindView(R.id.notification_bar) NotificationBar mNotificationBar;
 
     private NextButtonAdapter mNextButtonAdapter;
     private TextWatcher mValidWatcher;
+
+    @Inject LoginAction mLoginAction;
+    @Inject LocalUserInfoAction mLocalUserInfoAction;
+    private LoginData mLoginData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,10 +110,11 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
 
         mUserAvatar.setBackgroundResource(R.drawable.auth_avatar);
 
-        // region: Account Field
-        mAccountField.setFilters(
-            new InputFilter[] { new AccountFilter(ACCOUNT_FILTER_ID, this), new InputFilter.LengthFilter(30) });
-        mAccountField.requestFocus();
+        // region: UID Field
+        mUidField.setFilters(new InputFilter[] {
+            new UserIdFilter(UID_FILTER_ID, this), new InputFilter.LengthFilter(UserInfoModel.USER_ID_MAX_LENGTH)
+        });
+        mUidField.requestFocus();
         // endregion
 
         // region: Password Field
@@ -116,7 +132,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
                 return false;
             }
         });
-        final CheckableImageButton toggleButton = (CheckableImageButton) view.findViewById(R.id.userPwd_toggle_button);
+        final CheckableImageButton toggleButton = ButterKnife.findById(view, R.id.userPwd_toggle_button);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +153,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
         // endregion
 
         // region: NextButton
-        TextView nextButton = (TextView) view.findViewById(R.id.next_button);
+        TextView nextButton = ButterKnife.findById(view, R.id.next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,15 +181,21 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
     }
 
     private boolean isFieldValid() {
-        return mAccountField.getText().length() >= 3
-            && UserInfoModel.isValidPassword(mPasswordField.getText());
+        return UserInfoModel.isValidUid(mUidField.getText()) && UserInfoModel.isValidPassword(mPasswordField.getText());
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mLoginAction.attach(this);
+        mLocalUserInfoAction.attach(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        mAccountField.addTextChangedListener(mValidWatcher);
+        mUidField.addTextChangedListener(mValidWatcher);
         mPasswordField.addTextChangedListener(mValidWatcher);
         dispatchOnResume();
     }
@@ -189,9 +211,12 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mLoginAction.detach();
+        mLocalUserInfoAction.detach();
+
         dispatchOnDestroyView();
         mPasswordField.setOnEditorActionListener(null);
-        mAccountField.removeTextChangedListener(mValidWatcher);
+        mUidField.removeTextChangedListener(mValidWatcher);
         mPasswordField.removeTextChangedListener(mValidWatcher);
         mValidWatcher = null;
         if (mUnBinder != null) {
@@ -200,13 +225,26 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
         }
     }
 
-    private void login() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mLoginAction = null;
+        mLocalUserInfoAction = null;
+    }
 
+    private void login() {
+        mNextButtonAdapter.waiting();
+        if (mLoginData == null) {
+            mLoginData = new LoginData();
+        }
+        mLoginData.setUid(mUidField.getText().toString());
+        mLoginData.setPassword(mPasswordField.getText().toString());
+        mLoginAction.login(mLoginData);
     }
 
     @Override
     public void onInvalidCharacter(int requestId, char c) {
-        if (requestId == ACCOUNT_FILTER_ID || requestId == PWD_FILTER_ID) {
+        if (requestId == UID_FILTER_ID || requestId == PWD_FILTER_ID) {
             mNotificationBar.showTemporaryInverse(getString(R.string.not_support_character, c));
         }
     }
@@ -216,7 +254,6 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
         if (requestId == NEXT_BUTTON_ID) {
             return isFieldValid();
         }
-
         // else
         return false;
     }
@@ -225,18 +262,33 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
     public void onStateChange(BaseStateAdapter adapter, int requestId, int currentState) {
         if (requestId == NEXT_BUTTON_ID) {
             final boolean enable = currentState != NextButtonAdapter.WAITING;
-            mAccountField.setEnabled(enable);
+            mUidField.setEnabled(enable);
             mPasswordLayout.setEnabled(enable);
         }
     }
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-
+        if (action == UserScene.ACTION_LOGIN) {
+            mNextButtonAdapter.syncRevokeWaiting();
+            mNotificationBar.showTemporaryInverse(message);
+        }
     }
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-
+        if (action == UserScene.ACTION_LOGIN) {
+            AccessResponse res = (AccessResponse) response;
+            if (res != null) {
+                User user = res.getUser();
+                user.setPassword(mLoginData.getPassword());
+                mLocalUserInfoAction.userLogin(res, res.getUser());
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+            Timber.i("register success");
+            mNextButtonAdapter.syncRevokeWaiting();
+        }
     }
 }

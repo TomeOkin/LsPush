@@ -24,5 +24,5 @@ import static java.lang.annotation.ElementType.METHOD;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = {METHOD})
+@Target(value = { METHOD })
 public @interface NoGuarantee { }

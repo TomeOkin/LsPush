@@ -23,6 +23,7 @@ public abstract class BaseStateAdapter extends LifecycleListener {
     public static final int WAITING = 2;
     public static final int INFO = 3;
 
+    protected boolean mNotice = true;
     protected int mState = DISABLE;
     protected final int mRequestId;
     protected BaseStateCallback mCallback;
@@ -75,11 +76,8 @@ public abstract class BaseStateAdapter extends LifecycleListener {
 
     @CallSuper
     public void sync(int state) {
-        if (mState != state) {
-            mState = state;
-            mCallback.onStateChange(this, mRequestId, mState);
-        }
-
+        // disable notice when sync
+        mNotice = false;
         if (state == ACTIVE) {
             active();
         } else if (state == WAITING) {
@@ -89,30 +87,40 @@ public abstract class BaseStateAdapter extends LifecycleListener {
         } else {
             disable();
         }
+        mNotice = true;
     }
 
     @CallSuper
     public void active() {
-        mState = ACTIVE;
+        updateState(ACTIVE, mNotice);
     }
 
     @CallSuper
     public void waiting() {
-        mState = WAITING;
+        updateState(WAITING, mNotice);
     }
 
     @CallSuper
     public void disable() {
-        mState = DISABLE;
+        updateState(DISABLE, mNotice);
     }
 
     @CallSuper
     public void info() {
-        mState = INFO;
+        updateState(INFO, mNotice);
     }
 
     @CallSuper
     public int getState() {
         return mState;
+    }
+
+    protected void updateState(int state, boolean callback) {
+        if (mState != state) {
+            mState = state;
+            if (callback) {
+                mCallback.onStateChange(this, mRequestId, mState);
+            }
+        }
     }
 }

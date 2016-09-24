@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/row_height_small"
             android:layout_marginBottom="@dimen/row_padding"
-            android:hint="@string/user_account_hit"
-            android:inputType="text|textEmailAddress|phone"
+            android:hint="@string/uid_hint"
+            android:inputType="textNoSuggestions"
             android:paddingLeft="@dimen/row_padding"
             android:paddingRight="@dimen/row_padding" />
 

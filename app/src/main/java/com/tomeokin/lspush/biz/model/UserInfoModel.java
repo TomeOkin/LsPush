@@ -35,7 +35,9 @@ public class UserInfoModel {
     }
 
     public static boolean isValidPassword(CharSequence password) {
-        return password.toString().trim().length() >= USER_PASSWORD_MIN_LENGTH && quickFallPasswordStrength(password);
+        return password != null
+            && password.toString().trim().length() >= USER_PASSWORD_MIN_LENGTH
+            && quickFallPasswordStrength(password);
     }
 
     public static boolean quickFallPasswordStrength(CharSequence password) {
@@ -50,5 +52,9 @@ public class UserInfoModel {
         }
         result += StringUtils.indexSpecial(UserInfoModel.PASSWORD_SPECIAL_SORT, password);
         return result >= 2;
+    }
+
+    public static boolean isValidUid(CharSequence uid) {
+        return uid != null && uid.toString().trim().length() >= USER_ID_MIN_LENGTH;
     }
 }

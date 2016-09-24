@@ -47,8 +47,8 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.adapter.FieldAdapter;
-import com.tomeokin.lspush.biz.auth.filter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.adapter.NextButtonAdapter;
+import com.tomeokin.lspush.biz.auth.filter.FilterCallback;
 import com.tomeokin.lspush.biz.auth.filter.PasswordFilter;
 import com.tomeokin.lspush.biz.auth.filter.UserIdFilter;
 import com.tomeokin.lspush.biz.base.BaseActionCallback;
@@ -59,10 +59,10 @@ import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.main.MainActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
-import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
 import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
 import com.tomeokin.lspush.biz.usercase.auth.UploadAvatarAction;
+import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.FileNameUtils;
 import com.tomeokin.lspush.common.ImageIntentUtils;
 import com.tomeokin.lspush.common.MimeTypeUtils;
@@ -467,7 +467,6 @@ public class RegisterFragment extends BaseFragment
         mUIDAdapter = null;
         mUserNameAdapter = null;
         mNextButtonAdapter = null;
-
     }
 
     @Override
@@ -547,8 +546,7 @@ public class RegisterFragment extends BaseFragment
     }
 
     public boolean isValidUserId() {
-        return mUserIdField.getText().toString().trim().length() >= UserInfoModel.USER_ID_MIN_LENGTH
-            && mUIDAdapter.getState() != FieldAdapter.INFO;
+        return UserInfoModel.isValidUid(mUserIdField.getText()) && mUIDAdapter.getState() != FieldAdapter.INFO;
     }
 
     public boolean isValidUserName() {
@@ -618,16 +616,7 @@ public class RegisterFragment extends BaseFragment
         } else if (action == UserScene.ACTION_REGISTER) {
             AccessResponse res = (AccessResponse) response;
             if (res != null) {
-                User user = new User();
-                user.setUid(res.getUserId());
-                user.setNickname(mRegisterData.getNickname());
-                if (mRegisterData.getCaptchaRequest().getSendObject().contains("@")) {
-                    user.setEmail(mRegisterData.getCaptchaRequest().getSendObject());
-                } else {
-                    user.setPhone(mRegisterData.getCaptchaRequest().getSendObject());
-                    user.setRegion(mRegisterData.getCaptchaRequest().getRegion());
-                }
-                user.setImage(mRegisterData.getUserAvatar());
+                User user = res.getUser();
                 user.setPassword(mRegisterData.getPassword());
                 mLocalUserInfoAction.userLogin(res, user);
                 Intent intent = new Intent(getContext(), MainActivity.class);
