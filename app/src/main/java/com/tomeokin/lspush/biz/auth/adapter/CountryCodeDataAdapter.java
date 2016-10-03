@@ -34,7 +34,7 @@ public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> 
     private final ArrayList<CountryCodeData> mCountryCodeList;
 
     public CountryCodeDataAdapter(Context context, List<CountryCodeData> list) {
-        super(context, R.layout.row_menu_item, list);
+        super(context, R.layout.layout_row_item, list);
         mList = list;
         mCountryCodeList = new ArrayList<>(list);
     }
@@ -43,7 +43,7 @@ public final class CountryCodeDataAdapter extends ArrayAdapter<CountryCodeData> 
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_menu_item, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_row_item, parent, false);
             convertView.setPadding(0, 0, 0, 0);
         }
         TextView tv = (TextView) convertView.findViewById(R.id.row_simple_text_textview);

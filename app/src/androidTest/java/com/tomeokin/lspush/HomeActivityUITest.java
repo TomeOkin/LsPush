@@ -19,7 +19,7 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.tomeokin.lspush.biz.main.MainActivity;
+import com.tomeokin.lspush.biz.home.HomeActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,9 +33,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * https://google.github.io/android-testing-support-library/
  */
 @RunWith(AndroidJUnit4.class)
-public class MainActivityUITest {
-    @Rule public final ActivityTestRule<MainActivity> main =
-            new ActivityTestRule<>(MainActivity.class);
+public class HomeActivityUITest {
+    @Rule public final ActivityTestRule<HomeActivity> main =
+            new ActivityTestRule<>(HomeActivity.class);
 
     @Test
     public void shouldBeAbleToLaunchMainScreen() {

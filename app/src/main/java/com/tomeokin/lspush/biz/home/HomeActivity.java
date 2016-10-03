@@ -1,4 +1,4 @@
-package com.tomeokin.lspush.biz.main;
+package com.tomeokin.lspush.biz.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,21 +15,25 @@ import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;
-import com.tomeokin.lspush.injection.component.DaggerMainComponent;
-import com.tomeokin.lspush.injection.component.MainComponent;
+import com.tomeokin.lspush.injection.component.DaggerHomeComponent;
+import com.tomeokin.lspush.injection.component.HomeComponent;
+import com.tomeokin.lspush.injection.module.HomeModule;
 
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<MainComponent> {
-    private MainComponent mComponent;
+import timber.log.Timber;
+
+public class HomeActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<HomeComponent> {
+    private HomeComponent mComponent;
     @Inject LocalUserInfoAction mLocalUserInfoAction;
 
     @Override
-    public MainComponent component() {
+    public HomeComponent component() {
         if (mComponent == null) {
-            mComponent = DaggerMainComponent.builder()
+            mComponent = DaggerHomeComponent.builder()
                 .appComponent(getAppComponent())
                 .activityModule(getActivityModule())
+                .homeModule(new HomeModule())
                 .build();
         }
         return mComponent;
@@ -45,18 +49,19 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
         component().inject(this);
         mLocalUserInfoAction.attach(this);
         AccessResponse accessResponse = mLocalUserInfoAction.getAccessResponse();
         if (accessResponse == null) {
-            //Navigator.moveTo(this, SplashFragment.class, null, false);
             return;
         }
 
         // access response is not null, we move to main fragment
-        Navigator.moveTo(this, MainFragment.class, null);
+        setTheme(R.style.AppTheme);
+        Timber.i("move to fragment");
+        Navigator.moveTo(this, HomeFragment.class, null);
 
         //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
         //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
@@ -83,7 +88,7 @@ public class MainActivity extends BaseActivity implements BaseActionCallback, Pr
             AccessResponse accessResponse = (AccessResponse) response;
             setTheme(R.style.AppTheme);
             if (accessResponse != null) {
-                Navigator.moveTo(this, MainFragment.class, null);
+                Navigator.moveTo(this, HomeFragment.class, null);
             } else {
                 Intent intent = new Intent(this, AuthActivity.class);
                 startActivity(intent);

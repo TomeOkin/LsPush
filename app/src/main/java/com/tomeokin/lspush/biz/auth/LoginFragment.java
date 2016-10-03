@@ -45,7 +45,7 @@ import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.main.MainActivity;
+import com.tomeokin.lspush.biz.home.HomeActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
@@ -97,7 +97,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_container, container, false);
+        View view = inflater.inflate(R.layout.layout_auth_container, container, false);
         inflater.inflate(R.layout.fragment_login, (ViewGroup) view.findViewById(R.id.content_container), true);
         mUnBinder = ButterKnife.bind(this, view);
 
@@ -283,7 +283,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
                 User user = res.getUser();
                 user.setPassword(mLoginData.getPassword());
                 mLocalUserInfoAction.userLogin(res, res.getUser());
-                Intent intent = new Intent(getContext(), MainActivity.class);
+                Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }

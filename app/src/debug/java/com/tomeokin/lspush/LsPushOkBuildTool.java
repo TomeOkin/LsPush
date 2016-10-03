@@ -53,8 +53,10 @@ public class LsPushOkBuildTool {
         Properties properties = new Properties();
         properties.setProperty(CommonCrypto.hashPrefKey(PUBLIC_KEY),
             BeeCrypto.get().encrypt(BuildConfig.LSPUSH_PUBLIC_KEY));
-        properties.setProperty(CommonCrypto.hashPrefKey(MOB_SMS_ID), BeeCrypto.get().encrypt(BuildConfig.MOB_SMS_ID));
-        properties.setProperty(CommonCrypto.hashPrefKey(MOB_SMS_KEY), BeeCrypto.get().encrypt(BuildConfig.MOB_SMS_KEY));
+        properties.setProperty(CommonCrypto.hashPrefKey(MOB_SMS_ID),
+            BeeCrypto.get().encrypt(BuildConfig.MOB_SMS_ID));
+        properties.setProperty(CommonCrypto.hashPrefKey(MOB_SMS_KEY),
+            BeeCrypto.get().encrypt(BuildConfig.MOB_SMS_KEY));
         File file = getFile(context, "secure", LSPUSH_OK);
         OutputStream out = new FileOutputStream(file);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, CharsetsSupport.UTF_8));

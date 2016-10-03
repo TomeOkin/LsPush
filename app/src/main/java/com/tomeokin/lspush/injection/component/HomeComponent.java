@@ -15,14 +15,18 @@
  */
 package com.tomeokin.lspush.injection.component;
 
-import com.tomeokin.lspush.biz.main.MainActivity;
+import com.tomeokin.lspush.biz.home.HomeActivity;
+import com.tomeokin.lspush.biz.home.HomeFragment;
 import com.tomeokin.lspush.injection.module.ActivityModule;
+import com.tomeokin.lspush.injection.module.HomeModule;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 
 import dagger.Component;
 
 @PerActivity
-@Component(dependencies = AppComponent.class, modules = ActivityModule.class)
-public interface MainComponent extends ActivityComponent {
-    void inject(MainActivity mainActivity);
+@Component(dependencies = AppComponent.class, modules = {ActivityModule.class, HomeModule.class})
+public interface HomeComponent extends ActivityComponent {
+    void inject(HomeActivity homeActivity);
+
+    void inject(HomeFragment homeFragment);
 }

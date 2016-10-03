@@ -20,7 +20,6 @@ public class UserScene {
     public static final String TAG_NETWORK = "LsPush-Network";
     public static final String TAG_DATABASE = "LsPush-Database";
 
-    public static final String REGISTER = "register";
     public static final String SEND_CAPTCHA = "send-captcha";
     public static final String CHECK_CAPTCHA = "check-captcha";
 
@@ -35,4 +34,5 @@ public class UserScene {
     public static final int ACTION_GET_ACCESS_RESPONSE = 8;
     public static final int ACTION_UPDATE_ACCESS_RESPONSE = 9;
     public static final int ACTION_GET_HISTORY_LOGIN_USER = 10;
+    public static final int ACTION_OBTAIN_LATEST_COLLECTIONS = 11;
 }

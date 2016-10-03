@@ -18,9 +18,7 @@ package com.tomeokin.lspush.biz.base;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -35,20 +33,9 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport = new LifecycleListenerSupport();
     }
 
-    @Deprecated
-    public void dispatchOnCreate(@Nullable Bundle savedInstanceState) {
-        listenerSupport.onCreate();
-    }
-
     public void dispatchOnCreateView(View view) {
         if (view != null) {
             listenerSupport.onCreateView(view);
-        }
-    }
-
-    public void dispatchOnViewCreate(View view, @Nullable Bundle savedInstanceState) {
-        if (view != null) {
-            listenerSupport.onViewCreate(view, savedInstanceState);
         }
     }
 
@@ -64,17 +51,7 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport.onDestroyView();
     }
 
-    @Deprecated
-    public void dispatchOnDestroy() {
-        listenerSupport.onDestroy();
-    }
-
-    public Activity getParentActivity() {
-        Activity parent = getActivity().getParent();
-        return parent == null ? getActivity() : parent;
-    }
-
-    public final void registerAll(LifecycleListenerSupport listenerSupport) {
+    public void registerAll(LifecycleListenerSupport listenerSupport) {
         listenerSupport.registerAll(listenerSupport);
     }
 
@@ -83,8 +60,13 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
         listenerSupport.register(listener);
     }
 
-    public final void unregister(OnLifecycleListener listener) {
+    public void unregisterLifecycleListener(OnLifecycleListener listener) {
         listenerSupport.unregister(listener);
+    }
+
+    public Activity getParentActivity() {
+        Activity parent = getActivity().getParent();
+        return parent == null ? getActivity() : parent;
     }
 
     /**

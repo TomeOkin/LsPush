@@ -20,6 +20,6 @@
 
     <include
         android:id="@+id/row_divider"
-        layout="@layout/row_divider" />
+        layout="@layout/layout_row_divider" />
 
 </FrameLayout>

@@ -31,7 +31,7 @@ public class AutoCompleteEmailAdapter extends ArrayAdapter<String> {
     final List<String> filteredList = new ArrayList<>();
 
     public AutoCompleteEmailAdapter(Context context, List<String> emptyList, List<String> hintList) {
-        super(context, R.layout.row_autocomplete_email, emptyList);
+        super(context, R.layout.layout_autocomplete_email, emptyList);
         mEmptyList = emptyList;
         mHintList = hintList;
     }

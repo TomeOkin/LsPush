@@ -54,7 +54,7 @@
             android:paddingRight="@dimen/row_padding"
             tools:hint="@string/captcha_hint" />
 
-        <include layout="@layout/auth_next" />
+        <include layout="@layout/layout_auth_next" />
 
     </LinearLayout>
 
@@ -63,6 +63,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/auth_footer" />
+    <include layout="@layout/layout_auth_footer" />
 
 </merge>

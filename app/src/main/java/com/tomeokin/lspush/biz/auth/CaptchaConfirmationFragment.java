@@ -95,7 +95,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_container, container, false);
+        View view = inflater.inflate(R.layout.layout_auth_container, container, false);
         inflater.inflate(R.layout.fragment_captcha_confirmation, (ViewGroup) view.findViewById(R.id.content_container),
             true);
 
@@ -174,7 +174,6 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
         super.onViewCreated(view, savedInstanceState);
         mSendCaptchaAction.attach(this);
         mCheckCaptchaAction.attach(this);
-        dispatchOnViewCreate(view, savedInstanceState);
     }
 
     @Override
@@ -203,7 +202,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
     public void onDestroyView() {
         super.onDestroyView();
         dispatchOnDestroyView();
-        unregister(mNextButtonAdapter);
+        unregisterLifecycleListener(mNextButtonAdapter);
         mNextButtonAdapter = null;
         mCaptchaField.removeTextChangedListener(mValidWatcher);
         mValidWatcher = null;

@@ -15,22 +15,14 @@
  */
 package com.tomeokin.lspush.biz.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 public interface OnLifecycleListener {
-    void onCreate(); // y_
+    void onCreateView(View view);
 
-    void onCreateView(View view); // a
+    void onResume();
 
-    void onViewCreate(View view, @Nullable Bundle savedInstanceState);
+    void onPause();
 
-    void onResume(); // d
-
-    void onPause(); // F_
-
-    void onDestroyView(); // G_
-
-    void onDestroy(); // H_
+    void onDestroyView();
 }

@@ -51,4 +51,6 @@
     <string name="open_camera_failure">无法打开照相机。</string>
 
     <string name="don_not_have_an_account_register">没有帐户？<b>请注册。</b></string>
+
+    <string name="menu_search">搜索</string>
 </resources>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <color name="colorPrimary">#3D84A8</color>
+    <color name="colorPrimaryDark">#48466D</color>
+    <color name="colorAccent">#F6416C</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="white_70_transparent">#B3FFFFFF</color>
@@ -27,10 +30,54 @@
 
     <color name="grey_medium">@color/grey_5</color>
 
-    <color name="accent_blue_5">#ff4090db</color>
-    <color name="accent_blue_6">#ff2d6599</color>
+    <color name="blue_9">#ff02080d</color>
+    <color name="blue_8">#ff051a29</color>
+    <color name="blue_7">#ff092b44</color>
+    <color name="blue_6">#ff0d3c5f</color>
+    <color name="blue_5">#ff125688</color>
+    <color name="blue_4">#ff5a89ac</color>
+    <color name="blue_3">#ff89abc4</color>
+    <color name="blue_2">#ffb8cddc</color>
+    <color name="blue_1">#ffe8eef3</color>
 
+    <color name="blue_dark">@color/blue_7</color>
+    <color name="blue_medium">@color/blue_5</color>
+    <color name="blue_light">@color/blue_3</color>
+
+    <color name="accent_blue_9">#ff060e15</color>
+    <color name="accent_blue_8">#ff132b41</color>
+    <color name="accent_blue_7">#ff20486d</color>
+    <color name="accent_blue_6">#ff2d6599</color>
+    <color name="accent_blue_5">#ff4090db</color>
+    <color name="accent_blue_4">#ff7ab2e6</color>
+    <color name="accent_blue_3">#ffa0c8ed</color>
+    <color name="accent_blue_2">#ffc6def4</color>
+    <color name="accent_blue_1">#ffecf4fb</color>
+
+    <color name="accent_blue_dark">@color/accent_blue_7</color>
     <color name="accent_blue_medium">@color/accent_blue_5</color>
+    <color name="accent_blue_light">@color/accent_blue_3</color>
+
+    <color name="blue_9_whiteout">#ff00264a</color>
+    <color name="blue_8_whiteout">#ff003569</color>
+    <color name="blue_7_whiteout">#ff0053a4</color>
+    <color name="blue_6_whiteout">#ff1372cc</color>
+    <color name="blue_5_whiteout">#ff3897f0</color>
+    <color name="blue_4_whiteout">#ff5eb1ff</color>
+    <color name="blue_3_whiteout">#ff89c5ff</color>
+    <color name="blue_2_whiteout">#ffb4daff</color>
+    <color name="blue_1_whiteout">#ffdfefff</color>
+    <color name="blue_0_whiteout">#fff4faff</color>
+
+    <color name="red_9">#ff180405</color>
+    <color name="red_8">#ff480c11</color>
+    <color name="red_7">#ff78141c</color>
+    <color name="red_6">#ffa81d27</color>
+    <color name="red_5">#fff12938</color>
+    <color name="red_4">#fffa7483</color>
+    <color name="red_3">#fff56a74</color>
+    <color name="red_2">#fff8949c</color>
+    <color name="red_1">#fffeeaeb</color>
 
     <color name="red_9_whiteout">#ff4d0008</color>
     <color name="red_8_whiteout">#ff6e0008</color>
@@ -43,16 +90,6 @@
     <color name="red_1_whiteout">#ffffe0e2</color>
     <color name="red_0_whiteout">#fffff5f5</color>
 
-    <color name="red_9">#ff180405</color>
-    <color name="red_8">#ff480c11</color>
-    <color name="red_7">#ff78141c</color>
-    <color name="red_6">#ffa81d27</color>
-    <color name="red_5">#fff12938</color>
-    <color name="red_4">#fffa7483</color>
-    <color name="red_3">#fff56a74</color>
-    <color name="red_2">#fff8949c</color>
-    <color name="red_1">#fffeeaeb</color>
-
     <color name="orange_9">#ff190b00</color>
     <color name="orange_8">#ff4c2100</color>
     <color name="orange_7">#ff7f3800</color>
@@ -62,6 +99,17 @@
     <color name="orange_3">#ffffb880</color>
     <color name="orange_2">#ffffd4b3</color>
     <color name="orange_1">#fffff1e6</color>
+
+    <color name="orange_9_whiteout">#ff4c2100</color>
+    <color name="orange_8_whiteout">#ff6b3000</color>
+    <color name="orange_7_whiteout">#ffa84b00</color>
+    <color name="orange_6_whiteout">#ffd7670d</color>
+    <color name="orange_5_whiteout">#fffd8d32</color>
+    <color name="orange_4_whiteout">#ffffa863</color>
+    <color name="orange_3_whiteout">#ffffc08d</color>
+    <color name="orange_2_whiteout">#ffffd7b6</color>
+    <color name="orange_1_whiteout">#ffffeee0</color>
+    <color name="orange_0_whiteout">#fffff9f5</color>
 
     <color name="error_state">#ffb30e0e</color>
 

@@ -18,6 +18,8 @@ package com.tomeokin.lspush.data.remote;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
+import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.UploadResponse;
 
@@ -30,6 +32,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface LsPushService {
     @POST("api/user/login")
@@ -59,5 +62,19 @@ public interface LsPushService {
     @Multipart
     @POST("api/resource/upload/{resourceType}")
     Call<UploadResponse> upload(@Path("resourceType") int resourceType, @Part("description") RequestBody description,
-        @Part() MultipartBody.Part image);
+        @Part MultipartBody.Part image);
+
+    @POST("api/collection/post")
+    Call<BaseResponse> postCollection(@Body CryptoToken cryptoToken, @Body Collection collection);
+
+    @GET("api/collection/get")
+    Call<CollectionResponse> getCollections(@Query("uid") String uid, @Query("page") int page, @Query("size") int size);
+
+    @GET("api/collection/getByUrl")
+    Call<CollectionResponse> getCollectionByUrl(@Query("uid") String uid, @Query("url") String url,
+        @Query("page") int page, @Query("size") int size);
+
+    @GET("api/collection/getLatest")
+    Call<CollectionResponse> getLatestCollections(@Query("uid") String uid, @Query("page") int page,
+        @Query("size") int size);
 }

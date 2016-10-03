@@ -126,6 +126,9 @@ public final class EmailFieldViewHolder extends LifecycleListener {
     public void onResume() {
         mEmailField.addTextChangedListener(mEmptyWatcher);
         mEmailField.addTextChangedListener(mValidWatcher);
+        if (mCaptchaView.isFieldValid()) {
+            mEmailField.dismissDropDown();
+        }
     }
 
     @Override

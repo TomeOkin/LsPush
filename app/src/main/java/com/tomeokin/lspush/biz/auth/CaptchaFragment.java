@@ -91,7 +91,7 @@ public class CaptchaFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_container, container, false);
+        View view = inflater.inflate(R.layout.layout_auth_container, container, false);
         inflater.inflate(R.layout.fragment_captcha, (ViewGroup) view.findViewById(R.id.content_container), true);
         ImageView imageIcon = (ImageView) view.findViewById(R.id.image_icon);
         imageIcon.setBackgroundResource(R.drawable.auth_avatar);
@@ -173,7 +173,6 @@ public class CaptchaFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSendCaptchaAction.attach(this);
-        dispatchOnViewCreate(view, savedInstanceState);
     }
 
     @Override
@@ -196,11 +195,11 @@ public class CaptchaFragment extends BaseFragment
         dispatchOnDestroyView();
         mEmailField = null;
         mPhoneField = null;
-        unregister(mEmailNextButtonAdapter);
-        unregister(mEmailFieldViewHolder);
-        unregister(mPhoneNextButtonAdapter);
-        unregister(mPhoneFieldViewHolder);
-        unregister(mViewHolder);
+        unregisterLifecycleListener(mEmailNextButtonAdapter);
+        unregisterLifecycleListener(mEmailFieldViewHolder);
+        unregisterLifecycleListener(mPhoneNextButtonAdapter);
+        unregisterLifecycleListener(mPhoneFieldViewHolder);
+        unregisterLifecycleListener(mViewHolder);
         mEmailNextButtonAdapter = null;
         mEmailFieldViewHolder = null;
         mPhoneNextButtonAdapter = null;

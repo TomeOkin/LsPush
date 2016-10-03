@@ -25,8 +25,10 @@ public class User implements Parcelable {
     private String phone;
     private String region; // 地区码, use for phone
     private String password;
-    private int validate; // 00：未验证，01：手机号已验证，02：email已验证，03：手机号和 email都已验证
+    private int validate; // 00：未验证，01：手机号已验证，02：email 已验证，03：手机号和 email 都已验证
     private String image;
+
+    private long colId;
 
     public String getUid() {
         return uid;
@@ -92,6 +94,14 @@ public class User implements Parcelable {
         this.image = image;
     }
 
+    public long getColId() {
+        return colId;
+    }
+
+    public void setColId(long colId) {
+        this.colId = colId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -103,6 +113,7 @@ public class User implements Parcelable {
             ", password='" + password + '\'' +
             ", validate=" + validate +
             ", image='" + image + '\'' +
+            ", colId=" + colId +
             '}';
     }
 
@@ -119,6 +130,7 @@ public class User implements Parcelable {
         dest.writeString(this.password);
         dest.writeInt(this.validate);
         dest.writeString(this.image);
+        dest.writeLong(this.colId);
     }
 
     public User() {}
@@ -132,6 +144,7 @@ public class User implements Parcelable {
         this.password = in.readString();
         this.validate = in.readInt();
         this.image = in.readString();
+        this.colId = in.readLong();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {

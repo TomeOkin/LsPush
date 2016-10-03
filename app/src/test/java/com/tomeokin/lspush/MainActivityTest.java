@@ -25,7 +25,7 @@ public class MainActivityTest {
 
     //@Test
     //public void testNotNull() {
-    //    MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+    //    HomeActivity activity = Robolectric.setupActivity(HomeActivity.class);
     //    assertNotNull(activity);
     //}
 

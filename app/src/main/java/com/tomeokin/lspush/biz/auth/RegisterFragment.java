@@ -57,7 +57,7 @@ import com.tomeokin.lspush.biz.base.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.BaseStateCallback;
 import com.tomeokin.lspush.biz.base.BaseTextWatcher;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.main.MainActivity;
+import com.tomeokin.lspush.biz.home.HomeActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.biz.usercase.auth.CheckUIDAction;
 import com.tomeokin.lspush.biz.usercase.auth.RegisterAction;
@@ -170,7 +170,7 @@ public class RegisterFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_container, container, false);
+        View view = inflater.inflate(R.layout.layout_auth_container, container, false);
         inflater.inflate(R.layout.fragment_register, (ViewGroup) view.findViewById(R.id.content_container), true);
 
         mNotificationBar = (NotificationBar) view.findViewById(R.id.notification_bar);
@@ -461,9 +461,9 @@ public class RegisterFragment extends BaseFragment
         mUserAvatar = null;
 
         dispatchOnDestroyView();
-        unregister(mUIDAdapter);
-        unregister(mUserNameAdapter);
-        unregister(mNextButtonAdapter);
+        unregisterLifecycleListener(mUIDAdapter);
+        unregisterLifecycleListener(mUserNameAdapter);
+        unregisterLifecycleListener(mNextButtonAdapter);
         mUIDAdapter = null;
         mUserNameAdapter = null;
         mNextButtonAdapter = null;
@@ -619,7 +619,7 @@ public class RegisterFragment extends BaseFragment
                 User user = res.getUser();
                 user.setPassword(mRegisterData.getPassword());
                 mLocalUserInfoAction.userLogin(res, user);
-                Intent intent = new Intent(getContext(), MainActivity.class);
+                Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }

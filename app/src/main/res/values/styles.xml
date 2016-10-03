@@ -107,7 +107,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:freezesText">true</item>
-        <item name="android:drawableLeft">@drawable/nav_search</item>
+        <item name="android:drawableLeft">@drawable/ic_search</item>
         <item name="android:drawableRight">@drawable/search_clear</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:inputType">textAutoComplete</item>

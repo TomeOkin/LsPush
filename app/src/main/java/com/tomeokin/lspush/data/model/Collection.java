@@ -16,6 +16,7 @@
 package com.tomeokin.lspush.data.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Collection {
     private long id;
@@ -25,6 +26,10 @@ public class Collection {
     private String image;
     private Date createDate;
     private Date updateDate;
+
+    private List<String> tags;
+    private List<User> explorers;
+    private long favorCount;
 
     public long getId() {
         return id;
@@ -82,6 +87,30 @@ public class Collection {
         this.updateDate = updateDate;
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public List<User> getExplorers() {
+        return explorers;
+    }
+
+    public void setExplorers(List<User> explorers) {
+        this.explorers = explorers;
+    }
+
+    public long getFavorCount() {
+        return favorCount;
+    }
+
+    public void setFavorCount(long favorCount) {
+        this.favorCount = favorCount;
+    }
+
     @Override
     public String toString() {
         return "Collection{" +
@@ -92,6 +121,9 @@ public class Collection {
             ", image='" + image + '\'' +
             ", createDate=" + createDate +
             ", updateDate=" + updateDate +
+            ", tags=" + tags +
+            ", explorers=" + explorers +
+            ", favorCount=" + favorCount +
             '}';
     }
 }

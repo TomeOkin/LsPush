@@ -28,12 +28,22 @@ public class LsPushUserState {
     public LsPushUserState() {
     }
 
+    @Nullable
     public AccessResponse getAccessResponse() {
         return mAccessResponse;
     }
 
     public synchronized void setAccessResponse(@Nullable AccessResponse accessResponse) {
         mAccessResponse = accessResponse;
+    }
+
+    @Nullable
+    public String getUid() {
+        if (mAccessResponse == null || mAccessResponse.getUser() == null) {
+            return null;
+        } else {
+            return mAccessResponse.getUser().getUid();
+        }
     }
 
     //public static boolean checkNeedToRefreshExpireToken(@NonNull AccessResponse accessResponse) {

@@ -37,17 +37,23 @@ public class CommonSubscriber<T extends BaseResponse> extends Subscriber<T> {
 
     @Override
     public void onCompleted() {
-        mCallback.onActionSuccess(mActionId, null);
+        if (mCallback != null) {
+            mCallback.onActionSuccess(mActionId, null);
+        }
     }
 
     @Override
     public void onError(Throwable e) {
         Timber.tag(UserScene.TAG_DATABASE).w(e);
-        mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.unexpected_error));
+        if (mCallback != null) {
+            mCallback.onActionFailure(mActionId, null, mResource.getString(R.string.unexpected_error));
+        }
     }
 
     @Override
     public void onNext(T t) {
-        mCallback.onActionSuccess(mActionId, t);
+        if (mCallback != null) {
+            mCallback.onActionSuccess(mActionId, t);
+        }
     }
 }

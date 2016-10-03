@@ -15,43 +15,19 @@
  */
 package com.tomeokin.lspush.biz.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 public class LifecycleListener implements OnLifecycleListener {
-    @Override
-    public void onCreate() {
-
-    }
 
     @Override
-    public void onCreateView(View view) {
-
-    }
+    public void onCreateView(View view) {}
 
     @Override
-    public void onViewCreate(View view, @Nullable Bundle savedInstanceState) {
-
-    }
+    public void onResume() {}
 
     @Override
-    public void onResume() {
-
-    }
+    public void onPause() {}
 
     @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onDestroyView() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
+    public void onDestroyView() {}
 }

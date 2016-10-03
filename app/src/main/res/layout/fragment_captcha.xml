@@ -28,7 +28,7 @@
         android:layout_marginRight="@dimen/reg_field_horizontal_margin"
         android:orientation="vertical">
 
-        <include layout="@layout/register_field_switcher" />
+        <include layout="@layout/layout_reg_field_switcher" />
 
     </LinearLayout>
 
@@ -38,6 +38,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include layout="@layout/auth_footer" />
+    <include layout="@layout/layout_auth_footer" />
 
 </merge>

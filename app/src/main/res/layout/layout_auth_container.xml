@@ -22,6 +22,6 @@
 
     </ScrollView>
 
-    <include layout="@layout/notification_bar" />
+    <include layout="@layout/layout_notification_bar" />
 
 </FrameLayout>

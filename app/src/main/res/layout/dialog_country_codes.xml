@@ -15,7 +15,7 @@
         android:imeOptions="actionSearch|flagNoExtractUi"
         android:textColor="@color/black" />
 
-    <include layout="@layout/row_divider" />
+    <include layout="@layout/layout_row_divider" />
 
     <ListView
         android:id="@+id/country_code_list"

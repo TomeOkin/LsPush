@@ -36,7 +36,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.tomeokin.lspush"
         minSdkVersion 15
@@ -86,9 +86,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    dataBinding {
-        enabled = true
-    }
+//    dataBinding {
+//        enabled = true
+//    }
 
     dexOptions {
         preDexLibraries !Boolean.valueOf(System.getenv("TRAVIS"))
@@ -228,8 +228,6 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
-
-    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
 
     // stetho
     debugCompile debugDependencies.stetho

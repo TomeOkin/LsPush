@@ -58,4 +58,6 @@
     <string name="open_camera_failure">Fail to open camera.</string>
 
     <string name="don_not_have_an_account_register">Don\'t have an account? <b>Register.</b></string>
+
+    <string name="menu_search">Search</string>
 </resources>

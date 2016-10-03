@@ -28,6 +28,9 @@
     <uses-feature
         android:name="android.hardware.camera.front"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <!-- Using 'tools:replace="android:allowBackup"' override the setting in SMS-SDK -->
     <!-- Notice: don't add tools:ignore to it. -->
@@ -44,7 +47,7 @@
         tools:replace="android:allowBackup">
 
         <activity
-            android:name=".biz.main.MainActivity"
+            android:name=".biz.home.HomeActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
