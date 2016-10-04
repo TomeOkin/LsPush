@@ -21,8 +21,6 @@ import com.tomeokin.lspush.injection.module.HomeModule;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 public class HomeActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<HomeComponent> {
     private HomeComponent mComponent;
     @Inject LocalUserInfoAction mLocalUserInfoAction;
@@ -49,19 +47,20 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_home);
 
         component().inject(this);
         mLocalUserInfoAction.attach(this);
         AccessResponse accessResponse = mLocalUserInfoAction.getAccessResponse();
         if (accessResponse == null) {
+            Navigator.moveTo(this, SplashFragment.class, null, false);
             return;
         }
 
-        // access response is not null, we move to main fragment
-        setTheme(R.style.AppTheme);
-        Timber.i("move to fragment");
-        Navigator.moveTo(this, HomeFragment.class, null);
+        // access response is not null, we move to home fragment
+        //initView();
+        Navigator.moveTo(this, HomeFragment.class, null, false);
 
         //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
         //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
@@ -86,9 +85,9 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_GET_ACCESS_RESPONSE) {
             AccessResponse accessResponse = (AccessResponse) response;
-            setTheme(R.style.AppTheme);
             if (accessResponse != null) {
-                Navigator.moveTo(this, HomeFragment.class, null);
+                //initView();
+                Navigator.moveTo(this, HomeFragment.class, null, false);
             } else {
                 Intent intent = new Intent(this, AuthActivity.class);
                 startActivity(intent);
@@ -96,4 +95,8 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
             }
         }
     }
+
+    //private void initView() {
+    //    ButterKnife.bind(this);
+    //}
 }

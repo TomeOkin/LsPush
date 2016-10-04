@@ -3,8 +3,6 @@
     <dimen name="page_horizontal_margin">16dp</dimen>
     <dimen name="page_vertical_margin">16dp</dimen>
 
-    <dimen name="actionBar_height">?attr/actionBarSize</dimen>
-
     <dimen name="toolbar_elevation">8dp</dimen>
 
     <dimen name="row_padding">16dp</dimen>

@@ -13,6 +13,8 @@ ext {
     okhttp3Version = "3.4.1"
     stethoVersion = "1.4.1"
     junit4Version = "4.12"
+    mockitoVersion = "1.10.19"
+    mockito2Version = "2.1.0"
 
     File file = project.rootProject.file('local.properties')
     Properties properties = new Properties()
@@ -100,15 +102,17 @@ ext {
     ]
 
     testDependencies = [
-            junit      : "junit:junit:${junit4Version}",
-            robolectric: "org.robolectric:robolectric:3.1.2",
-            assertjCore: "org.assertj:assertj-core:3.5.2",
-            mockitoCore: "org.mockito:mockito-core:1.10.19"
+            junit       : "junit:junit:${junit4Version}",
+            robolectric : "org.robolectric:robolectric:3.1.2",
+            assertjCore : "org.assertj:assertj-core:3.5.2",
+            mockitoCore : "org.mockito:mockito-core:${mockitoVersion}",
+            mockitoCore2: "org.mockito:mockito-core:${mockito2Version}",
     ]
 
     androidTestDependencies = [
             junit              : "junit:junit:${junit4Version}",
-            mockitoCore        : "org.mockito:mockito-core:1.10.19",
+            mockitoCore        : "org.mockito:mockito-core:${mockitoVersion}",
+            mockitoCore2       : "org.mockito:mockito-core:${mockito2Version}",
             assertjAppCompatV7 : "com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar",
             assertjRecyclerView: "com.squareup.assertj:assertj-android-recyclerview-v7:1.1.1@aar",
             espresso           : "com.android.support.test.espresso:espresso-core:2.2.2",

@@ -12,6 +12,8 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Widget.LsPush" parent="android:Widget" />
+
     <!-- Divider -->
     <style name="Widget.LsPush.Divider.Horizontal.Small" parent="">
         <item name="android:background">@color/grey_2_whiteout</item>
@@ -32,7 +34,7 @@
     </style>
 
     <!-- Button -->
-    <style name="Widget.LsPush.Button" parent="">
+    <style name="Widget.LsPush.Button">
         <item name="android:background">@drawable/dialog_button</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/row_height_small</item>
@@ -134,12 +136,24 @@
         <item name="android:textColor">@color/orange_5</item>
     </style>
 
+    <style name="TitleTextAppearance" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Widget.LsPush.Toolbar">
+        <item name="android:titleTextAppearance">@style/TitleTextAppearance</item>
+        <item name="android:background">?android:colorPrimary</item>
+        <item name="android:elevation">@dimen/toolbar_elevation</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="android:titleTextAppearance">@style/TitleTextAppearance</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>

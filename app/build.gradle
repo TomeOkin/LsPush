@@ -234,13 +234,13 @@ dependencies {
     debugCompile debugDependencies.stethoJsRhino
 
     testCompile testDependencies.junit
-    testCompile testDependencies.mockitoCore
+    testCompile testDependencies.mockitoCore2
     testCompile testDependencies.robolectric
     testCompile testDependencies.assertjCore
 
     // android test
     androidTestCompile androidTestDependencies.junit
-    androidTestCompile androidTestDependencies.mockitoCore
+    androidTestCompile androidTestDependencies.mockitoCore2
     androidTestCompile androidTestDependencies.assertjAppCompatV7
     androidTestCompile androidTestDependencies.assertjRecyclerView
     androidTestCompile androidTestDependencies.espresso

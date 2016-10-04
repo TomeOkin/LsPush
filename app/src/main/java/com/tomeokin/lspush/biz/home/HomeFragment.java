@@ -15,8 +15,13 @@
  */
 package com.tomeokin.lspush.biz.home;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,18 +39,21 @@ import com.tomeokin.lspush.injection.component.HomeComponent;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class HomeFragment extends BaseFragment implements BaseActionCallback {
-
+    private Unbinder mUnBinder;
+    @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
     @Inject ObtainLatestCollectionsAction mObtainLatestColAction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        Timber.i("start HomeFragment");
         component(HomeComponent.class).inject(this);
     }
 
@@ -54,6 +62,10 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mUnBinder = ButterKnife.bind(this, view);
+        setupToolbar();
+
+        Toast.makeText(getContext(), "I'm HomeFragment", Toast.LENGTH_SHORT).show();
         return view;
     }
 
@@ -66,26 +78,44 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mUnBinder.unbind();
         mObtainLatestColAction.detach();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mUnBinder = null;
         mObtainLatestColAction = null;
+    }
+
+    private void setupToolbar() {
+        if (mToolbar != null) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(mToolbar);
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle(R.string.title_latest_collections);
+            }
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_home_menu, menu);
+        Drawable drawable = menu.findItem(R.id.action_search).getIcon();
+        DrawableCompat.setTint(drawable, Color.WHITE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_search:
+            case R.id.action_search:
                 Toast.makeText(getContext(), "search", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_add:
+                return true;
+            case R.id.action_pin:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

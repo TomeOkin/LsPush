@@ -53,4 +53,7 @@
     <string name="don_not_have_an_account_register">没有帐户？<b>请注册。</b></string>
 
     <string name="menu_search">搜索</string>
+    <string name="menu_add">添加</string>
+    <string name="menu_pin">钉</string>
+    <string name="title_latest_collections">最新收藏</string>
 </resources>
