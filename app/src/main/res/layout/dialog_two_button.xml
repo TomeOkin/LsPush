@@ -24,8 +24,8 @@
         android:id="@+id/button_divider"
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/vertical_separator_padding"
-        android:layout_marginTop="@dimen/vertical_separator_padding"
+        android:layout_marginBottom="@dimen/row_vertical_padding"
+        android:layout_marginTop="@dimen/row_vertical_padding"
         android:background="@color/grey_2_whiteout" />
 
     <TextView

@@ -58,7 +58,7 @@ ext {
 
             // rx
             rxandroid            : "io.reactivex:rxandroid:1.2.1",
-            rxjava               : "io.reactivex:rxjava:1.2.0",
+            rxjava               : "io.reactivex:rxjava:1.2.1",
 
             rxbindingV7          : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxbindingVersion}",
             rxbindingRecyclerview: "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${rxbindingVersion}",

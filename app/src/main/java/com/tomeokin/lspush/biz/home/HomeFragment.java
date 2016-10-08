@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +47,8 @@ import butterknife.Unbinder;
 public class HomeFragment extends BaseFragment implements BaseActionCallback {
     private Unbinder mUnBinder;
     @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.col_rv) RecyclerView mColRv;
+
     @Inject ObtainLatestCollectionsAction mObtainLatestColAction;
 
     @Override

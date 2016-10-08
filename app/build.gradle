@@ -44,6 +44,8 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
+        //project.ext.set("archivesBaseName", "${defaultConfig.applicationId}_${defaultConfig.versionName}");
+
         buildConfigField 'String', 'LSPUSH_SERVER_URL', "\"${metadata.lspushServerUrl}\""
         buildConfigField 'String', 'JAQ_KEY', "\"${metadata.jaqKey}\""
 
@@ -229,6 +231,8 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
+    compile 'com.google.android:flexbox:0.2.3'
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino
@@ -237,6 +241,7 @@ dependencies {
     testCompile testDependencies.mockitoCore2
     testCompile testDependencies.robolectric
     testCompile testDependencies.assertjCore
+    testCompile "com.google.truth:truth:0.30"
 
     // android test
     androidTestCompile androidTestDependencies.junit

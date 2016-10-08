@@ -30,6 +30,9 @@ public class Collection {
     private List<String> tags;
     private List<User> explorers;
     private long favorCount;
+    private boolean hasFavor;
+
+    private transient boolean hasRead;
 
     public long getId() {
         return id;
@@ -111,6 +114,22 @@ public class Collection {
         this.favorCount = favorCount;
     }
 
+    public boolean isHasFavor() {
+        return hasFavor;
+    }
+
+    public void setHasFavor(boolean hasFavor) {
+        this.hasFavor = hasFavor;
+    }
+
+    public boolean isHasRead() {
+        return hasRead;
+    }
+
+    public void setHasRead(boolean hasRead) {
+        this.hasRead = hasRead;
+    }
+
     @Override
     public String toString() {
         return "Collection{" +
@@ -124,6 +143,8 @@ public class Collection {
             ", tags=" + tags +
             ", explorers=" + explorers +
             ", favorCount=" + favorCount +
+            ", hasFavor=" + hasFavor +
+            ", hasRead=" + hasRead +
             '}';
     }
 }

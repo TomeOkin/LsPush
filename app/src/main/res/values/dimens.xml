@@ -4,16 +4,25 @@
     <dimen name="page_vertical_margin">16dp</dimen>
 
     <dimen name="toolbar_elevation">8dp</dimen>
+    <dimen name="action_bar_item_padding">12dp</dimen>
 
     <dimen name="row_padding">16dp</dimen>
     <dimen name="row_text_padding">12dp</dimen>
     <dimen name="row_height_small">48dp</dimen>
+    <dimen name="row_vertical_padding">8dp</dimen>
 
     <dimen name="button_width_small">64dp</dimen>
 
     <dimen name="font_small">12sp</dimen>
     <dimen name="font_medium">14sp</dimen>
-    <dimen name="font_large">18sp</dimen>
+    <dimen name="font_large">16sp</dimen>
+    <dimen name="font_extraLarge">18sp</dimen>
+
+    <dimen name="tag_border_width">0.5dp</dimen>
+    <dimen name="tag_horizontal_padding">12dp</dimen>
+    <dimen name="tag_vertical_padding">4dp</dimen>
+    <dimen name="tag_horizontal_spacing">8dp</dimen>
+    <dimen name="tag_vertical_spacing">4dp</dimen>
 
     <dimen name="button_corner_radius">2dp</dimen>
 
@@ -29,9 +38,12 @@
     <dimen name="auth_header_bottom_margin">24dp</dimen>
     <dimen name="error_text_view_padding">6dp</dimen>
 
-    <dimen name="alert_dialog_checkbox_padding">32dp</dimen>
     <dimen name="dialog_corner_radius">4dp</dimen>
 
-    <dimen name="vertical_separator_padding">8dp</dimen>
-    <dimen name="action_bar_item_padding">12dp</dimen>
+    <dimen name="list_item_header_height">56dp</dimen>
+    <dimen name="list_item_avatar_size">40dp</dimen>
+    <dimen name="list_item_padding">16dp</dimen>
+    <dimen name="list_item_max_content">320dp</dimen>
+
+    <dimen name="icon_small">32dp</dimen>
 </resources>

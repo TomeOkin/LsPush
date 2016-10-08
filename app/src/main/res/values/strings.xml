@@ -64,4 +64,7 @@
     <string name="menu_pin">Pin</string>
     <string name="title_latest_collections">Latest Collections</string>
     <string name="toolbar_scrolling_view_behavior" translatable="false">com.tomeokin.lspush.ui.widget.behavior.ToolbarBehavior</string>
+
+    <string name="add_tag">Add Tag</string>
+    <string name="more">more</string>
 </resources>
