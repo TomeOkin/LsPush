@@ -11,14 +11,15 @@
         android:id="@+id/col_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbars="none" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        app:layout_behavior="@string/toolbar_scrolling_view_behavior">
+        android:background="@null">
+        <!--app:layout_behavior="@string/toolbar_scrolling_view_behavior">-->
 
         <include layout="@layout/layout_home_toolbar" />
 

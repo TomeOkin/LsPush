@@ -28,9 +28,10 @@ import com.tomeokin.lspush.R;
 public class ImageLoader {
     public static void loadAvatar(Context context, ImageView avatar, @Nullable String image) {
         Glide.with(context)
-            .load(TextUtils.isEmpty(image) ? R.drawable.auth_avatar : image)
+            .load(TextUtils.isEmpty(image) ? R.drawable.avatar3 : image)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .transform(new CircleTransform(context))
+            .placeholder(R.drawable.avatar3)
             .into(avatar);
     }
 

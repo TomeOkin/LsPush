@@ -67,4 +67,10 @@
 
     <string name="add_tag">Add Tag</string>
     <string name="more">more</string>
+
+    <string name="just_now">just now</string>
+    <string name="minutes_ago">%d minute ago</string>
+    <string name="hours_ago">%d hour ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days_ago">%d days ago</string>
 </resources>

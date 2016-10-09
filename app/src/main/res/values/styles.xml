@@ -143,7 +143,6 @@
     <style name="Widget.LsPush.Toolbar">
         <item name="android:titleTextAppearance">@style/TitleTextAppearance</item>
         <item name="android:background">?android:colorPrimary</item>
-        <item name="android:elevation">@dimen/toolbar_elevation</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 

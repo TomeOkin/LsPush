@@ -18,6 +18,7 @@ package com.tomeokin.lspush;
 import android.app.Application;
 import android.content.Context;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.orhanobut.hawk.Hawk;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
@@ -36,6 +37,7 @@ public class LsPushApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initLogger(this);
+        AndroidThreeTen.init(this);
     }
 
     public LsPushApplication get(Context context) {

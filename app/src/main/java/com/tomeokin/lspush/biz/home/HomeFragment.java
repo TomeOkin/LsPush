@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -36,7 +37,18 @@ import com.tomeokin.lspush.biz.base.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.usercase.collection.ObtainLatestCollectionsAction;
 import com.tomeokin.lspush.data.model.BaseResponse;
+import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.Link;
+import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.injection.component.HomeComponent;
+
+import org.threeten.bp.DateTimeUtils;
+import org.threeten.bp.Instant;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,10 +56,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class HomeFragment extends BaseFragment implements BaseActionCallback {
+public class HomeFragment extends BaseFragment implements BaseActionCallback, CollectionListAdapter.Callback {
     private Unbinder mUnBinder;
     @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.col_rv) RecyclerView mColRv;
+    private List<Collection> mColList;
+    private CollectionListAdapter mColListAdapter;
 
     @Inject ObtainLatestCollectionsAction mObtainLatestColAction;
 
@@ -58,6 +72,48 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback {
         setRetainInstance(true);
 
         component(HomeComponent.class).inject(this);
+
+        User user = new User();
+        user.setUid("one");
+        user.setNickname("One");
+
+        Link link = new Link();
+        link.setTitle("Tencent/tinker");
+        link.setUrl("https://github.com/Tencent/tinker");
+
+        Collection collection = new Collection();
+        collection.setUser(user);
+        collection.setLink(link);
+        collection.setDescription("tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
+        collection.setImage("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
+        collection.setId(1);
+        Instant now = Instant.now();
+        Date create = DateTimeUtils.toDate(now);
+        collection.setCreateDate(create);
+        collection.setUpdateDate(create);
+        collection.setExplorers(Arrays.asList(user));
+        collection.setTags(Arrays.asList("github", "热修复", "Tencent", "hot-fix"));
+        collection.setFavorCount(101);
+        collection.setHasFavor(true);
+        collection.setHasRead(false);
+
+        mColList = new ArrayList<>(1);
+        mColList.add(collection);
+
+        //Instant current = Instant.now();
+        //Timber.i("current %s", DateUtils.toDurationFriendly(getContext(), DateTimeUtils.toDate(current)));
+        //Date date = DateTimeUtils.toDate(current.minus(45, ChronoUnit.SECONDS));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
+        //date = DateTimeUtils.toDate(current.minus(21, ChronoUnit.MINUTES));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
+        //date = DateTimeUtils.toDate(current.minus(17, ChronoUnit.HOURS));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
+        //date = DateTimeUtils.toDate(current.minus(34, ChronoUnit.HOURS));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
+        //date = DateTimeUtils.toDate(current.minus(3, ChronoUnit.DAYS));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
+        //date = DateTimeUtils.toDate(current.minus(9, ChronoUnit.DAYS));
+        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
     }
 
     @Nullable
@@ -68,6 +124,9 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback {
         mUnBinder = ButterKnife.bind(this, view);
         setupToolbar();
 
+        mColListAdapter = new CollectionListAdapter(mColList, this);
+        mColRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        mColRv.setAdapter(mColListAdapter);
         Toast.makeText(getContext(), "I'm HomeFragment", Toast.LENGTH_SHORT).show();
         return view;
     }
@@ -132,6 +191,16 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback {
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
+
+    }
+
+    @Override
+    public void onFavorChange(Collection collection) {
+
+    }
+
+    @Override
+    public void onShowMoreExplorers(Collection collection) {
 
     }
 }

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.facebook.stetho.Stetho;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.LogInterceptor;
 import com.orhanobut.logger.Logger;
@@ -53,6 +54,7 @@ public class LsPushApplication extends Application {
         LeakCanary.install(this);
         initializeStetho(this);
         initLogger();
+        AndroidThreeTen.init(this);
     }
 
     public LsPushApplication get(Context context) {

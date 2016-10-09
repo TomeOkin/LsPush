@@ -59,4 +59,10 @@
 
     <string name="add_tag">添加标签</string>
     <string name="more">更多</string>
+
+    <string name="just_now">刚刚</string>
+    <string name="minutes_ago">%d 分钟前</string>
+    <string name="hours_ago">%d 小时前</string>
+    <string name="yesterday">昨天</string>
+    <string name="days_ago">%d 天前</string>
 </resources>

@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.common.DateUtils;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.ui.glide.ImageLoader;
@@ -35,18 +36,25 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
     implements View.OnClickListener {
     private List<Collection> mColList = null;
+    private Callback mCallback = null;
 
-    public CollectionListAdapter(List<Collection> colList) {
+    public CollectionListAdapter(List<Collection> colList, Callback callback) {
         setColList(colList);
+        setCallback(callback);
     }
 
     public void setColList(List<Collection> colList) {
         mColList = colList;
         notifyDataSetChanged();
+    }
+
+    public void setCallback(Callback callback) {
+        mCallback = callback;
     }
 
     @Override
@@ -58,18 +66,24 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         holder.explorersMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2016/10/8
+                final int position = (int) v.getTag();
+                final Collection collection = mColList.get(position);
+                if (mCallback != null) {
+                    mCallback.onShowMoreExplorers(collection);
+                }
             }
         });
         holder.favorIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2016/10/8
                 final int position = (int) v.getTag();
                 final Collection collection = mColList.get(position);
                 collection.setHasFavor(!collection.isHasFavor());
                 updateFavorIcon(holder.favorIcon, collection.isHasFavor());
-                // send to server
+
+                if (mCallback != null) {
+                    mCallback.onFavorChange(collection);
+                }
             }
         });
         return holder;
@@ -82,9 +96,14 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         final Context context = holder.itemView.getContext();
 
         holder.itemView.setTag(position);
+        holder.explorersMore.setTag(position);
+        holder.favorIcon.setTag(position);
 
+        Timber.i(user.toString());
+        Timber.i("is visible ? %b", holder.nickname.getVisibility() == View.VISIBLE);
         ImageLoader.loadAvatar(context, holder.avatar, user.getImage());
         holder.nickname.setText(user.getNickname());
+        holder.updateDate.setText(DateUtils.toDurationFriendly(context, collection.getUpdateDate()));
 
         holder.title.setText(collection.getLink().getTitle());
         updateTitleColor(context, holder.title, collection.isHasRead());
@@ -93,15 +112,14 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
         holder.tagGroup.setTags(collection.getTags());
         setExplorers(holder.explorersContainer, collection.getExplorers());
-        // FIXME: 2016/10/8 change color
-        holder.favorIcon.setTag(position);
+
         updateFavorIcon(holder.favorIcon, collection.isHasFavor());
         holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
     }
 
     private void updateTitleColor(Context context, TextView title, boolean hasRead) {
         title.setTextColor(
-            ContextCompat.getColor(context, hasRead ? R.color.black_50_transparent : R.color.black_87_transparent));
+            ContextCompat.getColor(context, hasRead ? R.color.grey_40_transparent : R.color.black_87_transparent));
     }
 
     private void updateFavorIcon(ImageView favorIcon, boolean hasFavor) {
@@ -122,12 +140,12 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
     @Override
     public void onClick(View v) {
-        // TODO: 2016/10/8
         final int position = (int) v.getTag();
         final Collection collection = mColList.get(position);
         collection.setHasRead(true);
         TextView title = (TextView) v.findViewById(R.id.title_tv);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
+        // TODO: 2016/10/9 move to web view
     }
 
     @Override
@@ -138,6 +156,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     public final class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.avatar_iv) ImageView avatar;
         @BindView(R.id.nickname_tv) TextView nickname;
+        @BindView(R.id.updateDate) TextView updateDate;
         @BindView(R.id.title_tv) TextView title;
         @BindView(R.id.description_tv) TextView description;
         @BindView(R.id.description_iv) ImageView descriptionImage;
@@ -151,5 +170,11 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface Callback {
+        void onFavorChange(Collection collection);
+
+        void onShowMoreExplorers(Collection collection);
     }
 }
