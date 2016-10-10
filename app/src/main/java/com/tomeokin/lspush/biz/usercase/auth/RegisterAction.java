@@ -19,8 +19,8 @@ import android.content.res.Resources;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.base.support.BaseAction;
+import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.data.model.AccessResponse;

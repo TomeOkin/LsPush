@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.AuthActivity;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
@@ -18,6 +18,10 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.DaggerHomeComponent;
 import com.tomeokin.lspush.injection.component.HomeComponent;
 import com.tomeokin.lspush.injection.module.HomeModule;
+
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
 
 import javax.inject.Inject;
 
@@ -57,6 +61,8 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
             Navigator.moveTo(this, SplashFragment.class, null, false);
             return;
         }
+
+
 
         // access response is not null, we move to home fragment
         //initView();

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.injection.component;
 
-import android.support.annotation.Nullable;
+import com.tomeokin.lspush.biz.home.SyncService;
+import com.tomeokin.lspush.injection.module.ActivityModule;
+import com.tomeokin.lspush.injection.module.SyncModule;
+import com.tomeokin.lspush.injection.scope.PerActivity;
 
-import com.tomeokin.lspush.data.model.BaseResponse;
+import dagger.Component;
 
-public interface BaseActionCallback {
-    void onActionSuccess(int action, @Nullable BaseResponse response);
-
-    void onActionFailure(int action, @Nullable BaseResponse response, String message);
+@PerActivity
+@Component(dependencies = AppComponent.class, modules = {ActivityModule.class, SyncModule.class})
+public interface SyncComponent {
+    void inject(SyncService syncService);
 }

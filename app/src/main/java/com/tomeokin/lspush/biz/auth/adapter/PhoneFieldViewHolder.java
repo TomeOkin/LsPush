@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 import com.tomeokin.lspush.biz.auth.CaptchaView;
 import com.tomeokin.lspush.biz.auth.CountryCodePickerDialog;
-import com.tomeokin.lspush.biz.base.BaseTextWatcher;
-import com.tomeokin.lspush.biz.base.LifecycleListener;
+import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.ui.widget.SearchEditText;

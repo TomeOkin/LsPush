@@ -17,8 +17,8 @@ package com.tomeokin.lspush.biz.usercase.collection;
 
 import android.content.res.Resources;
 
-import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.base.support.BaseAction;
+import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.model.CollectionResponse;

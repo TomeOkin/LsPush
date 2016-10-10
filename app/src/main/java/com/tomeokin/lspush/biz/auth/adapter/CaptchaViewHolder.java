@@ -18,7 +18,7 @@ package com.tomeokin.lspush.biz.auth.adapter;
 import android.view.View;
 
 import com.tomeokin.lspush.biz.auth.CaptchaView;
-import com.tomeokin.lspush.biz.base.LifecycleListener;
+import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
 
 public final class CaptchaViewHolder extends LifecycleListener {
     private final CaptchaView mCaptchaView;

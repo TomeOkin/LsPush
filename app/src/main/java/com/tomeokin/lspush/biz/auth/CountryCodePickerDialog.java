@@ -36,7 +36,7 @@ import com.tomeokin.lspush.common.CountryCodeUtils;
 import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.ui.colorfilter.ColorFilterCache;
-import com.tomeokin.lspush.ui.widget.OnFilterTextListener;
+import com.tomeokin.lspush.ui.widget.listener.OnFilterTextListener;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 

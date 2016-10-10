@@ -37,15 +37,15 @@ public class NetworkUtils {
         mConnectivityManager = connectivityManager;
     }
 
-    public static boolean connectingNetwork() {
+    public static boolean isOffline() {
         if (mConnectivityManager == null) {
-            return false;
+            return true;
         }
         final NetworkInfo active = mConnectivityManager.getActiveNetworkInfo();
-        return active != null && active.isConnected();
+        return active == null || !active.isConnected();
     }
 
-    public static boolean connectingWifi() {
+    public static boolean isWifiActive() {
         return mConnectivityManager != null
             && mConnectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
     }

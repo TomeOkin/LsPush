@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.ui.widget.listener.OnFilterTextListener;
 
 public class SearchEditText extends AppCompatEditText implements TextView.OnEditorActionListener {
     private Drawable[] mCompoundDrawables;

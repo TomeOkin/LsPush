@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.injection.module;
 
-public interface BaseStateCallback {
-    boolean isActive(BaseStateAdapter adapter, int requestId);
+import dagger.Module;
 
-    void onStateChange(BaseStateAdapter adapter, int requestId, int currentState);
+@Module
+public class SyncModule {
+
 }

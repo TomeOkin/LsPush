@@ -30,7 +30,7 @@ import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
 
 import java.util.ArrayList;
 import java.util.List;

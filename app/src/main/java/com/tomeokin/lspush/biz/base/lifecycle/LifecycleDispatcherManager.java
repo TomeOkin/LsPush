@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.base.lifecycle;
 
-public interface Presenter<V extends BaseActionCallback> {
-    void attachView(V mvpView);
-
-    void detachView();
+public interface LifecycleDispatcherManager {
+    void registerLifecycleListener(OnLifecycleListener listener);
 }

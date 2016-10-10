@@ -13,38 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.ui.widget.listener;
 
-import android.support.annotation.CallSuper;
+import android.text.Editable;
+import android.text.TextWatcher;
 
-import retrofit2.Call;
-
-public class BasePresenter<T extends BaseActionCallback> implements Presenter<T> {
-    private T mMvpView;
-
-    @CallSuper
+public class BaseTextWatcher implements TextWatcher {
     @Override
-    public void attachView(T mvpView) {
-        mMvpView = mvpView;
+    public void afterTextChanged(Editable s) {
+
     }
 
-    @CallSuper
     @Override
-    public void detachView() {
-        mMvpView = null;
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
     }
 
-    public boolean isViewAttached() {
-        return mMvpView != null;
-    }
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-    public T getMvpView() {
-        return mMvpView;
-    }
-
-    protected void checkAndCancel(Call<?> call) {
-        if (call != null && !call.isCanceled()) {
-            call.cancel();
-        }
     }
 }

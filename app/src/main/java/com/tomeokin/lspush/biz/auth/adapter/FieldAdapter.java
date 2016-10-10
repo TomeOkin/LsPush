@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseStateAdapter;
-import com.tomeokin.lspush.biz.base.BaseStateCallback;
+import com.tomeokin.lspush.biz.base.support.BaseStateAdapter;
+import com.tomeokin.lspush.biz.base.support.BaseStateCallback;
 
 public class FieldAdapter extends BaseStateAdapter {
     private ImageView mValidButton;

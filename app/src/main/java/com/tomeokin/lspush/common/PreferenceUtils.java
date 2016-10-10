@@ -61,10 +61,9 @@ public class PreferenceUtils {
         T value = null;
         try {
             String hashKey = CommonCrypto.hashPrefKey(key);
-            String old = mPreference.getString(key, null);
+            String old = mPreference.getString(hashKey, null);
             if (old != null) {
                 Entity entity = Entity.create(key);
-                Timber.i("get %s entity %s", key, entity.toString());
                 byte[] data = mCrypto.decrypt(Base64.decode(old, Base64.NO_WRAP), entity);
                 value = mGson.fromJson(new String(data, CharsetsSupport.UTF_8), type);
             }
@@ -81,15 +80,9 @@ public class PreferenceUtils {
 
     private void put(String key, String hashKey, String value)
         throws KeyChainException, CryptoInitializationException, IOException {
-        Timber.i("put %s value %s", key, value);
         Entity entity = Entity.create(key); // original key
         byte[] data = mCrypto.encrypt(value.getBytes(CharsetsSupport.UTF_8), entity);
 
-        // test
-        Entity one = Entity.create(key);
-        byte[] oneData = mCrypto.decrypt(data, one);
-        Timber.i("get %s value %s", key, new String(oneData, CharsetsSupport.UTF_8));
-
-        mPreference.edit().putString(key, Base64.encodeToString(data, Base64.NO_WRAP)).apply();
+        mPreference.edit().putString(hashKey, Base64.encodeToString(data, Base64.NO_WRAP)).apply();
     }
 }

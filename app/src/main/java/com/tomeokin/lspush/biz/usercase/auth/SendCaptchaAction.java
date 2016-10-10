@@ -19,9 +19,9 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
-import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.base.support.BaseAction;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.NoGuarantee;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.SMSCaptchaUtils;

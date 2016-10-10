@@ -56,7 +56,6 @@ public class BeeConcealKeyChain implements KeyChain {
             try {
                 data = BeeCrypto.get().decrypt(salt.getBytes(CharsetsSupport.UTF_8));
                 data = Base64.decode(data, Base64.NO_WRAP);
-                Timber.i("get key fom preferences, key.length: %d", data.length);
             } catch (Exception e) {
                 Timber.w(e, "get key from preferences failure");
                 data = generateKeyAndSave(key, length);
@@ -65,7 +64,6 @@ public class BeeConcealKeyChain implements KeyChain {
             data = generateKeyAndSave(key, length);
         }
 
-        Timber.i("key length: %d", data.length);
         return data;
     }
 
@@ -74,11 +72,6 @@ public class BeeConcealKeyChain implements KeyChain {
         byte[] random = new byte[length];
         mSecureRandom.nextBytes(random);
         String data = BeeCrypto.get().encrypt(Base64.encodeToString(random, Base64.NO_WRAP));
-
-        // test
-        byte[] one = BeeCrypto.get().decrypt(data.getBytes(CharsetsSupport.UTF_8));
-        byte[] raw = Base64.decode(one, Base64.NO_WRAP);
-        Timber.i("key length of decrypt-one: %d", raw.length);
 
         mSharedPreferences.edit().putString(CommonCrypto.hashPrefKey(key), data).commit();
         return random;
@@ -94,7 +87,6 @@ public class BeeConcealKeyChain implements KeyChain {
                 throw new KeyChainException(e.getMessage(), e);
             }
         }
-        Timber.i("key length: %d", mCipherKey.length);
         return mCipherKey;
     }
 

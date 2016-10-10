@@ -17,8 +17,8 @@ package com.tomeokin.lspush.biz.usercase.auth;
 
 import android.content.res.Resources;
 
-import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.CommonCallback;
+import com.tomeokin.lspush.biz.base.support.BaseAction;
+import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.data.model.UploadResponse;
 import com.tomeokin.lspush.data.remote.LsPushService;

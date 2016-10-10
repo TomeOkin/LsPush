@@ -117,6 +117,39 @@ public class User implements Parcelable {
             '}';
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (validate != user.validate) return false;
+        if (colId != user.colId) return false;
+        if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
+        if (nickname != null ? !nickname.equals(user.nickname) : user.nickname != null) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        if (region != null ? !region.equals(user.region) : user.region != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        return image != null ? image.equals(user.image) : user.image == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uid != null ? uid.hashCode() : 0;
+        result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + validate;
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (int) (colId ^ (colId >>> 32));
+        return result;
+    }
+
     @Override
     public int describeContents() { return 0; }
 

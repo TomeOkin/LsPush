@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.base.support;
 
-public interface LifecycleDispatcherManager {
-    void registerLifecycleListener(OnLifecycleListener listener);
+import android.support.annotation.Nullable;
+
+import com.tomeokin.lspush.data.model.BaseResponse;
+
+public interface BaseActionCallback {
+    void onActionSuccess(int action, @Nullable BaseResponse response);
+
+    void onActionFailure(int action, @Nullable BaseResponse response, String message);
 }

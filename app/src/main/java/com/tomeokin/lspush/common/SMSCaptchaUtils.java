@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.model.SMSCheckCaptchaResponse;
 import com.tomeokin.lspush.data.model.SMSCountryListResponse;

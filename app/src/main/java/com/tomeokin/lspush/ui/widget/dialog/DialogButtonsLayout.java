@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.ui.widget;
+package com.tomeokin.lspush.ui.widget.dialog;
 
 import android.content.Context;
 import android.util.AttributeSet;

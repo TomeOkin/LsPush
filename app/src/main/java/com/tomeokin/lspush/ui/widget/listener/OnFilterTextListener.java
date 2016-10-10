@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.ui.widget;
+package com.tomeokin.lspush.ui.widget.listener;
+
+import com.tomeokin.lspush.ui.widget.SearchEditText;
 
 public interface OnFilterTextListener {
     void onTextChanged(SearchEditText editText, CharSequence text, int start, int lengthBefore, int lengthAfter);

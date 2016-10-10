@@ -52,4 +52,25 @@ public class Link {
             ", title='" + title + '\'' +
             '}';
     }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link link = (Link) o;
+
+        if (id != link.id) return false;
+        if (url != null ? !url.equals(link.url) : link.url != null) return false;
+        return title != null ? title.equals(link.title) : link.title == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        return result;
+    }
 }

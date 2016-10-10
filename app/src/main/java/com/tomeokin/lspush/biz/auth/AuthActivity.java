@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.data.model.BaseResponse;

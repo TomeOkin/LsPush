@@ -56,6 +56,7 @@ public class DateUtils {
             return context.getResources().getString(R.string.days_ago, duration.toDays());
         }
 
+        // http://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
         return target.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         //if (now.isEqual(target)) {
@@ -77,4 +78,6 @@ public class DateUtils {
         //    return duration.toDays() + " 天前";
         //}
     }
+
+
 }

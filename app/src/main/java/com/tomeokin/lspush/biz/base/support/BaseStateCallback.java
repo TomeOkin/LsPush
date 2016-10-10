@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.base.support;
 
-import android.view.View;
+public interface BaseStateCallback {
+    boolean isActive(BaseStateAdapter adapter, int requestId);
 
-public interface OnLifecycleListener {
-    void onCreateView(View view);
-
-    void onResume();
-
-    void onPause();
-
-    void onDestroyView();
+    void onStateChange(BaseStateAdapter adapter, int requestId, int currentState);
 }

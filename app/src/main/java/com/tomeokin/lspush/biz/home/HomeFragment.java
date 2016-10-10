@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseActionCallback;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.usercase.collection.ObtainLatestCollectionsAction;
 import com.tomeokin.lspush.data.model.BaseResponse;

@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.base;
+package com.tomeokin.lspush.biz.base.lifecycle;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.View;
 
-public class BaseTextWatcher implements TextWatcher {
-    @Override
-    public void afterTextChanged(Editable s) {
+public interface OnLifecycleListener {
+    void onCreateView(View view);
 
-    }
+    void onResume();
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    void onPause();
 
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
+    void onDestroyView();
 }

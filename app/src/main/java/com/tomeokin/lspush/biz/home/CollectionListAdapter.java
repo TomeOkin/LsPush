@@ -16,7 +16,9 @@
 package com.tomeokin.lspush.biz.home;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,21 +38,39 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
     implements View.OnClickListener {
-    private List<Collection> mColList = null;
+    //private List<Collection> mColList = null;
     private Callback mCallback = null;
+    private final SortedList.BatchedCallback<Collection> mBatchCallback =
+        new SortedList.BatchedCallback<>(new CollectionSortCallback());
+    private SortedList<Collection> mColSortList = new SortedList<>(Collection.class, mBatchCallback);
 
-    public CollectionListAdapter(List<Collection> colList, Callback callback) {
+    public CollectionListAdapter(List<Collection> colList, @Nullable Callback callback) {
         setColList(colList);
         setCallback(callback);
     }
 
     public void setColList(List<Collection> colList) {
-        mColList = colList;
-        notifyDataSetChanged();
+        mColSortList.beginBatchedUpdates();
+        try {
+            mColSortList.clear();
+            mColSortList.addAll(colList);
+        } finally {
+            mColSortList.endBatchedUpdates();
+        }
+        //mColList = colList;
+        //notifyDataSetChanged();
+    }
+
+    public void insertColList(List<Collection> colList) {
+        mColSortList.beginBatchedUpdates();
+        try {
+            mColSortList.addAll(colList);
+        } finally {
+            mColSortList.endBatchedUpdates();
+        }
     }
 
     public void setCallback(Callback callback) {
@@ -67,7 +87,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             @Override
             public void onClick(View v) {
                 final int position = (int) v.getTag();
-                final Collection collection = mColList.get(position);
+                final Collection collection = mColSortList.get(position);
                 if (mCallback != null) {
                     mCallback.onShowMoreExplorers(collection);
                 }
@@ -77,7 +97,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             @Override
             public void onClick(View v) {
                 final int position = (int) v.getTag();
-                final Collection collection = mColList.get(position);
+                final Collection collection = mColSortList.get(position);
                 collection.setHasFavor(!collection.isHasFavor());
                 updateFavorIcon(holder.favorIcon, collection.isHasFavor());
 
@@ -91,7 +111,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Collection collection = mColList.get(position);
+        final Collection collection = mColSortList.get(position);
         final User user = collection.getUser();
         final Context context = holder.itemView.getContext();
 
@@ -99,8 +119,6 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         holder.explorersMore.setTag(position);
         holder.favorIcon.setTag(position);
 
-        Timber.i(user.toString());
-        Timber.i("is visible ? %b", holder.nickname.getVisibility() == View.VISIBLE);
         ImageLoader.loadAvatar(context, holder.avatar, user.getImage());
         holder.nickname.setText(user.getNickname());
         holder.updateDate.setText(DateUtils.toDurationFriendly(context, collection.getUpdateDate()));
@@ -126,22 +144,41 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         favorIcon.setImageResource(hasFavor ? R.drawable.heart_solid : R.drawable.heart_hollow);
     }
 
-    private void setExplorers(ViewGroup container, List<User> explorers) {
+    private void setExplorers(ViewGroup container, @Nullable List<User> explorers) {
         final Context context = container.getContext();
         // TODO: 2016/10/8 performance improve
-        container.removeAllViews();
-        for (User explorer : explorers) {
-            final ImageView avatar =
-                (ImageView) LayoutInflater.from(context).inflate(R.layout.layout_item_explorer, container, false);
-            ImageLoader.loadAvatar(context, avatar, explorer.getImage());
-            container.addView(avatar);
+        //container.removeAllViews();
+        //for (User explorer : explorers) {
+        //    final ImageView avatar =
+        //        (ImageView) LayoutInflater.from(context).inflate(R.layout.layout_item_explorer, container, false);
+        //    ImageLoader.loadAvatar(context, avatar, explorer.getImage());
+        //    container.addView(avatar);
+        //}
+
+        final int count = container.getChildCount();
+        final int targetCount = explorers == null ? 0 : explorers.size();
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        if (count > targetCount) {
+            container.removeViews(targetCount, count - targetCount);
+        }
+        ImageView avatar;
+        for (int i = 0; i < targetCount; i++) {
+            if (i > count - 1) { // no cache
+                avatar = (ImageView) inflater.inflate(R.layout.layout_item_explorer, container, false);
+            } else {
+                avatar = (ImageView) container.getChildAt(i);
+            }
+            ImageLoader.loadAvatar(context, avatar, explorers.get(i).getImage());
+            if (avatar.getParent() == null) {
+                container.addView(avatar);
+            }
         }
     }
 
     @Override
     public void onClick(View v) {
         final int position = (int) v.getTag();
-        final Collection collection = mColList.get(position);
+        final Collection collection = mColSortList.get(position);
         collection.setHasRead(true);
         TextView title = (TextView) v.findViewById(R.id.title_tv);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
@@ -150,7 +187,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
     @Override
     public int getItemCount() {
-        return mColList == null ? 0 : mColList.size();
+        return mColSortList.size();
     }
 
     public final class ViewHolder extends RecyclerView.ViewHolder {

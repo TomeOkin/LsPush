@@ -20,8 +20,8 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.sqlbrite.BriteDatabase;
-import com.tomeokin.lspush.biz.base.BaseAction;
-import com.tomeokin.lspush.biz.base.CommonSubscriber;
+import com.tomeokin.lspush.biz.base.support.BaseAction;
+import com.tomeokin.lspush.biz.base.support.CommonSubscriber;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
@@ -129,6 +129,13 @@ public class LocalUserInfoAction extends BaseAction {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new CommonSubscriber<>(mResource, UserScene.ACTION_GET_ACCESS_RESPONSE, mCallback));
         return null;
+    }
+
+    public AccessResponse getAccessResponseSync() {
+        if (mLsPushUserState.getAccessResponse() != null) {
+            return mLsPushUserState.getAccessResponse();
+        }
+        return mPreferenceUtils.get(ACCESS_RESPONSE, AccessResponse.class);
     }
 
     public void updateAccessResponse(final AccessResponse accessResponse) {

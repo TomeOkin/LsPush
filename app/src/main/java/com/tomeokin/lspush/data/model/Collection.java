@@ -147,4 +147,43 @@ public class Collection {
             ", hasRead=" + hasRead +
             '}';
     }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Collection that = (Collection) o;
+
+        if (id != that.id) return false;
+        if (favorCount != that.favorCount) return false;
+        if (hasFavor != that.hasFavor) return false;
+        if (hasRead != that.hasRead) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (link != null ? !link.equals(that.link) : that.link != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
+        if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) return false;
+        if (updateDate != null ? !updateDate.equals(that.updateDate) : that.updateDate != null) return false;
+        if (tags != null ? !tags.equals(that.tags) : that.tags != null) return false;
+        return explorers != null ? explorers.equals(that.explorers) : that.explorers == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (link != null ? link.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (explorers != null ? explorers.hashCode() : 0);
+        result = 31 * result + (int) (favorCount ^ (favorCount >>> 32));
+        result = 31 * result + (hasFavor ? 1 : 0);
+        result = 31 * result + (hasRead ? 1 : 0);
+        return result;
+    }
 }
