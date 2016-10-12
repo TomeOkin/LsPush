@@ -18,6 +18,8 @@ package com.tomeokin.lspush.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.evernote.android.job.JobManager;
+import com.tomeokin.lspush.biz.job.LsPushJobCreator;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
@@ -51,5 +53,13 @@ public class AppModule {
     @Singleton
     LsPushUserState provideLsPushUserState() {
         return new LsPushUserState();
+    }
+
+    @Provides
+    @Singleton
+    JobManager provideJobManager(@AppContext Context context) {
+        JobManager.create(context).addJobCreator(new LsPushJobCreator(context));
+        JobManager.instance().cancelAll();
+        return JobManager.instance();
     }
 }

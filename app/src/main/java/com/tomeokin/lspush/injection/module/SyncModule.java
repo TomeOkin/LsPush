@@ -15,9 +15,19 @@
  */
 package com.tomeokin.lspush.injection.module;
 
+import com.google.gson.Gson;
+import com.tomeokin.lspush.biz.usercase.RefreshTokenAction;
+import com.tomeokin.lspush.data.remote.LsPushService;
+import com.tomeokin.lspush.injection.scope.PerActivity;
+
 import dagger.Module;
+import dagger.Provides;
 
 @Module
 public class SyncModule {
-
+    @Provides
+    @PerActivity
+    public RefreshTokenAction provideRefreshTokenAction(LsPushService lsPushService, Gson gson) {
+        return new RefreshTokenAction(lsPushService, gson);
+    }
 }

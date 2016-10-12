@@ -18,6 +18,7 @@ package com.tomeokin.lspush.injection.component;
 import android.app.Application;
 import android.content.Context;
 
+import com.evernote.android.job.JobManager;
 import com.google.gson.Gson;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
@@ -53,4 +54,6 @@ public interface AppComponent {
     LsPushUserState lspushUserState();
 
     LocalUserInfoAction localUserInfoAction();
+
+    JobManager jobManager();
 }

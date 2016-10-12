@@ -18,8 +18,8 @@ package com.tomeokin.lspush.injection.module;
 import android.content.Context;
 
 import com.squareup.sqlbrite.BriteDatabase;
-import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
 
@@ -32,8 +32,8 @@ import dagger.Provides;
 public class UserModule {
     @Provides
     @Singleton
-    public LocalUserInfoAction provideLocalUserInfoAction(@AppContext Context context,
-        BriteDatabase briteDatabase, PreferenceUtils preferenceUtils, LsPushUserState lsPushUserState) {
-        return new LocalUserInfoAction(context.getResources(), briteDatabase, preferenceUtils, lsPushUserState);
+    public LocalUserInfoAction provideLocalUserInfoAction(@AppContext Context context, BriteDatabase briteDatabase,
+        PreferenceUtils preferenceUtils, LsPushUserState lsPushUserState) {
+        return new LocalUserInfoAction(context, briteDatabase, preferenceUtils, lsPushUserState);
     }
 }

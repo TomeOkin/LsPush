@@ -15,7 +15,10 @@
  */
 package com.tomeokin.lspush.data.model;
 
-public class AccessResponse extends BaseResponse {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class AccessResponse extends BaseResponse implements Parcelable {
     // 表示截至的访问时间，超过该时间后 expireToken 无效，需要使用 refreshToken 来获取新的 expireToken，否则用户需要重新登录。
     private long expireTime;
     // 超过该刷新时间后，refreshToken 也需要重新获取一个新的，更新 refreshToken 需要以旧换新。
@@ -73,4 +76,32 @@ public class AccessResponse extends BaseResponse {
     public void setRefreshToken(CryptoToken refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.expireTime);
+        dest.writeLong(this.refreshTime);
+        dest.writeParcelable(this.user, flags);
+        dest.writeParcelable(this.expireToken, flags);
+        dest.writeParcelable(this.refreshToken, flags);
+    }
+
+    protected AccessResponse(Parcel in) {
+        this.expireTime = in.readLong();
+        this.refreshTime = in.readLong();
+        this.user = in.readParcelable(User.class.getClassLoader());
+        this.expireToken = in.readParcelable(CryptoToken.class.getClassLoader());
+        this.refreshToken = in.readParcelable(CryptoToken.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<AccessResponse> CREATOR = new Parcelable.Creator<AccessResponse>() {
+        @Override
+        public AccessResponse createFromParcel(Parcel source) {return new AccessResponse(source);}
+
+        @Override
+        public AccessResponse[] newArray(int size) {return new AccessResponse[size];}
+    };
 }

@@ -33,16 +33,17 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 public interface LsPushService {
     @POST("api/user/login")
     Call<AccessResponse> login(@Body CryptoToken cryptoToken);
 
     @POST("api/user/refreshExpireToken")
-    Call<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
+    Observable<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
 
     @POST("api/user/refreshRefreshToken")
-    Call<AccessResponse> refreshRefreshToken(@Body CryptoToken cryptoToken);
+    Observable<AccessResponse> refreshRefreshToken(@Body CryptoToken cryptoToken);
 
     @POST("api/user/register")
     Call<AccessResponse> register(@Body CryptoToken cryptoToken);

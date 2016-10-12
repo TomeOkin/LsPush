@@ -15,7 +15,7 @@
  */
 package com.tomeokin.lspush.injection.component;
 
-import com.tomeokin.lspush.biz.home.SyncService;
+import com.tomeokin.lspush.biz.job.sync.SyncService;
 import com.tomeokin.lspush.injection.module.ActivityModule;
 import com.tomeokin.lspush.injection.module.SyncModule;
 import com.tomeokin.lspush.injection.scope.PerActivity;

@@ -42,6 +42,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
@@ -144,6 +145,7 @@ public class LsPushApiModule {
     public LsPushService provideLsPushService(Gson gson, OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL)
             .client(okHttpClient)
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 

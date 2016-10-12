@@ -16,13 +16,14 @@
 package com.tomeokin.lspush.biz.usercase.user;
 
 import android.content.ContentValues;
-import android.content.res.Resources;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.tomeokin.lspush.biz.base.support.BaseAction;
 import com.tomeokin.lspush.biz.base.support.CommonSubscriber;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.job.sync.SyncService;
 import com.tomeokin.lspush.common.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
 import com.tomeokin.lspush.data.model.AccessResponse;
@@ -36,6 +37,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -46,15 +48,17 @@ public class LocalUserInfoAction extends BaseAction {
     private final BriteDatabase mBriteDatabase;
     private final PreferenceUtils mPreferenceUtils;
     private final LsPushUserState mLsPushUserState;
+    private final Context mContext;
     private Subscription mUserLoginSubscription;
     private Subscription mUserLogoutSubscription;
     private Subscription mGetAccessResponseSubscription;
     private Subscription mUpdateAccessResponseSubscription;
     private Subscription mGetHistoryLoginUserSubscription;
 
-    public LocalUserInfoAction(Resources resources, BriteDatabase briteDatabase, PreferenceUtils preferenceUtils,
+    public LocalUserInfoAction(Context context, BriteDatabase briteDatabase, PreferenceUtils preferenceUtils,
         LsPushUserState lsPushUserState) {
-        super(resources);
+        super(context.getResources());
+        mContext = context;
         mBriteDatabase = briteDatabase;
         mPreferenceUtils = preferenceUtils;
         mLsPushUserState = lsPushUserState;
@@ -85,6 +89,12 @@ public class LocalUserInfoAction extends BaseAction {
         })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Action1<BaseResponse>() {
+                @Override
+                public void call(BaseResponse baseResponse) {
+                    SyncService.start(mContext);
+                }
+            })
             .subscribe(new CommonSubscriber<>(mResource, UserScene.ACTION_DATA_USER_LOGIN, mCallback));
     }
 
@@ -131,6 +141,20 @@ public class LocalUserInfoAction extends BaseAction {
         return null;
     }
 
+    public Observable<AccessResponse> getAccessResponseObservable() {
+        return Observable.create(new Observable.OnSubscribe<AccessResponse>() {
+            @Override
+            public void call(Subscriber<? super AccessResponse> subscriber) {
+                if (mLsPushUserState.getAccessResponse() != null) {
+                    subscriber.onNext(mLsPushUserState.getAccessResponse());
+                } else {
+                    AccessResponse response = mPreferenceUtils.get(ACCESS_RESPONSE, AccessResponse.class);
+                    subscriber.onNext(response);
+                }
+            }
+        });
+    }
+
     public AccessResponse getAccessResponseSync() {
         if (mLsPushUserState.getAccessResponse() != null) {
             return mLsPushUserState.getAccessResponse();
@@ -151,13 +175,30 @@ public class LocalUserInfoAction extends BaseAction {
                         subscriber.onNext(null);
                     }
                 } catch (Exception e) {
-                    subscriber.onError(e);
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onError(e);
+                    }
                 }
             }
         })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new CommonSubscriber<>(mResource, UserScene.ACTION_UPDATE_ACCESS_RESPONSE, mCallback));
+    }
+
+    public Observable<AccessResponse> updateAccessResponseObservable(final AccessResponse accessResponse) {
+        return Observable.create(new Observable.OnSubscribe<AccessResponse>() {
+            @Override
+            public void call(Subscriber<? super AccessResponse> subscriber) {
+                try {
+                    mLsPushUserState.setAccessResponse(accessResponse);
+                    mPreferenceUtils.put(ACCESS_RESPONSE, accessResponse);
+                    subscriber.onNext(accessResponse);
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
     }
 
     public void getHistoryLoginUser() {

@@ -15,10 +15,7 @@
  */
 package com.tomeokin.lspush.data.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class BaseResponse implements Parcelable {
+public class BaseResponse {
     public static final int COMMON_SUCCESS = 0;
     public static final String COMMON_SUCCESS_MESSAGE = "success";
 
@@ -50,26 +47,4 @@ public class BaseResponse implements Parcelable {
     public void setResult(String result) {
         this.result = result;
     }
-
-    @Override
-    public int describeContents() { return 0; }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.resultCode);
-        dest.writeString(this.result);
-    }
-
-    protected BaseResponse(Parcel in) {
-        this.resultCode = in.readInt();
-        this.result = in.readString();
-    }
-
-    public static final Parcelable.Creator<BaseResponse> CREATOR = new Parcelable.Creator<BaseResponse>() {
-        @Override
-        public BaseResponse createFromParcel(Parcel source) {return new BaseResponse(source);}
-
-        @Override
-        public BaseResponse[] newArray(int size) {return new BaseResponse[size];}
-    };
 }

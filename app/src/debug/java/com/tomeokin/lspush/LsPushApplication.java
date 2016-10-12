@@ -57,7 +57,7 @@ public class LsPushApplication extends Application {
         AndroidThreeTen.init(this);
     }
 
-    public LsPushApplication get(Context context) {
+    public static LsPushApplication get(Context context) {
         return (LsPushApplication) context.getApplicationContext();
     }
 
