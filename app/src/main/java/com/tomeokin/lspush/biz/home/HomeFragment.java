@@ -99,21 +99,6 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
 
         mColList = new ArrayList<>(1);
         mColList.add(collection);
-
-        //Instant current = Instant.now();
-        //Timber.i("current %s", DateUtils.toDurationFriendly(getContext(), DateTimeUtils.toDate(current)));
-        //Date date = DateTimeUtils.toDate(current.minus(45, ChronoUnit.SECONDS));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
-        //date = DateTimeUtils.toDate(current.minus(21, ChronoUnit.MINUTES));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
-        //date = DateTimeUtils.toDate(current.minus(17, ChronoUnit.HOURS));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
-        //date = DateTimeUtils.toDate(current.minus(34, ChronoUnit.HOURS));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
-        //date = DateTimeUtils.toDate(current.minus(3, ChronoUnit.DAYS));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
-        //date = DateTimeUtils.toDate(current.minus(9, ChronoUnit.DAYS));
-        //Timber.i("%s %s", date, DateUtils.toDurationFriendly(getContext(), date));
     }
 
     @Nullable

@@ -28,12 +28,12 @@ public class LsPushJobCreator implements JobCreator {
 
     public LsPushJobCreator(Context context) {
         mContext = context;
-        Timber.i("add job creator");
+        Timber.v("add job creator");
     }
 
     @Override
     public Job create(String tag) {
-        Timber.i("start job");
+        Timber.v("start job");
         if (SyncJob.TAG.equals(tag)) {
             return new SyncJob(mContext);
         }

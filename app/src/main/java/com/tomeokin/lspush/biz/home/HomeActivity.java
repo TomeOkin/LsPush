@@ -100,8 +100,7 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
                 //Navigator.moveTo(this, HomeFragment.class, null, false);
                 enter();
             } else {
-                Intent intent = new Intent(this, AuthActivity.class);
-                startActivity(intent);
+                AuthActivity.start(this);
                 finish();
             }
         }
@@ -111,19 +110,19 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
         SyncService.start(this);
         mServiceConnection = new ServiceConnection() {
             public void onServiceConnected(ComponentName className, IBinder service) {
-                Timber.i("sync service connected");
+                Timber.v("sync service connected");
                 SyncService.SyncBinder binder = (SyncService.SyncBinder) service;
                 binder.getService().sync(new SyncService.Callback() {
                     @Override
                     public void onSuccess() {
-                        Timber.i("sync service onSuccess");
                         Navigator.moveTo(HomeActivity.this, HomeFragment.class, null, false);
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        // TODO: 2016/10/11 show message or another
-                        Timber.i("sync service onFailure");
+                        Timber.w("sync service onFailure");
+                        AuthActivity.start(HomeActivity.this);
+                        finish();
                     }
                 });
             }

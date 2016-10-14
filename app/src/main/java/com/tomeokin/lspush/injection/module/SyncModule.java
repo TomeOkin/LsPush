@@ -16,7 +16,7 @@
 package com.tomeokin.lspush.injection.module;
 
 import com.google.gson.Gson;
-import com.tomeokin.lspush.biz.usercase.RefreshTokenAction;
+import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 

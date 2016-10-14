@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.biz.usercase;
+package com.tomeokin.lspush.biz.usercase.sync;
 
 import com.google.gson.Gson;
 import com.tomeokin.lspush.data.crypt.Crypto;

@@ -43,7 +43,7 @@ public class SyncJob extends Job {
      */
     @SuppressWarnings("UnusedParameters")
     public static int start(JobManager jobManager, long interval, long flex) {
-        Timber.i("call start sync job");
+        Timber.v("call start sync job");
         return new JobRequest.Builder(TAG).setPeriodic(interval, flex)
             .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
             .build()

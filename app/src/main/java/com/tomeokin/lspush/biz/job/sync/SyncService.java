@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 
 import com.evernote.android.job.JobManager;
 import com.tomeokin.lspush.LsPushApplication;
-import com.tomeokin.lspush.biz.usercase.RefreshTokenAction;
+import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.NetworkUtils;
@@ -118,7 +118,7 @@ public class SyncService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         mJobId = intent == null ? -1 : intent.getIntExtra(EXTRA_JOB_ID, -1);
-        Timber.d("onBind extra_job_id is %d", mJobId);
+        Timber.v("onBind extra_job_id is %d", mJobId);
         return new SyncBinder();
     }
 
@@ -131,14 +131,13 @@ public class SyncService extends Service {
             return;
         }
 
-        Timber.d("getAccessResponseObservable start");
         mLocalUserInfoAction.getAccessResponseObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    Timber.d("doOnError");
+                    Timber.w(throwable, "getAccessResponseObservable");
                     if (callback != null) {
                         callback.onFailure(throwable);
                     }
@@ -148,7 +147,7 @@ public class SyncService extends Service {
             .doOnNext(new Action1<AccessResponse>() {
                 @Override
                 public void call(AccessResponse accessResponse) {
-                    Timber.d("doOnNext");
+                    Timber.v("doOnNext");
                     if (accessResponse != null) {
                         refresh(accessResponse, callback);
                     } else {
@@ -159,11 +158,9 @@ public class SyncService extends Service {
                 }
             })
             .subscribe();
-        Timber.d("getAccessResponseObservable end");
     }
 
     private void refresh(final AccessResponse old, final Callback callback) {
-        Timber.d("refresh function");
         LocalDateTime now = LocalDateTime.now();
         Instant instantExpire = Instant.ofEpochSecond(old.getExpireTime());
         LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());
@@ -177,16 +174,16 @@ public class SyncService extends Service {
             if (now.isAfter(targetExpire)) {
                 if (shouldUpdateByPassword(now, old.getRefreshTime())) {
                     // need refresh by password
-                    Timber.d("need refresh by password");
+                    Timber.v("need refresh by password");
                     updateByPassword(old, callback);
                 } else {
                     // need refresh by refreshData
-                    Timber.d("need refresh by refreshData");
+                    Timber.v("need refresh by refreshData");
                     updateRefreshToken(old, callback);
                 }
             } else {
                 // need refresh by refresh token
-                Timber.d("need refresh by refresh token");
+                Timber.v("need refresh by refresh token");
                 updateExpireToken(old, callback);
             }
         }
@@ -206,7 +203,7 @@ public class SyncService extends Service {
             .doOnError(new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    Timber.d("doOnError");
+                    Timber.w(throwable, "updateExpireToken");
                     callback.onFailure(throwable);
                 }
             })
@@ -214,7 +211,6 @@ public class SyncService extends Service {
             .doOnNext(new Action1<AccessResponse>() {
                 @Override
                 public void call(AccessResponse accessResponse) {
-                    Timber.d("doOnNext");
                     old.setExpireTime(accessResponse.getExpireTime());
                     old.setExpireToken(accessResponse.getExpireToken());
                     updateAccessResponse(old, callback);
@@ -231,7 +227,7 @@ public class SyncService extends Service {
             .doOnError(new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    Timber.d("doOnError");
+                    Timber.w(throwable, "updateRefreshToken");
                     callback.onFailure(throwable);
                 }
             })
@@ -239,7 +235,6 @@ public class SyncService extends Service {
             .doOnNext(new Action1<AccessResponse>() {
                 @Override
                 public void call(AccessResponse accessResponse) {
-                    Timber.d("doOnNext");
                     old.setExpireTime(accessResponse.getExpireTime());
                     old.setExpireToken(accessResponse.getExpireToken());
                     old.setRefreshTime(accessResponse.getRefreshTime());
@@ -261,7 +256,7 @@ public class SyncService extends Service {
             .doOnError(new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    Timber.d("doOnError");
+                    Timber.w(throwable, "update AccessResponse by password");
                     callback.onFailure(throwable);
                 }
             })
@@ -269,7 +264,6 @@ public class SyncService extends Service {
             .doOnNext(new Action1<AccessResponse>() {
                 @Override
                 public void call(AccessResponse accessResponse) {
-                    Timber.d("doOnNext");
                     old.setExpireTime(accessResponse.getExpireTime());
                     old.setExpireToken(accessResponse.getExpireToken());
                     old.setRefreshTime(accessResponse.getRefreshTime());
@@ -286,7 +280,7 @@ public class SyncService extends Service {
             .doOnError(new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
-                    Timber.d("doOnError");
+                    Timber.w(throwable, "updateAccessResponse");
                     callback.onFailure(throwable);
                 }
             })
@@ -294,7 +288,6 @@ public class SyncService extends Service {
             .doOnNext(new Action1<AccessResponse>() {
                 @Override
                 public void call(AccessResponse accessResponse) {
-                    Timber.d("doOnNext");
                     // 检查定时器或者调整定时器
                     scheduleJob(callback);
                 }

@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.auth;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -41,6 +43,11 @@ public class AuthActivity extends BaseActivity implements ProvideComponent<AuthC
                 .build();
         }
         return mComponent;
+    }
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, AuthActivity.class);
+        context.startActivity(starter);
     }
 
     @Override
