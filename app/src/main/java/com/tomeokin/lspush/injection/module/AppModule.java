@@ -59,7 +59,6 @@ public class AppModule {
     @Singleton
     JobManager provideJobManager(@AppContext Context context) {
         JobManager.create(context).addJobCreator(new LsPushJobCreator(context));
-        JobManager.instance().cancelAll();
         return JobManager.instance();
     }
 }

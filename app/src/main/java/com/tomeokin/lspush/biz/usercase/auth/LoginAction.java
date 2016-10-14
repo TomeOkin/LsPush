@@ -29,6 +29,9 @@ import com.tomeokin.lspush.data.model.LoginData;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import retrofit2.Call;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 public class LoginAction extends BaseAction {
@@ -56,6 +59,27 @@ public class LoginAction extends BaseAction {
         checkAndCancel(mLoginCall);
         mLoginCall = mLsPushService.login(cryptoToken);
         mLoginCall.enqueue(new CommonCallback<AccessResponse>(mResource, UserScene.ACTION_LOGIN, mCallback));
+    }
+
+    public Observable<AccessResponse> loginObservable(final LoginData loginData) {
+        return Observable.create(new Observable.OnSubscribe<CryptoToken>() {
+            @Override
+            public void call(Subscriber<? super CryptoToken> subscriber) {
+                String data = mGson.toJson(loginData, LoginData.class);
+                try {
+                    CryptoToken cryptoToken = Crypto.get().encrypt(data);
+                    subscriber.onNext(cryptoToken);
+                } catch (Exception e) {
+                    Timber.w(e);
+                    subscriber.onError(e);
+                }
+            }
+        }).concatMap(new Func1<CryptoToken, Observable<AccessResponse>>() {
+            @Override
+            public Observable<AccessResponse> call(CryptoToken cryptoToken) {
+                return mLsPushService.loginObservable(cryptoToken);
+            }
+        });
     }
 
     @Override

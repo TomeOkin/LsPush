@@ -15,82 +15,90 @@
  */
 package com.tomeokin.lspush.biz.job.sync;
 
-import android.app.AlarmManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
+import java.util.concurrent.CountDownLatch;
+
 import timber.log.Timber;
 
 public class SyncJob extends Job {
     public static final String TAG = "SyncJob";
-    private static final long SYNC_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
-    private static final long SYNC_INTERVAL_FLEX = AlarmManager.INTERVAL_HOUR;
     private Context mContext;
 
     public SyncJob(Context context) {
         mContext = context.getApplicationContext();
     }
 
-    //public static int start() {
-    //    Timber.i("call start sync job");
-    //    return new JobRequest.Builder(TAG).setPeriodic(SYNC_INTERVAL, SYNC_INTERVAL_FLEX)
-    //        .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-    //        .build()
-    //        .schedule();
-    //}
-
     /**
      * @param jobManager only want to emphasize that it depend on jobManager
      */
     @SuppressWarnings("UnusedParameters")
-    public static int start(JobManager jobManager) {
+    public static int start(JobManager jobManager, long interval, long flex) {
         Timber.i("call start sync job");
-        return new JobRequest.Builder(TAG).setExecutionWindow(3_000, 5_000)
+        return new JobRequest.Builder(TAG).setPeriodic(interval, flex)
             .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
             .build()
             .schedule();
     }
 
+    ///**
+    // * @param jobManager only want to emphasize that it depend on jobManager
+    // */
+    //@SuppressWarnings("UnusedParameters")
+    //public static int start(JobManager jobManager) {
+    //    Timber.i("call start sync job");
+    //    return new JobRequest.Builder(TAG).setExecutionWindow(3_000, 5_000)
+    //        .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+    //        .build()
+    //        .schedule();
+    //}
+
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
-        //final CountDownLatch countDownLatch = new CountDownLatch(1);
-        //ServiceConnection serviceConnection = new ServiceConnection() {
-        //    public void onServiceConnected(ComponentName className, IBinder service) {
-        //        SyncService.SyncBinder binder = (SyncService.SyncBinder) service;
-        //        binder.getService().sync(new SyncService.Callback() {
-        //            @Override
-        //            public void onSuccess() {
-        //                countDownLatch.countDown();
-        //            }
-        //
-        //            @Override
-        //            public void onFailure(Throwable t) {
-        //                countDownLatch.countDown();
-        //            }
-        //        });
-        //        Timber.i("sync service connected");
-        //    }
-        //
-        //    public void onServiceDisconnected(ComponentName className) {
-        //        countDownLatch.countDown();
-        //        Timber.i("sync service disconnected");
-        //    }
-        //};
-        //
-        //final Intent intent = SyncService.newIntent(mContext, params.getId());
-        ////mContext.startService(intent);
-        //mContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        //try {
-        //    countDownLatch.await();
-        //} catch (InterruptedException ignored) {
-        //}
-        //mContext.unbindService(serviceConnection);
-        //Timber.i("job existed");
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                Timber.i("sync service connected");
+
+                SyncService.SyncBinder binder = (SyncService.SyncBinder) service;
+                binder.getService().sync(new SyncService.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        countDownLatch.countDown();
+                    }
+                });
+            }
+
+            public void onServiceDisconnected(ComponentName className) {
+                Timber.i("sync service disconnected");
+                countDownLatch.countDown();
+            }
+        };
+
+        SyncService.start(mContext);
+        final Intent intent = SyncService.newIntent(mContext, params.getId());
+        mContext.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
+        }
+        mContext.unbindService(serviceConnection);
+        Timber.i("job existed");
         return Result.SUCCESS;
     }
 }

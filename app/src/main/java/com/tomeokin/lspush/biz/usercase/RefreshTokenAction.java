@@ -25,6 +25,7 @@ import com.tomeokin.lspush.data.remote.LsPushService;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 public class RefreshTokenAction {
@@ -41,20 +42,25 @@ public class RefreshTokenAction {
     }
 
     public Observable<AccessResponse> refreshRefreshToken(final AccessResponse accessResponse) {
-        return Observable.create(new Observable.OnSubscribe<AccessResponse>() {
+        return Observable.create(new Observable.OnSubscribe<CryptoToken>() {
             @Override
-            public void call(Subscriber<? super AccessResponse> subscriber) {
+            public void call(Subscriber<? super CryptoToken> subscriber) {
                 RefreshData refreshData = new RefreshData();
                 refreshData.setRefreshToken(accessResponse.getRefreshToken());
                 refreshData.setUserId(accessResponse.getUser().getUid());
                 String data = mGson.toJson(refreshData, RegisterData.class);
                 try {
                     CryptoToken cryptoToken = Crypto.get().encrypt(data);
-                    mLsPushService.refreshRefreshToken(cryptoToken);
+                    subscriber.onNext(cryptoToken);
                 } catch (Exception e) {
                     Timber.w(e);
                     subscriber.onError(e);
                 }
+            }
+        }).concatMap(new Func1<CryptoToken, Observable<? extends AccessResponse>>() {
+            @Override
+            public Observable<? extends AccessResponse> call(CryptoToken cryptoToken) {
+                return mLsPushService.refreshRefreshToken(cryptoToken);
             }
         });
     }

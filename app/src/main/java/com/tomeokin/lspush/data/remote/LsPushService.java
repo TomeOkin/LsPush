@@ -39,6 +39,9 @@ public interface LsPushService {
     @POST("api/user/login")
     Call<AccessResponse> login(@Body CryptoToken cryptoToken);
 
+    @POST("api/user/login")
+    Observable<AccessResponse> loginObservable(@Body CryptoToken cryptoToken);
+
     @POST("api/user/refreshExpireToken")
     Observable<AccessResponse> refreshExpireToken(@Body CryptoToken cryptoToken);
 

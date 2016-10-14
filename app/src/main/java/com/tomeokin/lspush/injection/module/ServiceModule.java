@@ -13,18 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.injection.component;
+package com.tomeokin.lspush.injection.module;
 
-import com.tomeokin.lspush.biz.job.sync.SyncService;
-import com.tomeokin.lspush.injection.module.AuthModule;
-import com.tomeokin.lspush.injection.module.ServiceModule;
-import com.tomeokin.lspush.injection.module.SyncModule;
+import android.app.Service;
+import android.content.Context;
+
+import com.tomeokin.lspush.injection.qualifier.ActivityContext;
 import com.tomeokin.lspush.injection.scope.PerActivity;
 
-import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 
-@PerActivity
-@Component(dependencies = AppComponent.class, modules = { ServiceModule.class, SyncModule.class, AuthModule.class})
-public interface SyncComponent {
-    void inject(SyncService syncService);
+@Module
+public class ServiceModule {
+    private final Service service;
+
+    public ServiceModule(Service service) {
+        this.service = service;
+    }
+
+    @Provides
+    @PerActivity
+    Service service() {
+        return service;
+    }
+
+    @Provides
+    @PerActivity
+    @ActivityContext
+    Context provideServiceContext() {
+        return service;
+    }
 }
