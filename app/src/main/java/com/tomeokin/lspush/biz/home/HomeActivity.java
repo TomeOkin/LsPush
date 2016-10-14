@@ -128,7 +128,7 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
             }
 
             public void onServiceDisconnected(ComponentName className) {
-                Timber.i("sync service disconnected");
+                Timber.v("sync service disconnected");
             }
         };
 

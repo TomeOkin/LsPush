@@ -14,8 +14,8 @@
         android:layout_weight="1"
         android:background="@drawable/dialog_row_bottom"
         android:gravity="center"
-        android:minHeight="@dimen/row_height_small"
         android:maxLines="1"
+        android:minHeight="@dimen/row_height_small"
         android:textColor="@color/grey_9_whiteout"
         android:textStyle="bold"
         tools:text="取消" />
@@ -35,8 +35,8 @@
         android:layout_weight="1"
         android:background="@drawable/dialog_row_bottom"
         android:gravity="center"
-        android:minHeight="@dimen/row_height_small"
         android:maxLines="1"
+        android:minHeight="@dimen/row_height_small"
         android:textColor="@color/grey_9_whiteout"
         android:textStyle="bold"
         tools:text="确定" />

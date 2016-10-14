@@ -287,7 +287,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
                 startActivity(intent);
                 getActivity().finish();
             }
-            Timber.i("register success");
+            Timber.v("register success");
             mNextButtonAdapter.syncRevokeWaiting();
         }
     }

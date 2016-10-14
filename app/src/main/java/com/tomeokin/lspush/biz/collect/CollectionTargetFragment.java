@@ -81,9 +81,9 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
     public void onDialogActionClick(DialogInterface dialog, int requestCode, int which) {
         if (requestCode == REQUEST_DIALOG) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                Timber.i("ok is click");
+                Timber.v("ok is click");
             } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-                Timber.i("cancel is click");
+                Timber.v("cancel is click");
             }
         }
     }

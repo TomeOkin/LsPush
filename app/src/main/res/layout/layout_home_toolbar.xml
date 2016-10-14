@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     style="@style/Widget.LsPush.Toolbar"
-    app:elevation="@dimen/toolbar_elevation"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:orientation="vertical"
     android:outlineProvider="none"
-    app:layout_scrollFlags="scroll|enterAlways">
+    app:elevation="@dimen/toolbar_elevation">
+
+    <!--app:layout_scrollFlags="scroll|enterAlways"-->
 
     <!--<FrameLayout-->
     <!--android:layout_width="match_parent"-->

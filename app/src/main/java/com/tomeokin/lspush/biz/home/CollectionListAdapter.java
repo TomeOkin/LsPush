@@ -98,8 +98,11 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             public void onClick(View v) {
                 final int position = (int) v.getTag();
                 final Collection collection = mColSortList.get(position);
-                collection.setHasFavor(!collection.isHasFavor());
-                updateFavorIcon(holder.favorIcon, collection.isHasFavor());
+                final boolean hasFavor = !collection.isHasFavor();
+                collection.setHasFavor(hasFavor);
+                collection.setFavorCount(collection.getFavorCount() + (hasFavor ? 1 : -1));
+                updateFavorIcon(holder.favorIcon, hasFavor);
+                holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
 
                 if (mCallback != null) {
                     mCallback.onFavorChange(collection);

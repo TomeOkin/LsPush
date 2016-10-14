@@ -190,7 +190,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:titleTextAppearance">@style/TitleTextAppearance</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/grey_7_transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

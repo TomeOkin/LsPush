@@ -12,9 +12,9 @@
         android:layout_height="match_parent"
         android:freezesText="true"
         android:gravity="center"
+        android:maxLines="1"
         android:paddingLeft="@dimen/textField_padding"
         android:paddingRight="@dimen/textField_padding"
-        android:maxLines="1"
         android:textColor="@color/white"
         android:textStyle="bold"
         tools:text="CN +86" />

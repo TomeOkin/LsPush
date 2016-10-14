@@ -68,7 +68,7 @@ public class SyncJob extends Job {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         ServiceConnection serviceConnection = new ServiceConnection() {
             public void onServiceConnected(ComponentName className, IBinder service) {
-                Timber.i("sync service connected");
+                Timber.v("sync service connected");
 
                 SyncService.SyncBinder binder = (SyncService.SyncBinder) service;
                 binder.getService().sync(new SyncService.Callback() {
@@ -85,7 +85,7 @@ public class SyncJob extends Job {
             }
 
             public void onServiceDisconnected(ComponentName className) {
-                Timber.i("sync service disconnected");
+                Timber.v("sync service disconnected");
                 countDownLatch.countDown();
             }
         };
@@ -98,7 +98,7 @@ public class SyncJob extends Job {
         } catch (InterruptedException ignored) {
         }
         mContext.unbindService(serviceConnection);
-        Timber.i("job existed");
+        Timber.v("job existed");
         return Result.SUCCESS;
     }
 }

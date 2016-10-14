@@ -36,8 +36,8 @@
         layout="@layout/layout_auth_next" />
 
     <include
-        tools:visibility="gone"
         android:id="@+id/next_button_2"
-        layout="@layout/layout_auth_next" />
+        layout="@layout/layout_auth_next"
+        tools:visibility="gone" />
 
 </merge>

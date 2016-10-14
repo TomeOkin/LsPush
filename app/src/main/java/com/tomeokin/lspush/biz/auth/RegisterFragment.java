@@ -358,12 +358,12 @@ public class RegisterFragment extends BaseFragment
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Timber.i("permission granted %d", requestCode);
+        Timber.v("permission granted %d", requestCode);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Timber.i("permission denied %d", requestCode);
+        Timber.v("permission denied %d", requestCode);
 
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
@@ -386,7 +386,7 @@ public class RegisterFragment extends BaseFragment
 
     // 根据 uri 裁剪图片
     private void cropImage(@NonNull Uri input) {
-        Timber.i("Uri.toString: %s", input.toString());
+        Timber.v("Uri.toString: %s", input.toString());
         if (!MimeTypeUtils.isImage(getContext(), input)) {
             mNotificationBar.showTemporaryInverse(getString(R.string.not_image_file));
             return;
@@ -481,7 +481,7 @@ public class RegisterFragment extends BaseFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK && requestCode != CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            Timber.i("request-code-failure %d, result: %d", requestCode, resultCode);
+            Timber.v("request-code-failure %d, result: %d", requestCode, resultCode);
             return;
         }
         if (requestCode == REQUEST_PICK_IMAGE) {
@@ -513,13 +513,13 @@ public class RegisterFragment extends BaseFragment
                     return;
                 }
 
-                Timber.i("crop-image result uri: %s", mUserAvatarFile.getAbsolutePath());
+                Timber.v("crop-image result uri: %s", mUserAvatarFile.getAbsolutePath());
                 Glide.with(this).load(mUserAvatarFile).diskCacheStrategy(DiskCacheStrategy.ALL)
                     // when using transform or bitmapTransform, don't use fitCenter() or centerCrop()
                     .transform(new CircleTransform(getContext())).override(450, 450).into(mUserAvatar);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 mNotificationBar.showTemporaryInverse(getString(R.string.could_not_access_image));
-                Timber.i(result.getError(), "crop image failure");
+                Timber.v(result.getError(), "crop image failure");
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -623,7 +623,7 @@ public class RegisterFragment extends BaseFragment
                 startActivity(intent);
                 getActivity().finish();
             }
-            Timber.i("register success");
+            Timber.v("register success");
             mNextButtonAdapter.syncRevokeWaiting();
         } else if (action == UserScene.ACTION_UPLOAD) {
             UploadResponse res = (UploadResponse) response;
