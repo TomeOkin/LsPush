@@ -62,7 +62,7 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_collection_target, container, false);
-        mWebView = (WebView) view.findViewById(R.id.webview);
+        mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.loadUrl(mUrl);
         mWebView.getSettings().setJavaScriptEnabled(true);
         // https://labs.mwrinfosecurity.com/blog/webview-addjavascriptinterface-remote-code-execution/

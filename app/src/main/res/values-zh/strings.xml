@@ -65,4 +65,8 @@
     <string name="hours_ago">%d 小时前</string>
     <string name="yesterday">昨天</string>
     <string name="days_ago">%d 天前</string>
+
+    <string name="collect">收藏</string>
+    <string name="copy_link">复制链接</string>
+    <string name="share">分享到</string>
 </resources>

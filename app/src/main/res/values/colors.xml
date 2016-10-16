@@ -3,8 +3,13 @@
     <!--<color name="colorPrimary">#3F51B5</color>-->
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->
-    <color name="colorPrimary">#3D84A8</color>
-    <color name="colorPrimaryDark">#48466D</color>
+
+    <!--<color name="colorPrimary">#3D84A8</color>-->
+    <!--<color name="colorPrimaryDark">#48466D</color>-->
+    <!--<color name="colorAccent">#F6416C</color>-->
+
+    <color name="colorPrimary">@color/blue_6_whiteout</color>
+    <color name="colorPrimaryDark">@color/blue_7_whiteout</color>
     <color name="colorAccent">#F6416C</color>
 
     <color name="white">#ffffffff</color>
@@ -147,8 +152,6 @@
 
     <color name="error_state">#ffb30e0e</color>
 
-    <color name="green_medium">@color/green_5</color>
-
     <color name="green_9">#ff0a1304</color>
     <color name="green_8">#ff1e380d</color>
     <color name="green_7">#ff335e15</color>
@@ -158,4 +161,19 @@
     <color name="green_3">#ffb3de95</color>
     <color name="green_2">#ffb3de95</color>
     <color name="green_1">#fff0f9ea</color>
+
+    <color name="green_dark">@color/green_7</color>
+    <color name="green_medium">@color/green_5</color>
+    <color name="green_light">@color/green_3</color>
+
+    <color name="green_9_whiteout">#ff134400</color>
+    <color name="green_8_whiteout">#ff1d6000</color>
+    <color name="green_7_whiteout">#ff338313</color>
+    <color name="green_6_whiteout">#ff4e9f2e</color>
+    <color name="green_5_whiteout">#ff70c050</color>
+    <color name="green_4_whiteout">#ff8dde6d</color>
+    <color name="green_3_whiteout">#ffa5f585</color>
+    <color name="green_2_whiteout">#ffc4ffab</color>
+    <color name="green_1_whiteout">#ffe5ffda</color>
+    <color name="green_0_whiteout">#fff7fff3</color>
 </resources>

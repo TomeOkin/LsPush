@@ -15,7 +15,10 @@
  */
 package com.tomeokin.lspush.data.model;
 
-public class Link {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Link implements Parcelable {
     private long id;
     private String url;
     private String title;
@@ -73,4 +76,30 @@ public class Link {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.title);
+    }
+
+    public Link() {}
+
+    protected Link(Parcel in) {
+        this.id = in.readLong();
+        this.url = in.readString();
+        this.title = in.readString();
+    }
+
+    public static final Parcelable.Creator<Link> CREATOR = new Parcelable.Creator<Link>() {
+        @Override
+        public Link createFromParcel(Parcel source) {return new Link(source);}
+
+        @Override
+        public Link[] newArray(int size) {return new Link[size];}
+    };
 }

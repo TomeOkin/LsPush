@@ -41,7 +41,6 @@ import butterknife.ButterKnife;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
     implements View.OnClickListener {
-    //private List<Collection> mColList = null;
     private Callback mCallback = null;
     private final SortedList.BatchedCallback<Collection> mBatchCallback =
         new SortedList.BatchedCallback<>(new CollectionSortCallback());
@@ -144,12 +143,12 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     }
 
     private void updateFavorIcon(ImageView favorIcon, boolean hasFavor) {
-        favorIcon.setImageResource(hasFavor ? R.drawable.heart_solid : R.drawable.heart_hollow);
+        favorIcon.setImageResource(hasFavor ? R.drawable.ic_action_heart_solid : R.drawable.ic_action_heart_hollow);
     }
 
     private void setExplorers(ViewGroup container, @Nullable List<User> explorers) {
         final Context context = container.getContext();
-        // TODO: 2016/10/8 performance improve
+        // // TODO: 2016/10/8 performance improve
         //container.removeAllViews();
         //for (User explorer : explorers) {
         //    final ImageView avatar =
@@ -185,7 +184,9 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         collection.setHasRead(true);
         TextView title = (TextView) v.findViewById(R.id.title_tv);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
-        // TODO: 2016/10/9 move to web view
+        if (mCallback != null) {
+            mCallback.onOpenCollectionUrl(collection);
+        }
     }
 
     @Override
@@ -216,5 +217,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         void onFavorChange(Collection collection);
 
         void onShowMoreExplorers(Collection collection);
+
+        void onOpenCollectionUrl(Collection collection);
     }
 }

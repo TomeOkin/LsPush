@@ -34,8 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  */
 @RunWith(AndroidJUnit4.class)
 public class HomeActivityUITest {
-    @Rule public final ActivityTestRule<HomeActivity> main =
-            new ActivityTestRule<>(HomeActivity.class);
+    @Rule public final ActivityTestRule<HomeActivity> main = new ActivityTestRule<>(HomeActivity.class);
 
     @Test
     public void shouldBeAbleToLaunchMainScreen() {

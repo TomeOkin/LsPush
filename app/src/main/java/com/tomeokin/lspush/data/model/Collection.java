@@ -15,10 +15,13 @@
  */
 package com.tomeokin.lspush.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 import java.util.List;
 
-public class Collection {
+public class Collection implements Parcelable {
     private long id;
     private User user;
     private Link link;
@@ -186,4 +189,48 @@ public class Collection {
         result = 31 * result + (hasRead ? 1 : 0);
         return result;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeParcelable(this.user, flags);
+        dest.writeParcelable(this.link, flags);
+        dest.writeString(this.description);
+        dest.writeString(this.image);
+        dest.writeLong(this.createDate != null ? this.createDate.getTime() : -1);
+        dest.writeLong(this.updateDate != null ? this.updateDate.getTime() : -1);
+        dest.writeStringList(this.tags);
+        dest.writeTypedList(this.explorers);
+        dest.writeLong(this.favorCount);
+        dest.writeByte(this.hasFavor ? (byte) 1 : (byte) 0);
+    }
+
+    public Collection() {}
+
+    protected Collection(Parcel in) {
+        this.id = in.readLong();
+        this.user = in.readParcelable(User.class.getClassLoader());
+        this.link = in.readParcelable(Link.class.getClassLoader());
+        this.description = in.readString();
+        this.image = in.readString();
+        long tmpCreateDate = in.readLong();
+        this.createDate = tmpCreateDate == -1 ? null : new Date(tmpCreateDate);
+        long tmpUpdateDate = in.readLong();
+        this.updateDate = tmpUpdateDate == -1 ? null : new Date(tmpUpdateDate);
+        this.tags = in.createStringArrayList();
+        this.explorers = in.createTypedArrayList(User.CREATOR);
+        this.favorCount = in.readLong();
+        this.hasFavor = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Collection> CREATOR = new Parcelable.Creator<Collection>() {
+        @Override
+        public Collection createFromParcel(Parcel source) {return new Collection(source);}
+
+        @Override
+        public Collection[] newArray(int size) {return new Collection[size];}
+    };
 }

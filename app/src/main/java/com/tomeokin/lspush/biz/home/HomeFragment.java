@@ -188,4 +188,9 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
     public void onShowMoreExplorers(Collection collection) {
 
     }
+
+    @Override
+    public void onOpenCollectionUrl(Collection collection) {
+        CollectionWebViewActivity.start(getActivity(), collection);
+    }
 }

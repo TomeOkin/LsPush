@@ -7,4 +7,5 @@
     <integer name="direct_gallery_grid_num_columns">3</integer>
     <integer name="direct_max_message_length">500</integer>
     <integer name="max_comments_length">2200</integer>
+    <integer name="slide_animation_duration">300</integer>
 </resources>

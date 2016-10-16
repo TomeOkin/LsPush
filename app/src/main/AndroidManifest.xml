@@ -73,7 +73,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Auth" />
 
-        <service android:name=".biz.job.sync.SyncService" android:exported="false" />
+        <activity
+            android:name=".biz.home.CollectionWebViewActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".biz.job.sync.SyncService"
+            android:exported="false" />
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

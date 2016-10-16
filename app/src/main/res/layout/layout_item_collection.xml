@@ -6,15 +6,15 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/page_vertical_margin"
     android:clickable="true"
+    app:cardBackgroundColor="@color/collection_background"
     app:cardElevation="0.5dp"
-    app:cardMaxElevation="0dp">
+    app:cardMaxElevation="0dp"
+    app:contentPadding="@dimen/list_item_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/collection_background"
-        android:orientation="vertical"
-        android:padding="@dimen/list_item_padding">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -133,7 +133,17 @@
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@id/favor_count"
-                tools:src="@drawable/heart_hollow" />
+                tools:src="@drawable/ic_action_heart_solid" />
+
+            <ImageView
+                android:id="@+id/pin_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_small"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@id/favor_iv"
+                tools:src="@drawable/ic_action_pin_solid"/>
 
         </RelativeLayout>
 

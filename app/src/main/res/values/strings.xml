@@ -73,4 +73,8 @@
     <string name="hours_ago">%d hour ago</string>
     <string name="yesterday">yesterday</string>
     <string name="days_ago">%d days ago</string>
+
+    <string name="collect">Collect</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="share">Share with</string>
 </resources>
