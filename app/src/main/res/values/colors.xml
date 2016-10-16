@@ -54,6 +54,9 @@
     <color name="grey_7_transparent">#fff6f7f7</color>
     <color name="grey_5_transparent">#fffafafa</color>
 
+    <color name="grey_20_transparent_alpha">#33D2D2D2</color>
+    <color name="grey_10_transparent_alpha">#1AD2D2D2</color>
+
     <color name="grey_9_whiteout">#ff262626</color>
     <color name="grey_8_whiteout">#ff363636</color>
     <color name="grey_7_whiteout">#ff555555</color>

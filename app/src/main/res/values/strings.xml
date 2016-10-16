@@ -77,4 +77,5 @@
     <string name="collect">Collect</string>
     <string name="copy_link">Copy Link</string>
     <string name="share">Share with</string>
+    <string name="refresh">Refresh</string>
 </resources>

@@ -46,4 +46,10 @@
     <dimen name="list_item_max_content">320dp</dimen>
 
     <dimen name="icon_small">28dp</dimen>
+    <dimen name="icon_large">48dp</dimen>
+    <dimen name="menu_item_left_padding">16dp</dimen>
+    <dimen name="menu_item_right_padding">32dp</dimen>
+
+    <dimen name="progressBar_height_small">1dp</dimen>
+    <dimen name="progressBar_height_medium">1.5dp</dimen>
 </resources>

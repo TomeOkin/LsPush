@@ -183,6 +183,21 @@
         <item name="atg_verticalPadding">@dimen/tag_vertical_padding</item>
     </style>
 
+    <style name="WebViewMenuItemTextView">
+        <item name="android:ellipsize">end</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingLeft">@dimen/menu_item_left_padding</item>
+        <item name="android:paddingRight">@dimen/menu_item_right_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/font_medium</item>
+    </style>
+
+    <style name="WebViewMenuItem">
+        <item name="android:background">@drawable/web_view_menu_item_background</item>
+        <item name="android:gravity">center_vertical|left</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>

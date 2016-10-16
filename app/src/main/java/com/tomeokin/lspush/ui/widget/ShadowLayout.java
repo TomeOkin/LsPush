@@ -153,7 +153,9 @@ public class ShadowLayout extends FrameLayout {
         shadowPaint.setAntiAlias(true);
         shadowPaint.setColor(fillColor);
         shadowPaint.setStyle(Paint.Style.FILL);
-        shadowPaint.setShadowLayer(shadowRadius, dx, dy, shadowColor);
+        if (!isInEditMode()) {
+            shadowPaint.setShadowLayer(shadowRadius, dx, dy, shadowColor);
+        }
 
         canvas.drawRoundRect(shadowRect, cornerRadius, cornerRadius, shadowPaint);
 

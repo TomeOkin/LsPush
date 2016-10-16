@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menuLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <com.tomeokin.lspush.ui.widget.ShadowLayout
+        android:id="@+id/shadowLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/menu_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <LinearLayout
+                android:id="@+id/action_refresh"
+                style="WebViewMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_height_small">
+
+                <TextView
+                    android:id="@+id/action_refresh_tv"
+                    style="@style/WebViewMenuItemTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/refresh" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/action_collect"
+                style="WebViewMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_height_small">
+
+                <TextView
+                    android:id="@+id/action_collect_tv"
+                    style="@style/WebViewMenuItemTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/collect" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/action_copy_link"
+                style="WebViewMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_height_small">
+
+                <TextView
+                    android:id="@+id/action_copy_link_tv"
+                    style="@style/WebViewMenuItemTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/copy_link" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/action_share"
+                style="WebViewMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_height_small">
+
+                <TextView
+                    android:id="@+id/action_share_tv"
+                    style="@style/WebViewMenuItemTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/share" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.tomeokin.lspush.ui.widget.ShadowLayout>
+
+</RelativeLayout>
