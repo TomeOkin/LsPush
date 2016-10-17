@@ -55,7 +55,7 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.support.BaseStateCallback;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.home.HomeActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
@@ -191,7 +191,7 @@ public class RegisterFragment extends BaseFragment
         // endregion
 
         // region: TextWatcher and FocusChange Listener
-        mValidWatcher = new BaseTextWatcher() {
+        mValidWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s == mUserIdField.getText()) {

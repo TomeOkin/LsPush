@@ -38,7 +38,7 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.support.BaseStateCallback;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
 import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
@@ -134,7 +134,7 @@ public class CaptchaConfirmationFragment extends BaseFragment implements BaseAct
                 return false;
             }
         });
-        mValidWatcher = new BaseTextWatcher() {
+        mValidWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isFieldValid()) {

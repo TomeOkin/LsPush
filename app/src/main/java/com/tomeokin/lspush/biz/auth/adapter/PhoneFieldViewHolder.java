@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.tomeokin.lspush.biz.auth.CaptchaView;
 import com.tomeokin.lspush.biz.auth.CountryCodePickerDialog;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.CountryCodeData;
@@ -52,7 +52,7 @@ public final class PhoneFieldViewHolder extends LifecycleListener {
         TextView countryCodePicker, TextView nextButton, CaptchaView captchaView, CountryCodeData countryCodeData,
         NextButtonAdapter phoneFieldStateAdapter) {
         mPhoneField = phoneField;
-        mValidWatcher = new BaseTextWatcher() {
+        mValidWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (mCaptchaView.isFieldValid()) {

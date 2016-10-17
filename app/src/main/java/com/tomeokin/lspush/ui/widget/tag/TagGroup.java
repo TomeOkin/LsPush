@@ -30,7 +30,7 @@ import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -660,7 +660,7 @@ public class TagGroup extends ViewGroup {
         }
     };
 
-    private TextWatcher mBeforeTextChangeWatcher = new BaseTextWatcher() {
+    private TextWatcher mBeforeTextChangeWatcher = new TextWatcherAdapter() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             // When the INPUT state tag changed, uncheck the checked tag if exists.

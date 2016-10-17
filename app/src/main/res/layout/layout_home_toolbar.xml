@@ -1,34 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     style="@style/Widget.LsPush.Toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:orientation="vertical"
-    android:outlineProvider="none"
-    app:elevation="@dimen/toolbar_elevation">
-
-    <!--app:layout_scrollFlags="scroll|enterAlways"-->
-
-    <!--<FrameLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:gravity="center"-->
-    <!--android:text="@string/title_latest_collections"-->
-    <!--android:textColor="@color/white"-->
-    <!--android:textSize="@dimen/font_large" />-->
-
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:paddingBottom="8dp"-->
-    <!--android:paddingTop="8dp" />-->
-
-    <!--</FrameLayout>-->
+    android:layout_height="@dimen/toolbar_size"
+    android:outlineProvider="none">
 
 </android.support.v7.widget.Toolbar>

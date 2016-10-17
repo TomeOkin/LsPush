@@ -24,6 +24,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -33,22 +35,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.scalpel.ScalpelFrameLayout;
+import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.ui.widget.ShadowLayout;
+import com.tomeokin.lspush.ui.widget.listener.AnimationListenerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CollectionWebViewActivity extends BaseActivity implements View.OnClickListener {
     private static final String EXTRA_COLLECTION = "extra.collection";
 
-    @Nullable @BindView(R.id.toolbar) Toolbar mToolBar;
-    @BindView(R.id.action_close) ImageButton mCloseButton;
-    @BindView(R.id.action_more) ImageButton mMoreButton;
+    @BindView(R.id.toolbar) Toolbar mToolBar;
     @BindView(R.id.title_tv) TextView mTitle;
+    @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
+    @BindView(R.id.toolbar_action_more) ImageButton mMoreButton;
+
+    @BindView(R.id.menu_layout) View mMenuLayout;
+    @BindView(R.id.shadow_layout) ShadowLayout mShadowLayout;
+
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.webView) WebView mWebView;
+
+    ScalpelFrameLayout mScalpelLayout;
 
     private Collection mCollection;
 
@@ -62,7 +75,14 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collection_web_view);
+        if (BuildConfig.DEBUG) {
+            View root = getLayoutInflater().inflate(R.layout.activity_collection_web_view, null);
+            mScalpelLayout = new ScalpelFrameLayout(this);
+            mScalpelLayout.addView(root);
+            setContentView(mScalpelLayout);
+        } else {
+            setContentView(R.layout.activity_collection_web_view);
+        }
 
         mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
         if (mCollection == null || mCollection.getLink() == null) {
@@ -72,6 +92,7 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
         ButterKnife.bind(this);
         setupToolbar();
         setupWebView();
+        setupMenu();
     }
 
     //@Override
@@ -113,12 +134,10 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     //}
 
     private void setupToolbar() {
-        if (mToolBar != null) {
-            setSupportActionBar(mToolBar);
-            mCloseButton.setOnClickListener(this);
-            mMoreButton.setOnClickListener(this);
-            mTitle.setText(mCollection.getLink().getTitle());
-        }
+        setSupportActionBar(mToolBar);
+        mCloseButton.setOnClickListener(this);
+        mMoreButton.setOnClickListener(this);
+        mTitle.setText(mCollection.getLink().getTitle());
     }
 
     private void setupWebView() {
@@ -146,9 +165,11 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
                 return true;
             }
         });
-        //final WebSettings settings = mWebView.getSettings();
-        //settings.setSupportZoom(true);
         mWebView.loadUrl(mCollection.getLink().getUrl());
+    }
+
+    private void setupMenu() {
+        mMenuLayout.setOnClickListener(this);
     }
 
     @Override
@@ -157,13 +178,62 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
         overridePendingTransition(R.anim.hold, R.anim.slide_right_out);
     }
 
+    protected void showMenu() {
+        mMenuLayout.setVisibility(View.VISIBLE);
+        Animation popupAnim = AnimationUtils.loadAnimation(this, R.anim.popup_layout_show);
+        mShadowLayout.startAnimation(popupAnim);
+    }
+
+    protected void hideMenu() {
+        Animation popupAnim = AnimationUtils.loadAnimation(this, R.anim.popup_layout_hide);
+        mShadowLayout.startAnimation(popupAnim);
+        popupAnim.setAnimationListener(new AnimationListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mMenuLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         final int id = v.getId();
-        if (id == R.id.action_close) {
+        if (id == R.id.toolbar_action_close) {
             onBackPressed();
-        } else if (id == R.id.action_more) {
-
+        } else if (id == R.id.toolbar_action_more) {
+            showMenu();
+        } else if (id == R.id.menu_layout) {
+            hideMenu();
+        } else {
+            dispatchMenuItem(id);
         }
+    }
+
+    public boolean dispatchMenuItem(int id) {
+        switch (id) {
+            case R.id.action_refresh:
+                hideMenu();
+                // TODO: 2016/10/16 refresh
+                return true;
+            case R.id.action_collect:
+                hideMenu();
+                // TODO: 2016/10/16
+                return true;
+            case R.id.action_copy_link:
+                hideMenu();
+                // TODO: 2016/10/16
+                return true;
+            case R.id.action_share:
+                hideMenu();
+                // TODO: 2016/10/16
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @OnClick(R.id.webView_container)
+    public void onBlankPositionClink() {
+        hideMenu();
     }
 }

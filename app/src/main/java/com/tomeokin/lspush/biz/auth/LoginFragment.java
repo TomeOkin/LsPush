@@ -43,7 +43,7 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseStateAdapter;
 import com.tomeokin.lspush.biz.base.support.BaseStateCallback;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.home.HomeActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
@@ -101,7 +101,7 @@ public class LoginFragment extends BaseFragment implements BaseActionCallback, B
         inflater.inflate(R.layout.fragment_login, (ViewGroup) view.findViewById(R.id.content_container), true);
         mUnBinder = ButterKnife.bind(this, view);
 
-        mValidWatcher = new BaseTextWatcher() {
+        mValidWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 mNextButtonAdapter.sync();

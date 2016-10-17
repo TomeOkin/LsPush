@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.CaptchaView;
-import com.tomeokin.lspush.ui.widget.listener.BaseTextWatcher;
+import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
 import com.tomeokin.lspush.common.SoftInputUtils;
 
@@ -50,13 +50,13 @@ public final class EmailFieldViewHolder extends LifecycleListener {
     public EmailFieldViewHolder(Context context, AutoCompleteTextView emailField, ImageView clearButton,
         TextView nextButton, CaptchaView captchaView, NextButtonAdapter emailFieldStateAdapter) {
         mEmailField = emailField;
-        mEmptyWatcher = new BaseTextWatcher() {
+        mEmptyWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
         };
-        mValidWatcher = new BaseTextWatcher() {
+        mValidWatcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (mCaptchaView.isFieldValid()) {

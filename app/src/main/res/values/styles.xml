@@ -138,12 +138,20 @@
 
     <style name="TitleTextAppearance" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/font_extraLarge</item>
     </style>
 
     <style name="Widget.LsPush.Toolbar">
         <item name="android:titleTextAppearance">@style/TitleTextAppearance</item>
         <item name="android:background">?android:colorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="OverflowMenuStyle">
+        <item name="android:popupBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:selectableItemBackgroundBorderless">@drawable/web_view_menu_item_background</item>
     </style>
 
     <style name="Widget.LsPush.TagView">
@@ -208,6 +216,9 @@
         <item name="android:windowBackground">@color/grey_7_transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimaryInverse">@color/black</item>
     </style>
 
     <style name="AppTheme.Auth">

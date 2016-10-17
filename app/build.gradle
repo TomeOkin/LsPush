@@ -235,6 +235,8 @@ dependencies {
 
     compile 'com.evernote:android-job:1.1.0'
 
+    debugCompile 'com.jakewharton.scalpel:scalpel:1.1.2'
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino
