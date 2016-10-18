@@ -115,7 +115,7 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
                 binder.getService().sync(new SyncService.Callback() {
                     @Override
                     public void onSuccess() {
-                        Timber.i("onSuccess");
+                        Timber.d("onSuccess");
                         Navigator.moveTo(HomeActivity.this, HomeFragment.class, null, false);
                     }
 
