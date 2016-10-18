@@ -17,8 +17,6 @@ package com.tomeokin.lspush.biz.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -131,7 +129,6 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
 
     private void setupWebView() {
         mProgressBar.setMax(100);
-        mProgressBar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {

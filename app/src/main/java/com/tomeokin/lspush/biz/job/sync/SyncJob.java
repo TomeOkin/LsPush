@@ -26,6 +26,7 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import timber.log.Timber;
@@ -38,29 +39,35 @@ public class SyncJob extends Job {
         mContext = context.getApplicationContext();
     }
 
-    /**
-     * @param jobManager only want to emphasize that it depend on jobManager
-     */
-    @SuppressWarnings("UnusedParameters")
-    public static int start(JobManager jobManager, long interval, long flex) {
-        Timber.v("call start sync job");
-        return new JobRequest.Builder(TAG).setPeriodic(interval, flex)
-            .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
-            .build()
-            .schedule();
-    }
-
     ///**
     // * @param jobManager only want to emphasize that it depend on jobManager
     // */
     //@SuppressWarnings("UnusedParameters")
-    //public static int start(JobManager jobManager) {
-    //    Timber.i("call start sync job");
-    //    return new JobRequest.Builder(TAG).setExecutionWindow(3_000, 5_000)
+    //public static int start(JobManager jobManager, long interval, long flex) {
+    //    Timber.v("call start sync job");
+    //    return new JobRequest.Builder(TAG).setPeriodic(interval, flex)
     //        .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
     //        .build()
     //        .schedule();
     //}
+
+    /**
+     * @param jobManager only want to emphasize that it depend on jobManager
+     * @param start ms, the execution window start
+     * @param end ms, the execution window end
+     */
+    public static int start(JobManager jobManager, long start, long end) {
+        Set<JobRequest> jobRequests = jobManager.getAllJobRequestsForTag(TAG);
+        if (jobRequests != null && jobRequests.size() != 0) {
+            Timber.v("Already has a %s apply.", TAG);
+            return 0;
+        }
+        Timber.v("Apply a new %s job", TAG);
+        return new JobRequest.Builder(TAG).setExecutionWindow(start, end)
+            .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+            .build()
+            .schedule();
+    }
 
     @NonNull
     @Override

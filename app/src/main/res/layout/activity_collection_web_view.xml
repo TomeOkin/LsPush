@@ -50,7 +50,7 @@
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/progressBar_height_medium"
+        android:layout_height="@dimen/progressBar_height_small"
         android:layout_marginTop="@dimen/toolbar_size"
         android:indeterminate="false"
         android:progressDrawable="@drawable/progress_drawable"

@@ -26,8 +26,8 @@ import android.support.annotation.Nullable;
 
 import com.evernote.android.job.JobManager;
 import com.tomeokin.lspush.LsPushApplication;
-import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
+import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
@@ -53,14 +53,22 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class SyncService extends Service {
-    private static final long EXPIRE_TIME = 24; // hours
+    private static final long EXPIRE_TIME = 24 * 60; // minutes
     private static final long ALARM_TIME = EXPIRE_TIME / 5;
     private static final long SHOULD_REFRESH = EXPIRE_TIME / 5 * 3;
-    private static final Duration SHOULD_EXPIRE_DURATION = Duration.of(SHOULD_REFRESH, ChronoUnit.HOURS);
+    private static final long TIME_UNIT_MINUTE = 60 * 1000;
+    private static final long NEXT_JOB_START = EXPIRE_TIME / 5 * 4 * TIME_UNIT_MINUTE;
+    private static final long NEXT_JOB_FLEX = AlarmManager.INTERVAL_HALF_HOUR;
+    private static final Duration SHOULD_EXPIRE_DURATION = Duration.of(SHOULD_REFRESH, ChronoUnit.MINUTES);
+
+    private static final int UPDATE_BY_PASSWORD = 0;
+    private static final int UPDATE_BY_REFRESH_DATA = 1;
+    private static final int UPDATE_BY_REFRESH_TOKEN = 2;
 
     private static final String EXTRA_JOB_ID = "extra.sync.job.id";
     private SyncComponent mComponent;
@@ -131,33 +139,98 @@ public class SyncService extends Service {
             return;
         }
 
+        //mLocalUserInfoAction.getAccessResponseObservable()
+        //    .subscribeOn(Schedulers.io())
+        //    .observeOn(AndroidSchedulers.mainThread())
+        //    .doOnError(new Action1<Throwable>() {
+        //        @Override
+        //        public void call(Throwable throwable) {
+        //            Timber.w(throwable, "getAccessResponseObservable");
+        //            if (callback != null) {
+        //                callback.onFailure(throwable);
+        //            }
+        //        }
+        //    })
+        //    .observeOn(Schedulers.io())
+        //    .doOnNext(new Action1<AccessResponse>() {
+        //        @Override
+        //        public void call(AccessResponse accessResponse) {
+        //            Timber.v("doOnNext");
+        //            if (accessResponse != null) {
+        //                refresh(accessResponse, callback);
+        //            } else {
+        //                if (callback != null) {
+        //                    callback.onFailure(null);
+        //                }
+        //            }
+        //        }
+        //    })
+        //    .subscribe();
+
         mLocalUserInfoAction.getAccessResponseObservable()
             .subscribeOn(Schedulers.io())
+            .concatMap(new Func1<AccessResponse, Observable<TokenInfo>>() {
+                @Override
+                public Observable<TokenInfo> call(AccessResponse accessResponse) {
+                    return refreshObservable(accessResponse, callback);
+                }
+            })
+            .concatMap(new Func1<TokenInfo, Observable<AccessResponse>>() {
+                @Override
+                public Observable<AccessResponse> call(TokenInfo tokenInfo) {
+                    AccessResponse old = tokenInfo.old;
+                    if (tokenInfo.update == UPDATE_BY_PASSWORD) {
+                        return updateByPasswordObservable(old);
+                    } else if (tokenInfo.update == UPDATE_BY_REFRESH_DATA) {
+                        return updateRefreshTokenObservable(old);
+                    } else if (tokenInfo.update == UPDATE_BY_REFRESH_TOKEN) {
+                        return updateExpireTokenObservable(old);
+                    }
+                    return null;
+                }
+            })
+            .concatMap(new Func1<AccessResponse, Observable<AccessResponse>>() {
+                @Override
+                public Observable<AccessResponse> call(AccessResponse accessResponse) {
+                    return mLocalUserInfoAction.updateAccessResponseObservable(accessResponse);
+                }
+            })
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(new Action1<Throwable>() {
+            .subscribe(new Subscriber<AccessResponse>() {
                 @Override
-                public void call(Throwable throwable) {
-                    Timber.w(throwable, "getAccessResponseObservable");
+                public void onCompleted() {
+                    Timber.i("onCompleted");
                     if (callback != null) {
-                        callback.onFailure(throwable);
+                        callback.onSuccess();
                     }
+                    stopSelf();
                 }
-            })
-            .observeOn(Schedulers.io())
-            .doOnNext(new Action1<AccessResponse>() {
+
                 @Override
-                public void call(AccessResponse accessResponse) {
-                    Timber.v("doOnNext");
-                    if (accessResponse != null) {
-                        refresh(accessResponse, callback);
-                    } else {
-                        if (callback != null) {
-                            callback.onFailure(null);
-                        }
+                public void onError(Throwable e) {
+                    Timber.i("onError");
+                    if (callback != null) {
+                        callback.onFailure(e);
                     }
+                    stopSelf();
                 }
-            })
-            .subscribe();
+
+                @Override
+                public void onNext(AccessResponse accessResponse) {
+                    Timber.i("onNext");
+                    LocalDateTime now = LocalDateTime.now();
+                    Instant instantExpire = Instant.ofEpochSecond(accessResponse.getExpireTime());
+                    LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());
+
+                    Duration duration = Duration.between(now, targetExpire);
+                    scheduleJob(duration);
+                    if (callback != null) {
+                        callback.onSuccess();
+                    }
+                    stopSelf();
+                }
+            });
+
     }
 
     private void refresh(final AccessResponse old, final Callback callback) {
@@ -186,6 +259,64 @@ public class SyncService extends Service {
                 Timber.v("need refresh by refresh token");
                 updateExpireToken(old, callback);
             }
+        }
+    }
+
+    private Observable<TokenInfo> refreshObservable(final AccessResponse old, final Callback callback) {
+        return Observable.create(new Observable.OnSubscribe<TokenInfo>() {
+            @Override
+            public void call(Subscriber<? super TokenInfo> subscriber) {
+                if (old == null) { // not need refresh
+                    Timber.i("");
+                    subscriber.onCompleted();
+                    return;
+                }
+
+                LocalDateTime now = LocalDateTime.now();
+                Instant instantExpire = Instant.ofEpochSecond(old.getExpireTime());
+                LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());
+
+                Duration duration = Duration.between(now, targetExpire);
+                Duration diff = duration.minus(SHOULD_EXPIRE_DURATION);
+                if (!diff.isNegative()) { // no need refresh
+                    scheduleJob(duration);
+                    Timber.i("No Need refresh, active");
+                    subscriber.onCompleted();
+                    return;
+                }
+
+                if (now.isAfter(targetExpire)) {
+                    if (shouldUpdateByPassword(now, old.getRefreshTime())) {
+                        // need refresh by password
+                        Timber.v("need refresh by password");
+                        subscriber.onNext(new TokenInfo(old, UPDATE_BY_PASSWORD));
+                        //updateByPassword(old, callback);
+                    } else {
+                        subscriber.onNext(new TokenInfo(old, UPDATE_BY_REFRESH_DATA));
+                        // need refresh by refreshData
+                        Timber.v("need refresh by refreshData");
+                        //updateRefreshToken(old, callback);
+                    }
+                } else {
+                    subscriber.onNext(new TokenInfo(old, UPDATE_BY_REFRESH_TOKEN));
+                    // need refresh by refresh token
+                    Timber.v("need refresh by refresh token");
+                    //updateExpireToken(old, callback);
+                }
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).doOnCompleted(new Action0() {
+            @Override
+            public void call() {
+                callback.onSuccess();
+            }
+        }).asObservable();
+    }
+
+    private void scheduleJob(Duration duration) {
+        if (duration.toMinutes() >= SHOULD_REFRESH) {
+            SyncJob.start(mJobManager, NEXT_JOB_START, NEXT_JOB_START + NEXT_JOB_FLEX);
+        } else {
+            Timber.w("call scheduleJob only when deadline is full");
         }
     }
 
@@ -219,6 +350,21 @@ public class SyncService extends Service {
             .subscribe();
     }
 
+    private Observable<AccessResponse> updateExpireTokenObservable(final AccessResponse old) {
+        return mRefreshTokenAction.get()
+            .refreshExpireToken(old.getRefreshToken())
+            .subscribeOn(Schedulers.io())
+            .map(new Func1<AccessResponse, AccessResponse>() {
+                @Override
+                public AccessResponse call(AccessResponse accessResponse) {
+                    old.setExpireTime(accessResponse.getExpireTime());
+                    old.setExpireToken(accessResponse.getExpireToken());
+                    return old;
+                }
+            })
+            .asObservable();
+    }
+
     private void updateRefreshToken(final AccessResponse old, final Callback callback) {
         mRefreshTokenAction.get()
             .refreshRefreshToken(old)
@@ -243,6 +389,22 @@ public class SyncService extends Service {
                 }
             })
             .subscribe();
+    }
+
+    private Observable<AccessResponse> updateRefreshTokenObservable(final AccessResponse old) {
+        return mRefreshTokenAction.get()
+            .refreshRefreshToken(old)
+            .subscribeOn(Schedulers.io())
+            .map(new Func1<AccessResponse, AccessResponse>() {
+                @Override
+                public AccessResponse call(AccessResponse accessResponse) {
+                    old.setExpireTime(accessResponse.getExpireTime());
+                    old.setExpireToken(accessResponse.getExpireToken());
+                    old.setRefreshTime(accessResponse.getRefreshTime());
+                    old.setRefreshToken(accessResponse.getRefreshToken());
+                    return old;
+                }
+            }).asObservable();
     }
 
     public void updateByPassword(final AccessResponse old, final Callback callback) {
@@ -274,6 +436,26 @@ public class SyncService extends Service {
             .subscribe();
     }
 
+    private Observable<AccessResponse> updateByPasswordObservable(final AccessResponse old) {
+        LoginData loginData = new LoginData();
+        loginData.setUid(old.getUser().getUid());
+        loginData.setPassword(old.getUser().getPassword());
+        return mLoginAction.get()
+            .loginObservable(loginData)
+            .subscribeOn(Schedulers.io())
+            .map(new Func1<AccessResponse, AccessResponse>() {
+                @Override
+                public AccessResponse call(AccessResponse accessResponse) {
+                    old.setExpireTime(accessResponse.getExpireTime());
+                    old.setExpireToken(accessResponse.getExpireToken());
+                    old.setRefreshTime(accessResponse.getRefreshTime());
+                    old.setRefreshToken(accessResponse.getRefreshToken());
+                    return accessResponse;
+                }
+            })
+            .asObservable();
+    }
+
     private void updateAccessResponse(final AccessResponse accessResponse, final Callback callback) {
         mLocalUserInfoAction.updateAccessResponseObservable(accessResponse)
             .observeOn(AndroidSchedulers.mainThread())
@@ -295,6 +477,10 @@ public class SyncService extends Service {
             .subscribe();
     }
 
+    //private Observable<AccessResponse> updateAccessResponseObservable(final AccessResponse accessResponse, final Callback callback) {
+    //    return mLocalUserInfoAction.updateAccessResponseObservable(accessResponse)
+    //}
+
     private void scheduleJob(final Callback callback) {
         Observable.create(new Observable.OnSubscribe<AccessResponse>() {
             @Override
@@ -313,6 +499,16 @@ public class SyncService extends Service {
                 callback.onSuccess();
             }
         }).subscribe();
+    }
+
+    private class TokenInfo {
+        public AccessResponse old;
+        public int update;
+
+        public TokenInfo(AccessResponse old, int update) {
+            this.old = old;
+            this.update = update;
+        }
     }
 
     public interface Callback {

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/page_vertical_margin"
     android:clickable="true"
-    app:cardBackgroundColor="@color/collection_background"
+    android:foreground="@drawable/collection_background"
     app:cardElevation="0.5dp"
     app:cardMaxElevation="0dp"
     app:contentPadding="@dimen/list_item_padding">
