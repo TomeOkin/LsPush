@@ -20,7 +20,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <!-- note: set 'app:elevation' so the toolbar_content will not behind toolbar -->
+    <!-- note: set 'app:elevation' so the layout_webview_toolbar_content will not behind toolbar -->
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -38,10 +38,9 @@
             app:contentInsetLeft="0dp"
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/OverflowMenuStyle">
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <include layout="@layout/toolbar_content" />
+            <include layout="@layout/layout_webview_toolbar_content" />
 
         </android.support.v7.widget.Toolbar>
 

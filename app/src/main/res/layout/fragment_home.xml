@@ -11,9 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@null">
-        <!--app:layout_behavior="@string/toolbar_scrolling_view_behavior">-->
 
-        <include layout="@layout/layout_home_toolbar" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.LsPush.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_size" />
 
     </android.support.design.widget.AppBarLayout>
 

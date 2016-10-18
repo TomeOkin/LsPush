@@ -35,8 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jakewharton.scalpel.ScalpelFrameLayout;
-import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.data.model.Collection;
@@ -61,8 +59,6 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.webView) WebView mWebView;
 
-    ScalpelFrameLayout mScalpelLayout;
-
     private Collection mCollection;
 
     public static void start(Activity activity, @NonNull Collection col) {
@@ -75,14 +71,7 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BuildConfig.DEBUG) {
-            View root = getLayoutInflater().inflate(R.layout.activity_collection_web_view, null);
-            mScalpelLayout = new ScalpelFrameLayout(this);
-            mScalpelLayout.addView(root);
-            setContentView(mScalpelLayout);
-        } else {
-            setContentView(R.layout.activity_collection_web_view);
-        }
+        setContentView(R.layout.activity_collection_web_view);
 
         mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
         if (mCollection == null || mCollection.getLink() == null) {
