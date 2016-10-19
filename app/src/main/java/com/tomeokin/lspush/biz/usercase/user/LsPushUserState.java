@@ -18,6 +18,7 @@ package com.tomeokin.lspush.biz.usercase.user;
 import android.support.annotation.Nullable;
 
 import com.tomeokin.lspush.data.model.AccessResponse;
+import com.tomeokin.lspush.data.model.CryptoToken;
 
 /**
  * Compare to Action, it will store app state, that mean it have data, but it is not action support.
@@ -44,6 +45,10 @@ public class LsPushUserState {
         } else {
             return mAccessResponse.getUser().getUid();
         }
+    }
+
+    public CryptoToken getExpireToken() {
+        return mAccessResponse == null ? null : mAccessResponse.getExpireToken();
     }
 
     //public static boolean checkNeedToRefreshExpireToken(@NonNull AccessResponse accessResponse) {

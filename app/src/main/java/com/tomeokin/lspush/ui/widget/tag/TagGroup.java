@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
@@ -680,6 +681,7 @@ public class TagGroup extends ViewGroup {
         tagView.setGravity(Gravity.CENTER);
         tagView.setText(text);
         tagView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        tagView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         tagView.setClickable(isAppendMode);
         tagView.setOnClickListener(mInternalTagClickListener);

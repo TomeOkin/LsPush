@@ -17,6 +17,7 @@ package com.tomeokin.lspush.injection.module;
 
 import android.content.Context;
 
+import com.tomeokin.lspush.biz.usercase.collection.AddFavorAction;
 import com.tomeokin.lspush.biz.usercase.collection.ObtainLatestCollectionsAction;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.remote.LsPushService;
@@ -27,11 +28,18 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class HomeModule {
+public class CollectionModule {
     @Provides
     @PerActivity
     public ObtainLatestCollectionsAction provideObtainLatestCollectionsAction(@ActivityContext Context context,
         LsPushService lsPushService, LsPushUserState lsPushUserState) {
         return new ObtainLatestCollectionsAction(context.getResources(), lsPushService, lsPushUserState);
+    }
+
+    @Provides
+    @PerActivity
+    public AddFavorAction provideAddFavorAction(@ActivityContext Context context, LsPushService lsPushService,
+        LsPushUserState lsPushUserState) {
+        return new AddFavorAction(context.getResources(), lsPushService, lsPushUserState);
     }
 }

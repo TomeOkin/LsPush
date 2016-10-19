@@ -16,13 +16,14 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.job.sync.SyncService;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.common.Navigator;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.DaggerHomeComponent;
 import com.tomeokin.lspush.injection.component.HomeComponent;
-import com.tomeokin.lspush.injection.module.HomeModule;
+import com.tomeokin.lspush.injection.module.CollectionModule;
 
 import javax.inject.Inject;
 
@@ -31,6 +32,7 @@ import timber.log.Timber;
 public class HomeActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<HomeComponent> {
     private HomeComponent mComponent;
     @Inject LocalUserInfoAction mLocalUserInfoAction;
+    @Inject LsPushUserState mLsPushUserState;
     private ServiceConnection mServiceConnection;
 
     @Override
@@ -39,7 +41,7 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
             mComponent = DaggerHomeComponent.builder()
                 .appComponent(getAppComponent())
                 .activityModule(getActivityModule())
-                .homeModule(new HomeModule())
+                .collectionModule(new CollectionModule())
                 .build();
         }
         return mComponent;
@@ -116,7 +118,13 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
                     @Override
                     public void onSuccess() {
                         Timber.d("onSuccess");
-                        Navigator.moveTo(HomeActivity.this, HomeFragment.class, null, false);
+                        if (mLsPushUserState.getAccessResponse() != null) {
+                            Navigator.moveTo(HomeActivity.this, HomeFragment.class, null, false);
+                        } else {
+                            Timber.w("user is not login");
+                            AuthActivity.start(HomeActivity.this);
+                            finish();
+                        }
                     }
 
                     @Override

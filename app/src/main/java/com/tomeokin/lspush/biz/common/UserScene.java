@@ -35,4 +35,5 @@ public class UserScene {
     public static final int ACTION_UPDATE_ACCESS_RESPONSE = 9;
     public static final int ACTION_GET_HISTORY_LOGIN_USER = 10;
     public static final int ACTION_OBTAIN_LATEST_COLLECTIONS = 11;
+    public static final int ACTION_ADD_FAVOR = 12;
 }

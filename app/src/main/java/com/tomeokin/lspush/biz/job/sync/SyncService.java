@@ -29,6 +29,7 @@ import com.tomeokin.lspush.LsPushApplication;
 import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.LoginData;
@@ -73,6 +74,7 @@ public class SyncService extends Service {
     private SyncComponent mComponent;
     private int mJobId = -1;
 
+    @Inject LsPushUserState mLsPushUserState;
     @Inject LocalUserInfoAction mLocalUserInfoAction;
     @Inject Lazy<RefreshTokenAction> mRefreshTokenAction;
     @Inject Lazy<LoginAction> mLoginAction;
@@ -133,7 +135,7 @@ public class SyncService extends Service {
         NetworkUtils.init(this);
         if (NetworkUtils.isOffline()) {
             if (callback != null) {
-                callback.onFailure(null);
+                callback.onSuccess();
             }
             return;
         }
@@ -208,11 +210,12 @@ public class SyncService extends Service {
             @Override
             public void call(Subscriber<? super TokenInfo> subscriber) {
                 if (old == null) { // not need refresh
-                    Timber.i("");
+                    Timber.v("user is not login");
                     subscriber.onCompleted();
                     return;
                 }
 
+                mLsPushUserState.setAccessResponse(old);
                 LocalDateTime now = LocalDateTime.now();
                 Instant instantExpire = Instant.ofEpochSecond(old.getExpireTime());
                 LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());

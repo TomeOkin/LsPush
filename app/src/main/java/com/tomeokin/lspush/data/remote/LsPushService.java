@@ -19,6 +19,7 @@ import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.CollectionBinding;
 import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.UploadResponse;
@@ -28,6 +29,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -69,7 +71,7 @@ public interface LsPushService {
         @Part MultipartBody.Part image);
 
     @POST("api/collection/post")
-    Call<BaseResponse> postCollection(@Body CryptoToken cryptoToken, @Body Collection collection);
+    Call<BaseResponse> postCollection(@Header(value = "token") CryptoToken cryptoToken, @Body Collection collection);
 
     @GET("api/collection/get")
     Call<CollectionResponse> getCollections(@Query("uid") String uid, @Query("page") int page, @Query("size") int size);
@@ -81,4 +83,9 @@ public interface LsPushService {
     @GET("api/collection/getLatest")
     Call<CollectionResponse> getLatestCollections(@Query("uid") String uid, @Query("page") int page,
         @Query("size") int size);
+
+    @POST("/api/favor/set")
+    Call<BaseResponse> addFavor(@Header(value = "token") CryptoToken cryptoToken, @Body CollectionBinding colBinding);
+
+
 }

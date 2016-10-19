@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.home;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -55,13 +57,16 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 public class HomeFragment extends BaseFragment implements BaseActionCallback, CollectionListAdapter.Callback {
+    private static final int REQUEST_OPEN_COLLECTION = 0;
     private Unbinder mUnBinder;
-    @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.col_rv) RecyclerView mColRv;
     private List<Collection> mColList;
     private CollectionListAdapter mColListAdapter;
+
+    @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.col_rv) RecyclerView mColRv;
 
     @Inject ObtainLatestCollectionsAction mObtainLatestColAction;
 
@@ -79,7 +84,8 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
 
         Link link = new Link();
         link.setTitle("Tencent/tinker");
-        link.setUrl("https://github.com/Tencent/tinker");
+        //link.setUrl("https://github.com/Tencent/tinker");
+        link.setUrl("http://thefinestartist.com");
 
         Collection collection = new Collection();
         collection.setUser(user);
@@ -191,6 +197,26 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
 
     @Override
     public void onOpenCollectionUrl(Collection collection) {
-        CollectionWebViewActivity.start(getActivity(), collection);
+        CollectionWebViewActivity.start(this, collection, REQUEST_OPEN_COLLECTION);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Timber.v("Result %d, requestCode %d", resultCode, requestCode);
+        if (resultCode != Activity.RESULT_OK) {
+            Timber.w("Error result %d, requestCode %d", resultCode, requestCode);
+            return;
+        }
+
+        if (requestCode == REQUEST_OPEN_COLLECTION) {
+            if (data != null) {
+                Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
+                if (collection != null) {
+                    mColListAdapter.updateColList(collection);
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

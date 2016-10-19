@@ -20,6 +20,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,27 +35,59 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
+import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.usercase.collection.AddFavorAction;
+import com.tomeokin.lspush.common.ClipboardUtil;
+import com.tomeokin.lspush.common.IntentUtils;
+import com.tomeokin.lspush.common.StringUtils;
+import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.injection.ProvideComponent;
+import com.tomeokin.lspush.injection.component.CollectionWebViewComponent;
+import com.tomeokin.lspush.injection.component.DaggerCollectionWebViewComponent;
+import com.tomeokin.lspush.injection.module.CollectionModule;
 import com.tomeokin.lspush.ui.widget.ShadowLayout;
 import com.tomeokin.lspush.ui.widget.listener.AnimationListenerAdapter;
 
+import javax.inject.Inject;
+
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CollectionWebViewActivity extends BaseActivity implements View.OnClickListener {
+public class CollectionWebViewActivity extends BaseActivity
+    implements View.OnClickListener, BaseActionCallback, AppBarLayout.OnOffsetChangedListener,
+    ProvideComponent<CollectionWebViewComponent> {
+    public static final String REQUEST_RESULT_COLLECTION = "request.result.collection";
     private static final String EXTRA_COLLECTION = "extra.collection";
 
+    private CollectionWebViewComponent mComponent;
+    private Snackbar mSnackbar;
+    private CharSequence mSequence;
+
+    @BindColor(R.color.grey_7_whiteout) int activeColor;
+    @BindColor(R.color.grey_5_whiteout) int disableColor;
+
+    @BindView(R.id.layout_content) CoordinatorLayout mContentLayout;
+    @BindView(R.id.appBar) AppBarLayout mAppBar;
     @BindView(R.id.toolbar) Toolbar mToolBar;
+    @BindView(R.id.titleLayout) LinearLayout mTitleLayout;
     @BindView(R.id.title_tv) TextView mTitle;
     @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
     @BindView(R.id.toolbar_action_more) ImageButton mMoreButton;
+
+    @BindView(R.id.action_back) ImageButton mBackButton;
+    @BindView(R.id.action_forward) ImageButton mForwardButton;
+    @BindView(R.id.action_favor) ImageButton mFavorButton;
 
     @BindView(R.id.menu_layout) View mMenuLayout;
     @BindView(R.id.shadow_layout) ShadowLayout mShadowLayout;
@@ -57,13 +95,27 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.webView) WebView mWebView;
 
+    @Inject AddFavorAction mAddFavorAction;
+
     private Collection mCollection;
 
-    public static void start(Activity activity, @NonNull Collection col) {
-        Intent starter = new Intent(activity, CollectionWebViewActivity.class);
+    @Override
+    public CollectionWebViewComponent component() {
+        if (mComponent == null) {
+            mComponent = DaggerCollectionWebViewComponent.builder()
+                .appComponent(getAppComponent())
+                .activityModule(getActivityModule())
+                .collectionModule(new CollectionModule())
+                .build();
+        }
+        return mComponent;
+    }
+
+    public static void start(@NonNull Fragment source, @NonNull Collection col, int requestCode) {
+        Intent starter = new Intent(source.getContext(), CollectionWebViewActivity.class);
         starter.putExtra(EXTRA_COLLECTION, col);
-        activity.startActivity(starter);
-        activity.overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
+        source.startActivityForResult(starter, requestCode);
+        source.getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
     }
 
     @Override
@@ -80,47 +132,11 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
         setupToolbar();
         setupWebView();
         setupMenu();
+        setupBottomBar();
     }
 
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-    //    getMenuInflater().inflate(R.menu.collection_web_view_menu, menu);
-    //    if (menu instanceof MenuBuilder) {
-    //        MenuBuilder builder = (MenuBuilder) menu;
-    //        builder.setOptionalIconsVisible(true);
-    //    }
-    //    //if(menu.getClass().getSimpleName().equals("MenuBuilder")){
-    //    //    try{
-    //    //        Method m = menu.getClass().getDeclaredMethod(
-    //    //            "setOptionalIconsVisible", Boolean.TYPE);
-    //    //        m.setAccessible(true);
-    //    //        m.invoke(menu, true);
-    //    //    }
-    //    //    catch(NoSuchMethodException e){
-    //    //        Log.e(TAG, "onMenuOpened", e);
-    //    //    }
-    //    //    catch(Exception e){
-    //    //        throw new RuntimeException(e);
-    //    //    }
-    //    //}
-    //    return true;
-    //}
-    //
-    //@Override
-    //public boolean onOptionsItemSelected(MenuItem item) {
-    //    switch (item.getItemId()) {
-    //        case R.id.collect:
-    //            return true;
-    //        case R.id.copy_link:
-    //            return true;
-    //        case R.id.share:
-    //            return true;
-    //        default:
-    //            return super.onOptionsItemSelected(item);
-    //    }
-    //}
-
     private void setupToolbar() {
+        mAppBar.addOnOffsetChangedListener(this);
         setSupportActionBar(mToolBar);
         mCloseButton.setOnClickListener(this);
         mMoreButton.setOnClickListener(this);
@@ -142,13 +158,27 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-                //mTitle.setText(title);
+                mTitle.setText(title);
+                mTitle.requestLayout();
+                mTitleLayout.requestLayout();
             }
         });
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return true;
+                return false; // let the web view handle the url
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                boolean canGoBack = view.canGoBack();
+                mBackButton.setEnabled(canGoBack);
+                mBackButton.setImageResource(canGoBack ? R.drawable.ic_action_back_deep : R.drawable.ic_action_back);
+
+                boolean canGoForward = view.canGoForward();
+                mForwardButton.setEnabled(canGoForward);
+                mForwardButton.setImageResource(
+                    canGoForward ? R.drawable.ic_action_forward_deep : R.drawable.ic_action_forward);
             }
         });
         mWebView.loadUrl(mCollection.getLink().getUrl());
@@ -158,10 +188,41 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
         mMenuLayout.setOnClickListener(this);
     }
 
+    private void setupBottomBar() {
+        mBackButton.setEnabled(false);
+        mBackButton.setOnClickListener(this);
+        mForwardButton.setEnabled(false);
+        mForwardButton.setOnClickListener(this);
+        mFavorButton.setOnClickListener(this);
+        updateFavor(mCollection.isHasFavor());
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
+        setResult(Activity.RESULT_OK, data);
+        super.onBackPressed();
+    }
+
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.hold, R.anim.slide_right_out);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        component().inject(this);
+        mAddFavorAction.attach(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAddFavorAction.detach();
+        mAddFavorAction = null;
     }
 
     protected void showMenu() {
@@ -182,32 +243,64 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     }
 
     @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        ViewCompat.setTranslationY(mProgressBar, verticalOffset);
+
+        ViewCompat.setTranslationY(mMenuLayout, Math.max(verticalOffset, 0));
+    }
+
+    @Override
     public void onClick(View v) {
         final int id = v.getId();
-        if (id == R.id.toolbar_action_close) {
-            onBackPressed();
-        } else if (id == R.id.toolbar_action_more) {
-            showMenu();
-        } else if (id == R.id.menu_layout) {
-            hideMenu();
-        } else {
-            dispatchMenuItem(id);
+        switch (id) {
+            case R.id.toolbar_action_close:
+                hideMenu();
+                onBackPressed();
+                break;
+            case R.id.toolbar_action_more:
+                showMenu();
+                break;
+            case R.id.menu_layout:
+                hideMenu();
+                break;
+            case R.id.action_back:
+                mWebView.goBack();
+                break;
+            case R.id.action_forward:
+                mWebView.goForward();
+                break;
+            case R.id.action_favor:
+                updateFavor(!mCollection.isHasFavor());
+                if (mCollection.isHasFavor()) {
+                    mAddFavorAction.addFavor(mCollection);
+                } else {
+                    // TODO: 2016/10/19 remove favor
+                }
+                break;
+            default:
+                dispatchMenuItem(id);
         }
+    }
+
+    private void updateFavor(boolean favor) {
+        mCollection.setHasFavor(favor);
+        mFavorButton.setImageResource(favor ? R.drawable.ic_action_heart_solid : R.drawable.ic_action_heart_hollow);
     }
 
     public boolean dispatchMenuItem(int id) {
         switch (id) {
             case R.id.action_refresh:
                 hideMenu();
-                // TODO: 2016/10/16 refresh
+                mWebView.reload();
                 return true;
-            case R.id.action_collect:
+            case R.id.action_open_in_browser:
                 hideMenu();
-                // TODO: 2016/10/16
+                IntentUtils.openInBrowser(this, mWebView.getUrl());
                 return true;
             case R.id.action_copy_link:
                 hideMenu();
-                // TODO: 2016/10/16
+                ClipboardUtil.setText(this, mWebView.getUrl());
+                showSnackbarNotification(getString(R.string.copied_to_clipboard));
                 return true;
             case R.id.action_share:
                 hideMenu();
@@ -221,5 +314,38 @@ public class CollectionWebViewActivity extends BaseActivity implements View.OnCl
     @OnClick(R.id.webView_container)
     public void onBlankPositionClink() {
         hideMenu();
+    }
+
+    @Override
+    public void onActionSuccess(int action, @Nullable BaseResponse response) {
+        if (action == UserScene.ACTION_ADD_FAVOR) {
+            Toast.makeText(this, getString(R.string.add_favor_success), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
+
+    }
+
+    public void showSnackbarNotification(@NonNull CharSequence sequence) {
+        if (mSnackbar == null) {
+            mSequence = sequence;
+            mSnackbar = Snackbar.make(mContentLayout, sequence, Snackbar.LENGTH_SHORT);
+            final View snackbarView = mSnackbar.getView();
+            snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            mSnackbar.show();
+        } else if (mSnackbar.isShown()) {
+            if (!StringUtils.isEqual(sequence, mSequence)) {
+                mSequence = sequence;
+                mSnackbar.dismiss();
+                mSnackbar.setText(sequence);
+                mSnackbar.show();
+            }
+        } else {
+            mSequence = sequence;
+            mSnackbar.setText(sequence);
+            mSnackbar.show();
+        }
     }
 }

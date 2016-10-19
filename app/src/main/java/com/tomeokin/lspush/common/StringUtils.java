@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.common;
 
+import android.support.annotation.NonNull;
+
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -113,5 +115,9 @@ public class StringUtils {
             }
         }
         return -1;
+    }
+
+    public static boolean isEqual(@NonNull CharSequence one, CharSequence two) {
+        return two != null && one.toString().equals(two.toString());
     }
 }

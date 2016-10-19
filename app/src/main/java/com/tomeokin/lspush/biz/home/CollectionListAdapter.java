@@ -16,6 +16,7 @@
 package com.tomeokin.lspush.biz.home;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.SortedList;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
     implements View.OnClickListener {
@@ -45,6 +47,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     private final SortedList.BatchedCallback<Collection> mBatchCallback =
         new SortedList.BatchedCallback<>(new CollectionSortCallback());
     private SortedList<Collection> mColSortList = new SortedList<>(Collection.class, mBatchCallback);
+    private int mClickIndex; // the index of the Collection Opened
 
     public CollectionListAdapter(List<Collection> colList, @Nullable Callback callback) {
         setColList(colList);
@@ -59,8 +62,6 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         } finally {
             mColSortList.endBatchedUpdates();
         }
-        //mColList = colList;
-        //notifyDataSetChanged();
     }
 
     public void insertColList(List<Collection> colList) {
@@ -70,6 +71,15 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         } finally {
             mColSortList.endBatchedUpdates();
         }
+        notifyDataSetChanged();
+    }
+
+    public void updateColList(@NonNull Collection collection) {
+        if (mColSortList.get(mClickIndex).getId() != collection.getId()) {
+            Timber.w("Error matching on collection list");
+        }
+        mColSortList.updateItemAt(mClickIndex, collection);
+        notifyItemChanged(mClickIndex);
     }
 
     public void setCallback(Callback callback) {
@@ -185,6 +195,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         TextView title = (TextView) v.findViewById(R.id.title_tv);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
         if (mCallback != null) {
+            mClickIndex = position;
             mCallback.onOpenCollectionUrl(collection);
         }
     }

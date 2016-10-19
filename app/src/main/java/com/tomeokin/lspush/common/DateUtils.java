@@ -43,17 +43,17 @@ public class DateUtils {
 
         if (target.isAfter(now.minusHours(1))) {
             duration = Duration.between(now, target);
-            return context.getResources().getString(R.string.minutes_ago, duration.toMinutes());
+            return context.getResources().getString(R.string.minutes_ago, Math.abs(duration.toMinutes()));
         }
 
         if (target.isAfter(now.minusDays(1))) {
             duration = Duration.between(now, target);
-            return context.getResources().getString(R.string.hours_ago, duration.toHours());
+            return context.getResources().getString(R.string.hours_ago, Math.abs(duration.toHours()));
         }
 
         if (target.isAfter(now.minusWeeks(1))) {
             duration = Duration.between(target, now);
-            return context.getResources().getString(R.string.days_ago, duration.toDays());
+            return context.getResources().getString(R.string.days_ago, Math.abs(duration.toDays()));
         }
 
         // http://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html

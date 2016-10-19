@@ -78,4 +78,11 @@
     <string name="copy_link">Copy Link</string>
     <string name="share">Share with</string>
     <string name="refresh">Refresh</string>
+    <string name="open_in_browser">Open In Browser</string>
+    <string name="select_browser">Select Browser</string>
+
+    <string name="add_favor_success">Collect Success.</string>
+    <string name="explorer">explorer</string>
+    <string name="favor_count">Favor Count %d</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
 </resources>

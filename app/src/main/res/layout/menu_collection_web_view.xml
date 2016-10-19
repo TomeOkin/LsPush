@@ -48,18 +48,18 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/action_collect"
+                android:id="@+id/action_open_in_browser"
                 style="@style/WebViewMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/row_height_small"
                 android:onClick="onClick">
 
                 <TextView
-                    android:id="@+id/action_collect_tv"
+                    android:id="@+id/action_open_in_browser_tv"
                     style="@style/WebViewMenuItemTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/collect" />
+                    android:text="@string/open_in_browser" />
 
             </LinearLayout>
 

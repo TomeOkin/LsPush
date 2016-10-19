@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/bottom_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottomBar_size"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/action_back"
+            android:layout_width="@dimen/icon_extraLarge"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_action_back" />
+
+        <ImageButton
+            android:id="@+id/action_forward"
+            android:layout_width="@dimen/icon_extraLarge"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_action_forward" />
+
+        <ImageButton
+            android:id="@+id/action_favor"
+            android:layout_width="@dimen/icon_extraLarge"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_action_heart_hollow" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/favor_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/row_padding"
+            android:textSize="@dimen/font_medium"
+            tools:text="收藏数 52" />
+
+    </LinearLayout>
+
+    <View
+        style="@style/Widget.LsPush.Divider.Horizontal.Small"
+        android:layout_alignTop="@id/bottom_bar_container"
+        android:layout_gravity="bottom" />
+
+</RelativeLayout>

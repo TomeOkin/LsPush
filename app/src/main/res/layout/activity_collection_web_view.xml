@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
+    android:id="@+id/layout_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -58,5 +58,7 @@
         tools:visibility="visible" />
 
     <include layout="@layout/menu_collection_web_view" />
+
+    <include layout="@layout/layout_collection_web_view_bottom_bar" />
 
 </android.support.design.widget.CoordinatorLayout>

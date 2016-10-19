@@ -14,7 +14,7 @@ ext {
     stethoVersion = "1.4.1"
     junit4Version = "4.12"
     mockitoVersion = "1.10.19"
-    mockito2Version = "2.2.1"
+    mockito2Version = "2.2.5"
 
     File file = project.rootProject.file('local.properties')
     Properties properties = new Properties()
