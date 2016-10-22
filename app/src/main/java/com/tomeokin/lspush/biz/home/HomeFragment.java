@@ -35,13 +35,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseFragment;
-import com.tomeokin.lspush.biz.usercase.collection.ObtainLatestCollectionsAction;
+import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
+import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.Link;
 import com.tomeokin.lspush.data.model.User;
+import com.tomeokin.lspush.data.model.WebPageInfo;
 import com.tomeokin.lspush.injection.component.HomeComponent;
 
 import org.threeten.bp.DateTimeUtils;
@@ -59,16 +60,21 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-public class HomeFragment extends BaseFragment implements BaseActionCallback, CollectionListAdapter.Callback {
+public class HomeFragment extends BaseFragment
+    implements BaseActionCallback, CollectionListAdapter.Callback, UriDialogFragment.OnUrlConfirmListener {
     private static final int REQUEST_OPEN_COLLECTION = 0;
+    private static final int REQUEST_EDIT_COLLECTION = 1;
+    private static final int REQUEST_GET_URL_INFO = 2;
+
     private Unbinder mUnBinder;
     private List<Collection> mColList;
     private CollectionListAdapter mColListAdapter;
+    private UriDialogFragment.Builder mUriDialogBuilder;
 
-    @Nullable @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.col_rv) RecyclerView mColRv;
 
-    @Inject ObtainLatestCollectionsAction mObtainLatestColAction;
+    @Inject CollectionAction mCollectionAction;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +96,8 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
         Collection collection = new Collection();
         collection.setUser(user);
         collection.setLink(link);
-        collection.setDescription("tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
+        collection.setDescription(
+            "tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
         collection.setImage("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
         collection.setId(1);
         Instant now = Instant.now();
@@ -105,6 +112,9 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
 
         mColList = new ArrayList<>(1);
         mColList.add(collection);
+
+        //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
+        //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
     }
 
     @Nullable
@@ -125,21 +135,21 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mObtainLatestColAction.attach(this);
+        mCollectionAction.attach(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnBinder.unbind();
-        mObtainLatestColAction.detach();
+        mCollectionAction.detach();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mUnBinder = null;
-        mObtainLatestColAction = null;
+        mCollectionAction = null;
     }
 
     private void setupToolbar() {
@@ -167,12 +177,22 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
                 Toast.makeText(getContext(), "search", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_add:
+                showUriDialog();
                 return true;
             case R.id.action_pin:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showUriDialog() {
+        if (mUriDialogBuilder == null) {
+            mUriDialogBuilder =
+                new UriDialogFragment.Builder(getContext(), getFragmentManager()).setTargetFragment(this,
+                    REQUEST_GET_URL_INFO);
+        }
+        mUriDialogBuilder.show();
     }
 
     @Override
@@ -198,6 +218,16 @@ public class HomeFragment extends BaseFragment implements BaseActionCallback, Co
     @Override
     public void onOpenCollectionUrl(Collection collection) {
         CollectionWebViewActivity.start(this, collection, REQUEST_OPEN_COLLECTION);
+    }
+
+    @Override
+    public void onUrlConfirm(@Nullable WebPageInfo webPageInfo) {
+        if (webPageInfo != null) {
+            Timber.i("url info: %s", webPageInfo.toString());
+            CollectionEditorActivity.start(this, webPageInfo.toCollection(), REQUEST_EDIT_COLLECTION);
+        } else {
+            Timber.i("WebPageInfo is null");
+        }
     }
 
     @Override

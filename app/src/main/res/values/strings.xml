@@ -81,8 +81,18 @@
     <string name="open_in_browser">Open In Browser</string>
     <string name="select_browser">Select Browser</string>
 
-    <string name="add_favor_success">Collect Success.</string>
+    <string name="add_favor_failure">Add Collection Failure.</string>
+    <string name="remove_favor_failure">Remove Collection Failure.</string>
     <string name="explorer">explorer</string>
     <string name="favor_count">Favor Count %d</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+
+    <string name="uri_hint">URL</string>
+    <string name="add_url">Add A URL</string>
+    <string name="add_url_failure">Get Url Information Failure.</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="description_image">Description Image</string>
+    <string name="tag">Tag</string>
+    <string name="edit">Edit</string>
 </resources>

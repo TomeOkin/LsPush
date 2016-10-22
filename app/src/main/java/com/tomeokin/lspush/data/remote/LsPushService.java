@@ -23,6 +23,7 @@ import com.tomeokin.lspush.data.model.CollectionBinding;
 import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.UploadResponse;
+import com.tomeokin.lspush.data.model.UrlFetchResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -87,5 +88,9 @@ public interface LsPushService {
     @POST("/api/favor/set")
     Call<BaseResponse> addFavor(@Header(value = "token") CryptoToken cryptoToken, @Body CollectionBinding colBinding);
 
+    @POST("/api/favor/remove")
+    Call<BaseResponse> removeFavor(@Header(value = "token") CryptoToken cryptoToken, @Body long colId);
 
+    @GET("/api/link/fetch")
+    Call<UrlFetchResponse> getUrlInfo(@Query("url") String url);
 }

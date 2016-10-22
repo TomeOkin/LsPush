@@ -17,8 +17,9 @@ package com.tomeokin.lspush.injection.module;
 
 import android.content.Context;
 
-import com.tomeokin.lspush.biz.usercase.collection.AddFavorAction;
-import com.tomeokin.lspush.biz.usercase.collection.ObtainLatestCollectionsAction;
+import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
+import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
+import com.tomeokin.lspush.biz.usercase.collection.LinkAction;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.qualifier.ActivityContext;
@@ -31,15 +32,21 @@ import dagger.Provides;
 public class CollectionModule {
     @Provides
     @PerActivity
-    public ObtainLatestCollectionsAction provideObtainLatestCollectionsAction(@ActivityContext Context context,
+    public CollectionAction provideCollectionAction(@ActivityContext Context context,
         LsPushService lsPushService, LsPushUserState lsPushUserState) {
-        return new ObtainLatestCollectionsAction(context.getResources(), lsPushService, lsPushUserState);
+        return new CollectionAction(context.getResources(), lsPushService, lsPushUserState);
     }
 
     @Provides
     @PerActivity
-    public AddFavorAction provideAddFavorAction(@ActivityContext Context context, LsPushService lsPushService,
+    public FavorAction provideFavorAction(@ActivityContext Context context, LsPushService lsPushService,
         LsPushUserState lsPushUserState) {
-        return new AddFavorAction(context.getResources(), lsPushService, lsPushUserState);
+        return new FavorAction(context.getResources(), lsPushService, lsPushUserState);
+    }
+
+    @Provides
+    @PerActivity
+    public LinkAction provideLinkAction(@ActivityContext Context context, LsPushService lsPushService) {
+        return new LinkAction(context.getResources(), lsPushService);
     }
 }

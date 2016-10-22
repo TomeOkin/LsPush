@@ -16,6 +16,7 @@
 package com.tomeokin.lspush.biz.usercase.collection;
 
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 
 import com.tomeokin.lspush.biz.base.support.BaseAction;
 import com.tomeokin.lspush.biz.base.support.CommonCallback;
@@ -31,19 +32,20 @@ import java.util.Date;
 
 import retrofit2.Call;
 
-public class AddFavorAction extends BaseAction {
+public class FavorAction extends BaseAction {
     private final LsPushService mLsPushService;
     private final LsPushUserState mLsPushUserState;
 
     private Call<BaseResponse> mAddFavorCall;
+    private Call<BaseResponse> mRemoveFavorCall;
 
-    public AddFavorAction(Resources resources, LsPushService lsPushService, LsPushUserState lsPushUserState) {
+    public FavorAction(Resources resources, LsPushService lsPushService, LsPushUserState lsPushUserState) {
         super(resources);
         this.mLsPushService = lsPushService;
         this.mLsPushUserState = lsPushUserState;
     }
 
-    public void addFavor(Collection collection) {
+    public void addFavor(@NonNull Collection collection) {
         CollectionBinding.Data data = new CollectionBinding.Data();
         data.uid = mLsPushUserState.getUid();
         data.date = new Date();
@@ -56,11 +58,19 @@ public class AddFavorAction extends BaseAction {
         mAddFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_ADD_FAVOR, mCallback));
     }
 
+    public void removeFavor(@NonNull Collection collection) {
+        checkAndCancel(mRemoveFavorCall);
+        mRemoveFavorCall = mLsPushService.removeFavor(mLsPushUserState.getExpireToken(), collection.getId());
+        mRemoveFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_REMOVE_FAVOR, mCallback));
+    }
+
     @Override
     public void cancel(int action) {
         super.cancel(action);
         if (action == UserScene.ACTION_ADD_FAVOR) {
             checkAndCancel(mAddFavorCall);
+        } else if (action == UserScene.ACTION_REMOVE_FAVOR) {
+            checkAndCancel(mRemoveFavorCall);
         }
     }
 
@@ -68,5 +78,6 @@ public class AddFavorAction extends BaseAction {
     public void detach() {
         super.detach();
         checkAndCancel(mAddFavorCall);
+        checkAndCancel(mRemoveFavorCall);
     }
 }

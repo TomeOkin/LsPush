@@ -45,17 +45,17 @@ public class ClipboardUtil {
     }
 
     @SuppressWarnings("deprecation")
-    public static CharSequence getText(Context context) {
+    public static String getText(Context context) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             ClipData clipData = clipboardManager.getPrimaryClip();
             if (hasText(clipboardManager, clipData)) {
-                return clipData.getItemAt(0).getText();
+                return clipData.getItemAt(0).getText().toString();
             } else {
                 return null;
             }
         } else {
-            return clipboardManager.getText();
+            return clipboardManager.getText().toString();
         }
     }
 

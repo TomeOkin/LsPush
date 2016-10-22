@@ -36,4 +36,7 @@ public class UserScene {
     public static final int ACTION_GET_HISTORY_LOGIN_USER = 10;
     public static final int ACTION_OBTAIN_LATEST_COLLECTIONS = 11;
     public static final int ACTION_ADD_FAVOR = 12;
+    public static final int ACTION_REMOVE_FAVOR = 13;
+    public static final int ACTION_POST_COLLECTION = 14;
+    public static final int ACTION_GET_URL_INFO = 15;
 }

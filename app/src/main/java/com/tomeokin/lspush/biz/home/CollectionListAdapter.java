@@ -48,6 +48,13 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         new SortedList.BatchedCallback<>(new CollectionSortCallback());
     private SortedList<Collection> mColSortList = new SortedList<>(Collection.class, mBatchCallback);
     private int mClickIndex; // the index of the Collection Opened
+    private View.OnClickListener mExplorerListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int uid = (int) v.getTag();
+            // TODO: 2016/10/20 user page
+        }
+    };
 
     public CollectionListAdapter(List<Collection> colList, @Nullable Callback callback) {
         setColList(colList);
@@ -184,6 +191,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             if (avatar.getParent() == null) {
                 container.addView(avatar);
             }
+            avatar.setTag(explorers.get(i).getUid());
+
         }
     }
 

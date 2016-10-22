@@ -36,6 +36,8 @@ import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * A <code>TagGroup</code> is a special layout with a set of tags.
  * This group has two modes:
@@ -62,7 +64,7 @@ public class TagGroup extends ViewGroup {
     private int textColor = Color.rgb(0x66, 0xbd, 0x2b);
     private float textSize = sp2px(14);
     private int borderColor = textColor;
-    private float borderStrokeWidth = dp2px(0.5f);
+    private float borderStrokeWidth = dp2px(1f);
     private int backgroundColor = Color.WHITE;
 
     // tag input
@@ -143,19 +145,19 @@ public class TagGroup extends ViewGroup {
 
         if (isInEditMode()) {
             setTags("hello", "tag", "editMode");
-        }
+        } else {
+            if (isAppendMode) {
+                // Append the initial INPUT tag.
+                appendInputTag();
 
-        if (isAppendMode) {
-            // Append the initial INPUT tag.
-            appendInputTag();
-
-            // Set the click listener to detect the end-input event.
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submitTag();
-                }
-            });
+                // Set the click listener to detect the end-input event.
+                setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        submitTag();
+                    }
+                });
+            }
         }
     }
 
@@ -578,21 +580,28 @@ public class TagGroup extends ViewGroup {
         public void onClick(View v) {
             final TagView tag = (TagView) v;
             if (isAppendMode) {
+                Timber.i("InternalTagClickListener.isAppendMode");
                 if (tag.isEditable()) {
+                    Timber.i("InternalTagClickListener.isAppendMode");
                     // If the clicked tag is in INPUT state, uncheck the previous checked tag if exists.
                     final TagView checkedTag = getCheckedTag();
                     if (checkedTag != null) {
+                        Timber.i("InternalTagClickListener checkedTag != null");
                         checkedTag.setChecked(false);
                     }
                 } else {
+                    Timber.i("InternalTagClickListener not tag.isEditable()");
                     // If the clicked tag is currently checked, delete the tag.
                     if (tag.isChecked()) {
+                        Timber.i("InternalTagClickListener tag.isChecked()");
                         deleteTag(tag);
                     } else {
+                        Timber.i("InternalTagClickListener tag.isChecked() false");
                         // If the clicked tag is unchecked, uncheck the previous checked tag if exists,
                         // then check the clicked tag.
                         final TagView checkedTag = getCheckedTag();
                         if (checkedTag != null) {
+                            Timber.i("InternalTagClickListener checkedTag != null");
                             checkedTag.setChecked(false);
                         }
                         tag.setChecked(true);
@@ -770,6 +779,7 @@ public class TagGroup extends ViewGroup {
         }
 
         private void init() {
+            setWillNotDraw(false);
             // Interrupted long click event to avoid PAUSE popup.
             setOnLongClickListener(mOnLongClickListener);
 
@@ -781,6 +791,8 @@ public class TagGroup extends ViewGroup {
             mCheckedMarkerPaint.setStyle(Paint.Style.FILL);
             mCheckedMarkerPaint.setStrokeWidth(CHECKED_MARKER_STROKE_WIDTH);
             mCheckedMarkerPaint.setColor(checkedMarkerColor);
+            // TODO: 2016/10/22
+            mCheckedMarkerPaint.setColor(Color.BLACK);
         }
 
         private void resetPaint() {
@@ -808,6 +820,8 @@ public class TagGroup extends ViewGroup {
                 mBackgroundPaint.setColor(backgroundColor);
                 setTextColor(textColor);
             }
+            // TODO: 2016/10/22
+            mBorderPaint.setColor(Color.GREEN);
 
             if (isPressed) {
                 mBackgroundPaint.setColor(pressedBackgroundColor);
@@ -851,6 +865,7 @@ public class TagGroup extends ViewGroup {
                 isChecked ? (int) (getPaddingRight() + getHeight() / 2.5f + CHECKED_MARKER_OFFSET) : getPaddingRight(),
                 getPaddingBottom());
             resetPaint();
+            invalidate();
         }
 
         public boolean isChecked() {
@@ -872,6 +887,8 @@ public class TagGroup extends ViewGroup {
             canvas.drawRect(mVerticalBlankFillRectF, mBackgroundPaint);
 
             if (isChecked) {
+                Timber.i("mCheckedMarkerBound %s", mCheckedMarkerBound.toString());
+                mCheckedMarkerPaint.setColor(Color.BLACK);
                 canvas.save();
                 canvas.rotate(45, mCheckedMarkerBound.centerX(), mCheckedMarkerBound.centerY());
                 canvas.drawLine(mCheckedMarkerBound.left, mCheckedMarkerBound.centerY(), mCheckedMarkerBound.right,
@@ -926,8 +943,8 @@ public class TagGroup extends ViewGroup {
 
             // Ensure the checked mark drawing region is correct across screen orientation changes.
             if (isChecked) {
-                setPadding(getPaddingLeft(), getPaddingTop(), (int) (getPaddingRight() + h / 2.5f + CHECKED_MARKER_OFFSET),
-                    getPaddingBottom());
+                setPadding(getPaddingLeft(), getPaddingTop(),
+                    (int) (getPaddingRight() + h / 2.5f + CHECKED_MARKER_OFFSET), getPaddingBottom());
             }
         }
 

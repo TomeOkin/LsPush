@@ -36,8 +36,8 @@ import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 
 public class ImageDialogFragment extends BaseDialogFragment {
     private static final String ARG_IMAGE_URL = "image.url";
-    public static final String ARG_IMAGE_WIDTH = "image.mWidth";
-    public static final String ARG_IMAGE_HEIGHT = "image.mHeight";
+    private static final String ARG_IMAGE_WIDTH = "image.width";
+    private static final String ARG_IMAGE_HEIGHT = "image.height";
 
     @SuppressLint("InflateParams")
     @NonNull

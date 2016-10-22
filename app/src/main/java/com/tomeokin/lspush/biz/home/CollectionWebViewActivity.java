@@ -44,7 +44,7 @@ import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.usercase.collection.AddFavorAction;
+import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
 import com.tomeokin.lspush.common.ClipboardUtil;
 import com.tomeokin.lspush.common.IntentUtils;
 import com.tomeokin.lspush.common.StringUtils;
@@ -73,6 +73,7 @@ public class CollectionWebViewActivity extends BaseActivity
     private CollectionWebViewComponent mComponent;
     private Snackbar mSnackbar;
     private CharSequence mSequence;
+    private Collection mCollection;
 
     @BindColor(R.color.grey_7_whiteout) int activeColor;
     @BindColor(R.color.grey_5_whiteout) int disableColor;
@@ -95,9 +96,7 @@ public class CollectionWebViewActivity extends BaseActivity
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
     @BindView(R.id.webView) WebView mWebView;
 
-    @Inject AddFavorAction mAddFavorAction;
-
-    private Collection mCollection;
+    @Inject FavorAction mFavorAction;
 
     @Override
     public CollectionWebViewComponent component() {
@@ -215,14 +214,14 @@ public class CollectionWebViewActivity extends BaseActivity
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         component().inject(this);
-        mAddFavorAction.attach(this);
+        mFavorAction.attach(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAddFavorAction.detach();
-        mAddFavorAction = null;
+        mFavorAction.detach();
+        mFavorAction = null;
     }
 
     protected void showMenu() {
@@ -271,10 +270,11 @@ public class CollectionWebViewActivity extends BaseActivity
                 break;
             case R.id.action_favor:
                 updateFavor(!mCollection.isHasFavor());
+                mFavorButton.setEnabled(false);
                 if (mCollection.isHasFavor()) {
-                    mAddFavorAction.addFavor(mCollection);
+                    mFavorAction.addFavor(mCollection);
                 } else {
-                    // TODO: 2016/10/19 remove favor
+                    mFavorAction.removeFavor(mCollection);
                 }
                 break;
             default:
@@ -318,14 +318,19 @@ public class CollectionWebViewActivity extends BaseActivity
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-        if (action == UserScene.ACTION_ADD_FAVOR) {
-            Toast.makeText(this, getString(R.string.add_favor_success), Toast.LENGTH_SHORT).show();
+        if (action == UserScene.ACTION_ADD_FAVOR || action == UserScene.ACTION_REMOVE_FAVOR) {
+            mFavorButton.setEnabled(true);
         }
     }
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-
+        if (action == UserScene.ACTION_ADD_FAVOR || action == UserScene.ACTION_REMOVE_FAVOR) {
+            mFavorButton.setEnabled(true);
+            showSnackbarNotification(
+                getString(mCollection.isHasFavor() ? R.string.add_favor_failure : R.string.remove_favor_failure));
+            updateFavor(!mCollection.isHasFavor());
+        }
     }
 
     public void showSnackbarNotification(@NonNull CharSequence sequence) {

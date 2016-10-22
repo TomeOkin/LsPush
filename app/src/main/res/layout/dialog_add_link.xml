@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:minWidth="280dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/row_vertical_padding"
+        android:paddingLeft="@dimen/row_padding_small"
+        android:paddingRight="@dimen/row_padding_small">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/row_text_padding"
+            android:text="@string/add_url"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/font_large"
+            android:textStyle="bold" />
+
+        <com.tomeokin.lspush.ui.widget.SearchEditText
+            android:id="@+id/url_field"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_height_small"
+            android:cursorVisible="true"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/search_clear"
+            android:hint="@string/uri_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/row_padding_small"
+            android:paddingRight="@dimen/row_padding_small"
+            android:textColor="@color/black_87_transparent"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/font_medium" />
+
+        <include
+            android:id="@+id/next_container"
+            layout="@layout/layout_next_button" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+
+
+

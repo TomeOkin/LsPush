@@ -36,7 +36,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    buildToolsVersion "25"
     defaultConfig {
         applicationId "com.tomeokin.lspush"
         minSdkVersion 15

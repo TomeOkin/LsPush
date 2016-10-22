@@ -20,42 +20,39 @@ import android.content.res.Resources;
 import com.tomeokin.lspush.biz.base.support.BaseAction;
 import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
-import com.tomeokin.lspush.data.model.CollectionResponse;
+import com.tomeokin.lspush.data.model.UrlFetchResponse;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import retrofit2.Call;
 
-public class ObtainLatestCollectionsAction extends BaseAction {
+public class LinkAction extends BaseAction {
     private final LsPushService mLsPushService;
-    private final LsPushUserState mLsPushUserState;
 
-    private Call<CollectionResponse> mObtainLatestCollectionsCall;
+    private Call<UrlFetchResponse> mGetUrlInfoAction;
 
-    public ObtainLatestCollectionsAction(Resources resources, LsPushService lsPushService, LsPushUserState lsPushUserState) {
+    public LinkAction(Resources resources, LsPushService mLsPushService) {
         super(resources);
-        mLsPushService = lsPushService;
-        mLsPushUserState = lsPushUserState;
+        this.mLsPushService = mLsPushService;
     }
 
-    public void obtainLatestCollection(int page, int size) {
-        checkAndCancel(mObtainLatestCollectionsCall);
-        mObtainLatestCollectionsCall = mLsPushService.getLatestCollections(mLsPushUserState.getUid(), page, size);
-        mObtainLatestCollectionsCall.enqueue(
-            new CommonCallback<CollectionResponse>(mResource, UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS, mCallback));
+    public void getUrlInfo(String url) {
+        checkAndCancel(mGetUrlInfoAction);
+        mGetUrlInfoAction = mLsPushService.getUrlInfo(url);
+        mGetUrlInfoAction.enqueue(
+            new CommonCallback<UrlFetchResponse>(mResource, UserScene.ACTION_GET_URL_INFO, mCallback));
     }
 
     @Override
     public void cancel(int action) {
         super.cancel(action);
-        if (action == UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS) {
-            checkAndCancel(mObtainLatestCollectionsCall);
+        if (action == UserScene.ACTION_GET_URL_INFO) {
+            checkAndCancel(mGetUrlInfoAction);
         }
     }
 
     @Override
     public void detach() {
         super.detach();
-        checkAndCancel(mObtainLatestCollectionsCall);
+        checkAndCancel(mGetUrlInfoAction);
     }
 }

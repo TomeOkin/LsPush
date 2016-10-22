@@ -83,9 +83,11 @@ public final class EmailFieldViewHolder extends LifecycleListener {
             if (mEmailField.length() == 0) {
                 mEmailField.setText(emails.get(0));
             }
+            mEmailField.setThreshold(1);
             mEmailField.setAdapter(new AutoCompleteEmailAdapter(mContext, emails, emailHintList));
             mEmailField.dismissDropDown();
         } else {
+            mEmailField.setThreshold(1);
             mEmailField.setAdapter(
                 new AutoCompleteEmailAdapter(mContext, Collections.<String>emptyList(), emailHintList));
         }

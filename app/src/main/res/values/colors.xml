@@ -10,7 +10,8 @@
 
     <color name="colorPrimary">@color/blue_6_whiteout</color>
     <color name="colorPrimaryDark">@color/blue_7_whiteout</color>
-    <color name="colorAccent">#F6416C</color>
+    <!--<color name="colorAccent">#F6416C</color>-->
+    <color name="colorAccent">@color/blue_5_whiteout</color>
 
     <color name="white">#ffffffff</color>
     <color name="white_opaque">#ffffffff</color>

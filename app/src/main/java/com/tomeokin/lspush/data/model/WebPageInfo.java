@@ -15,7 +15,10 @@
  */
 package com.tomeokin.lspush.data.model;
 
-public class WebPageInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class WebPageInfo implements Parcelable {
     private String url;
     private String title;
     private String description;
@@ -52,4 +55,41 @@ public class WebPageInfo {
             ", description='" + description + '\'' +
             '}';
     }
+
+    public Collection toCollection() {
+        Link link = new Link();
+        link.setUrl(url);
+        link.setTitle(title);
+
+        Collection collection = new Collection();
+        collection.setDescription(description);
+        collection.setLink(link);
+        return collection;
+    }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.url);
+        dest.writeString(this.title);
+        dest.writeString(this.description);
+    }
+
+    public WebPageInfo() {}
+
+    protected WebPageInfo(Parcel in) {
+        this.url = in.readString();
+        this.title = in.readString();
+        this.description = in.readString();
+    }
+
+    public static final Parcelable.Creator<WebPageInfo> CREATOR = new Parcelable.Creator<WebPageInfo>() {
+        @Override
+        public WebPageInfo createFromParcel(Parcel source) {return new WebPageInfo(source);}
+
+        @Override
+        public WebPageInfo[] newArray(int size) {return new WebPageInfo[size];}
+    };
 }

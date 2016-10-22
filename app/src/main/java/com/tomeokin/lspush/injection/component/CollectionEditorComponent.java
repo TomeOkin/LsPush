@@ -15,9 +15,7 @@
  */
 package com.tomeokin.lspush.injection.component;
 
-import com.tomeokin.lspush.biz.home.HomeActivity;
-import com.tomeokin.lspush.biz.home.HomeFragment;
-import com.tomeokin.lspush.biz.home.UriDialogFragment;
+import com.tomeokin.lspush.biz.home.CollectionEditorActivity;
 import com.tomeokin.lspush.injection.module.ActivityModule;
 import com.tomeokin.lspush.injection.module.CollectionModule;
 import com.tomeokin.lspush.injection.scope.PerActivity;
@@ -26,10 +24,6 @@ import dagger.Component;
 
 @PerActivity
 @Component(dependencies = AppComponent.class, modules = {ActivityModule.class, CollectionModule.class})
-public interface HomeComponent extends ActivityComponent {
-    void inject(HomeActivity homeActivity);
-
-    void inject(HomeFragment homeFragment);
-
-    void inject(UriDialogFragment uriDialogFragment);
+public interface CollectionEditorComponent {
+    void inject(CollectionEditorActivity collectionEditorActivity);
 }

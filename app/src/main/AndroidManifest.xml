@@ -82,6 +82,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.WebView" />
 
+        <activity android:name=".biz.home.CollectionEditorActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".biz.job.sync.SyncService"
             android:exported="false" />

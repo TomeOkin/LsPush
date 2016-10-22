@@ -70,9 +70,6 @@ public class HomeActivity extends BaseActivity implements BaseActionCallback, Pr
 
         // access response is not null, we move to home fragment
         enter();
-
-        //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
-        //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
     }
 
     @Override
