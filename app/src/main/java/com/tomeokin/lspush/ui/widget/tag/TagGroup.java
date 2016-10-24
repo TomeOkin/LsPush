@@ -36,8 +36,6 @@ import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
  * A <code>TagGroup</code> is a special layout with a set of tags.
  * This group has two modes:
@@ -580,28 +578,25 @@ public class TagGroup extends ViewGroup {
         public void onClick(View v) {
             final TagView tag = (TagView) v;
             if (isAppendMode) {
-                Timber.i("InternalTagClickListener.isAppendMode");
                 if (tag.isEditable()) {
-                    Timber.i("InternalTagClickListener.isAppendMode");
                     // If the clicked tag is in INPUT state, uncheck the previous checked tag if exists.
                     final TagView checkedTag = getCheckedTag();
                     if (checkedTag != null) {
-                        Timber.i("InternalTagClickListener checkedTag != null");
                         checkedTag.setChecked(false);
                     }
                 } else {
-                    Timber.i("InternalTagClickListener not tag.isEditable()");
                     // If the clicked tag is currently checked, delete the tag.
                     if (tag.isChecked()) {
-                        Timber.i("InternalTagClickListener tag.isChecked()");
-                        deleteTag(tag);
+                        if (tag.isInCheckedMarkerBound()) {
+                            deleteTag(tag);
+                        } else {
+                            tag.setChecked(false);
+                        }
                     } else {
-                        Timber.i("InternalTagClickListener tag.isChecked() false");
                         // If the clicked tag is unchecked, uncheck the previous checked tag if exists,
                         // then check the clicked tag.
                         final TagView checkedTag = getCheckedTag();
                         if (checkedTag != null) {
-                            Timber.i("InternalTagClickListener checkedTag != null");
                             checkedTag.setChecked(false);
                         }
                         tag.setChecked(true);
@@ -690,7 +685,6 @@ public class TagGroup extends ViewGroup {
         tagView.setGravity(Gravity.CENTER);
         tagView.setText(text);
         tagView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        tagView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         tagView.setClickable(isAppendMode);
         tagView.setOnClickListener(mInternalTagClickListener);
@@ -763,6 +757,8 @@ public class TagGroup extends ViewGroup {
         /** The path effect provide draw the dash border. */
         private PathEffect mPathEffect = new DashPathEffect(new float[] { 10, 5 }, 0);
 
+        private float mLastClickX, mLastClickY;
+
         public TagView(Context context) {
             super(context);
             init();
@@ -780,6 +776,7 @@ public class TagGroup extends ViewGroup {
 
         private void init() {
             setWillNotDraw(false);
+            setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             // Interrupted long click event to avoid PAUSE popup.
             setOnLongClickListener(mOnLongClickListener);
 
@@ -791,8 +788,6 @@ public class TagGroup extends ViewGroup {
             mCheckedMarkerPaint.setStyle(Paint.Style.FILL);
             mCheckedMarkerPaint.setStrokeWidth(CHECKED_MARKER_STROKE_WIDTH);
             mCheckedMarkerPaint.setColor(checkedMarkerColor);
-            // TODO: 2016/10/22
-            mCheckedMarkerPaint.setColor(Color.BLACK);
         }
 
         private void resetPaint() {
@@ -820,8 +815,6 @@ public class TagGroup extends ViewGroup {
                 mBackgroundPaint.setColor(backgroundColor);
                 setTextColor(textColor);
             }
-            // TODO: 2016/10/22
-            mBorderPaint.setColor(Color.GREEN);
 
             if (isPressed) {
                 mBackgroundPaint.setColor(pressedBackgroundColor);
@@ -858,14 +851,14 @@ public class TagGroup extends ViewGroup {
          *
          * @param checked true is checked, false otherwise
          */
+        @SuppressWarnings("ResourceType")
         public void setChecked(boolean checked) {
             isChecked = checked;
             // Make the checked mark drawing region.
-            setPadding(getPaddingLeft(), getPaddingTop(),
-                isChecked ? (int) (getPaddingRight() + getHeight() / 2.5f + CHECKED_MARKER_OFFSET) : getPaddingRight(),
-                getPaddingBottom());
+            int right = isChecked ? (int) (mHorizontalPadding + getHeight() / 2.5f + CHECKED_MARKER_OFFSET)
+                : mHorizontalPadding;
+            setPadding(mHorizontalPadding, mVerticalPadding, right, mVerticalPadding);
             resetPaint();
-            invalidate();
         }
 
         public boolean isChecked() {
@@ -887,8 +880,6 @@ public class TagGroup extends ViewGroup {
             canvas.drawRect(mVerticalBlankFillRectF, mBackgroundPaint);
 
             if (isChecked) {
-                Timber.i("mCheckedMarkerBound %s", mCheckedMarkerBound.toString());
-                mCheckedMarkerPaint.setColor(Color.BLACK);
                 canvas.save();
                 canvas.rotate(45, mCheckedMarkerBound.centerX(), mCheckedMarkerBound.centerY());
                 canvas.drawLine(mCheckedMarkerBound.left, mCheckedMarkerBound.centerY(), mCheckedMarkerBound.right,
@@ -906,8 +897,8 @@ public class TagGroup extends ViewGroup {
             super.onSizeChanged(w, h, oldw, oldh);
             int left = (int) borderStrokeWidth;
             int top = (int) borderStrokeWidth;
-            int right = (int) (w - borderStrokeWidth);
-            int bottom = (int) (h - borderStrokeWidth);
+            int right = (int) (left + w - borderStrokeWidth * 2);
+            int bottom = (int) (top + h - borderStrokeWidth * 2);
 
             int d = bottom - top;
 
@@ -938,14 +929,18 @@ public class TagGroup extends ViewGroup {
 
             int m = (int) (h / 2.5f);
             h = bottom - top;
-            mCheckedMarkerBound.set(right - m - getPaddingRight() + CHECKED_MARKER_OFFSET, top + h / 2 - m / 2,
-                right - getPaddingRight() + CHECKED_MARKER_OFFSET, bottom - h / 2 + m / 2);
+            mCheckedMarkerBound.set(right - m - mHorizontalPadding + CHECKED_MARKER_OFFSET, top + h / 2 - m / 2,
+                right - mHorizontalPadding + CHECKED_MARKER_OFFSET, bottom - h / 2 + m / 2);
 
             // Ensure the checked mark drawing region is correct across screen orientation changes.
             if (isChecked) {
-                setPadding(getPaddingLeft(), getPaddingTop(),
-                    (int) (getPaddingRight() + h / 2.5f + CHECKED_MARKER_OFFSET), getPaddingBottom());
+                setPadding(mHorizontalPadding, mVerticalPadding,
+                    (int) (mHorizontalPadding + h / 2.5f + CHECKED_MARKER_OFFSET), mVerticalPadding);
             }
+        }
+
+        protected boolean isInCheckedMarkerBound() {
+            return mCheckedMarkerBound.contains(mLastClickX, mLastClickY);
         }
 
         @Override
@@ -957,6 +952,8 @@ public class TagGroup extends ViewGroup {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
+                    mLastClickX = event.getX();
+                    mLastClickY = event.getY();
                     getDrawingRect(mOutRect);
                     isPressed = true;
                     resetPaint();

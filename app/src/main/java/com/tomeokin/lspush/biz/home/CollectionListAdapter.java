@@ -51,7 +51,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     private View.OnClickListener mExplorerListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final int uid = (int) v.getTag();
+            final int uid = (int) v.getTag(R.id.avatar_tag_uid);
             // TODO: 2016/10/20 user page
         }
     };
@@ -191,8 +191,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             if (avatar.getParent() == null) {
                 container.addView(avatar);
             }
-            avatar.setTag(explorers.get(i).getUid());
-
+            avatar.setTag(R.id.avatar_tag_uid, explorers.get(i).getUid());
+            avatar.setOnClickListener(mExplorerListener);
         }
     }
 

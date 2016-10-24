@@ -128,7 +128,6 @@ public class HomeFragment extends BaseFragment
         mColListAdapter = new CollectionListAdapter(mColList, this);
         mColRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mColRv.setAdapter(mColListAdapter);
-        Toast.makeText(getContext(), "I'm HomeFragment", Toast.LENGTH_SHORT).show();
         return view;
     }
 
