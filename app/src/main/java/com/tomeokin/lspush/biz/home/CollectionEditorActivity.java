@@ -22,12 +22,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
+import com.tomeokin.lspush.biz.collect.CollectionTargetActivity;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
@@ -35,23 +38,28 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.CollectionEditorComponent;
 import com.tomeokin.lspush.injection.component.DaggerCollectionEditorComponent;
 import com.tomeokin.lspush.injection.module.CollectionModule;
+import com.tomeokin.lspush.ui.glide.ImageLoader;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CollectionEditorActivity extends BaseActivity
     implements BaseActionCallback, ProvideComponent<CollectionEditorComponent> {
     public static final String REQUEST_RESULT_COLLECTION = "request.result.collection";
     private static final String EXTRA_COLLECTION = "extra.collection";
-    
+
+    private static final int REQUEST_IMAGE_URL = 201;
+
     private CollectionEditorComponent mComponent;
     private Collection mCollection;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.title) EditText mTitleField;
     @BindView(R.id.description) EditText mDescriptionField;
+    @BindView(R.id.description_image) ImageView mDescriptionImageField;
 
     @Inject CollectionAction mCollectionAction;
 
@@ -96,6 +104,13 @@ public class CollectionEditorActivity extends BaseActivity
         });
         mTitleField.setText(mCollection.getLink().getTitle());
         mDescriptionField.setText(mCollection.getDescription());
+        mDescriptionImageField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
+                    REQUEST_IMAGE_URL);
+            }
+        });
     }
 
     @Override
@@ -127,5 +142,24 @@ public class CollectionEditorActivity extends BaseActivity
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Timber.v("Result %d, requestCode %d", resultCode, requestCode);
+        if (resultCode != Activity.RESULT_OK) {
+            Timber.w("Error result %d, requestCode %d", resultCode, requestCode);
+            return;
+        }
+
+        if (requestCode == REQUEST_IMAGE_URL) {
+            String url = data.getStringExtra(CollectionTargetActivity.REQUEST_RESULT_IMAGE_URL);
+            if (!TextUtils.isEmpty(url)) {
+                Timber.i("image url %s", url);
+                ImageLoader.loadImage(this, mDescriptionImageField, url);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

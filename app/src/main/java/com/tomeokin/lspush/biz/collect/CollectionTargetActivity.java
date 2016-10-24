@@ -16,65 +16,59 @@
 package com.tomeokin.lspush.biz.collect;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseFragment;
+import com.tomeokin.lspush.ui.widget.BaseWebViewActivity;
 import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 
 import timber.log.Timber;
 
-public class CollectionTargetFragment extends BaseFragment implements View.OnTouchListener, OnActionClickListener {
+public class CollectionTargetActivity extends BaseWebViewActivity
+    implements View.OnTouchListener, OnActionClickListener {
     public static final String EXTRA_TARGET_URL = "extra.target.url";
-    public static final int REQUEST_DIALOG = 0;
+    public static final int REQUEST_DIALOG = 201;
+    public static final String REQUEST_RESULT_IMAGE_URL = "request.result.image.url";
 
-    private WebView mWebView;
     private String mUrl;
     private float mTouchX, mTouchY;
+    private String mImageUrl;
+    private boolean mSelect;
 
-    public static Bundle prepareArgument(String url) {
-        Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_TARGET_URL, url);
-        return bundle;
+    public static void start(Activity activity, String url, int requestCode) {
+        Intent starter = new Intent(activity, CollectionTargetActivity.class);
+        starter.putExtra(EXTRA_TARGET_URL, url);
+        activity.startActivityForResult(starter, requestCode);
+        activity.overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mUrl = getArguments().getString(EXTRA_TARGET_URL);
-        }
+    protected boolean onPrepareActivity() {
+        mUrl = getIntent().getStringExtra(EXTRA_TARGET_URL);
+        return !TextUtils.isEmpty(mUrl);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-        @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_collection_target, container, false);
-        mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.loadUrl(mUrl);
-        mWebView.getSettings().setJavaScriptEnabled(true);
+    protected void onPrepareWebView(WebView webView) {
+        super.onPrepareWebView(webView);
+        webView.getSettings().setJavaScriptEnabled(true);
         // https://labs.mwrinfosecurity.com/blog/webview-addjavascriptinterface-remote-code-execution/
         // FIXME: 2016/9/20 fix it later
-        mWebView.addJavascriptInterface(new JsInterface(getContext(), this),
-            getString(R.string.web_image_click_target));
+        webView.addJavascriptInterface(new JsInterface(this), getString(R.string.web_image_click_target));
         // http://blog.csdn.net/u013107656/article/details/51729398
-        mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
-        mWebView.removeJavascriptInterface("accessibilityTraversal");
-        mWebView.removeJavascriptInterface("accessibility");
-        mWebView.setOnTouchListener(this);
-        return view;
+        webView.removeJavascriptInterface("searchBoxJavaBridge_");
+        webView.removeJavascriptInterface("accessibilityTraversal");
+        webView.removeJavascriptInterface("accessibility");
+        webView.setOnTouchListener(this);
     }
 
     @Override
@@ -82,6 +76,8 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
         if (requestCode == REQUEST_DIALOG) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 Timber.v("ok is click");
+                mSelect = true;
+                onBackPressed();
             } else if (which == DialogInterface.BUTTON_NEGATIVE) {
                 Timber.v("cancel is click");
             }
@@ -90,19 +86,17 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
 
     private class JsInterface {
         private final Context mContext;
-        private final Fragment mInstance;
-        private ImageDialogFragment dialog;
 
-        public JsInterface(Context context, Fragment instance) {
+        public JsInterface(Context context) {
             mContext = context;
-            mInstance = instance;
         }
 
         @JavascriptInterface
         public void click(String url, int width, int height) {
+            mImageUrl = url;
             final float density = getResources().getDisplayMetrics().density;
-            dialog = new ImageDialogFragment.Builder(mContext, getFragmentManager()).setTargetFragment(mInstance,
-                REQUEST_DIALOG).show(url, (int) (width * density), (int) (height * density));
+            new ImageDialogFragment.Builder(mContext, getSupportFragmentManager()).setRequestCode(REQUEST_DIALOG)
+                .show(url, (int) (width * density), (int) (height * density));
         }
     }
 
@@ -129,6 +123,22 @@ public class CollectionTargetFragment extends BaseFragment implements View.OnTou
 
     private void clickImage(float touchX, float touchY) {
         final String js = getString(R.string.web_image_click, touchX, touchY);
-        mWebView.loadUrl(js);
+        getWebView().loadUrl(js);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent data = new Intent();
+        if (mSelect) {
+            data.putExtra(REQUEST_RESULT_IMAGE_URL, mImageUrl);
+        }
+        setResult(Activity.RESULT_OK, data);
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_right_out);
     }
 }

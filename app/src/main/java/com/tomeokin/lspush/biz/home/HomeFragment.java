@@ -62,8 +62,8 @@ import timber.log.Timber;
 
 public class HomeFragment extends BaseFragment
     implements BaseActionCallback, CollectionListAdapter.Callback, UriDialogFragment.OnUrlConfirmListener {
-    private static final int REQUEST_OPEN_COLLECTION = 0;
-    private static final int REQUEST_EDIT_COLLECTION = 1;
+    private static final int REQUEST_OPEN_COLLECTION = 201;
+    private static final int REQUEST_EDIT_COLLECTION = 202;
     private static final int REQUEST_GET_URL_INFO = 2;
 
     private Unbinder mUnBinder;
@@ -90,8 +90,8 @@ public class HomeFragment extends BaseFragment
 
         Link link = new Link();
         link.setTitle("Tencent/tinker");
-        //link.setUrl("https://github.com/Tencent/tinker");
-        link.setUrl("http://thefinestartist.com");
+        link.setUrl("https://github.com/Tencent/tinker");
+        //link.setUrl("http://thefinestartist.com");
 
         Collection collection = new Collection();
         collection.setUser(user);
@@ -244,6 +244,8 @@ public class HomeFragment extends BaseFragment
                     mColListAdapter.updateColList(collection);
                 }
             }
+        } else if (requestCode == REQUEST_EDIT_COLLECTION) {
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

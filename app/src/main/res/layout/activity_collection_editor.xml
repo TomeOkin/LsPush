@@ -43,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
+            android:inputType="textNoSuggestions"
             android:textColor="@color/black_87_transparent"
             android:textSize="@dimen/font_medium" />
 
@@ -61,6 +62,8 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="120"
             android:textColor="@color/black_87_transparent"
             android:textSize="@dimen/font_medium" />
 
@@ -104,11 +107,6 @@
             app:atg_inputHint="@string/tag"
             app:atg_isAppendMode="true"
             app:atg_textSize="@dimen/font_medium" />
-
-        <!--app:atg_checkedBorderColor="#66bd2b"-->
-        <!--app:atg_checkedMarkerColor="@color/colorAccent"-->
-        <!--app:atg_checkedTextColor="@color/white"-->
-        <!--app:atg_dashBorderColor="#66bd2b"-->
 
     </LinearLayout>
 

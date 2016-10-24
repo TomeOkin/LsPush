@@ -77,12 +77,21 @@
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.WebView" />
 
-        <activity android:name=".biz.home.CollectionEditorActivity"
+        <activity
+            android:name=".biz.home.CollectionEditorActivity"
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
+            android:configChanges="locale|keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".biz.collect.CollectionTargetActivity"
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
