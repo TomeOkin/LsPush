@@ -25,6 +25,7 @@ import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.data.remote.LsPushService;
+import com.tomeokin.lspush.data.support.GsonStrategy;
 
 import java.io.File;
 import java.io.IOException;
@@ -137,7 +138,9 @@ public class LsPushApiModule {
     @Provides
     @Singleton
     public Gson provideGson() {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .setExclusionStrategies(new GsonStrategy())
+            .create();
     }
 
     @Provides

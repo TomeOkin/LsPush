@@ -139,6 +139,7 @@
 
 # lspush
 -keep public class com.tomeokin.lspush.data.model.**
+-keep public class com.tomeokin.lspush.data.support.GsonIgnore
 
 # mob sms sdk
 -keepattributes EnclosingMethod

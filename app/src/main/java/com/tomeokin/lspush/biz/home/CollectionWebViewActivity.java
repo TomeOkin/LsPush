@@ -271,11 +271,11 @@ public class CollectionWebViewActivity extends BaseActivity
             case R.id.action_favor:
                 updateFavor(!mCollection.isHasFavor());
                 mFavorButton.setEnabled(false);
-                //if (mCollection.isHasFavor()) {
-                //    mFavorAction.addFavor(mCollection);
-                //} else {
-                //    mFavorAction.removeFavor(mCollection);
-                //}
+                if (mCollection.isHasFavor()) {
+                    mFavorAction.addFavor(mCollection);
+                } else {
+                    mFavorAction.removeFavor(mCollection);
+                }
                 break;
             default:
                 dispatchMenuItem(id);

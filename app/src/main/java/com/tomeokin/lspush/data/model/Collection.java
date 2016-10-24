@@ -18,6 +18,8 @@ package com.tomeokin.lspush.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tomeokin.lspush.data.support.GsonIgnore;
+
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class Collection implements Parcelable {
     private long favorCount;
     private boolean hasFavor;
 
-    private transient boolean hasRead;
+    @GsonIgnore private boolean hasRead;
 
     public long getId() {
         return id;
@@ -206,6 +208,7 @@ public class Collection implements Parcelable {
         dest.writeTypedList(this.explorers);
         dest.writeLong(this.favorCount);
         dest.writeByte(this.hasFavor ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasRead ? (byte) 1 : (byte) 0);
     }
 
     public Collection() {}
@@ -224,9 +227,10 @@ public class Collection implements Parcelable {
         this.explorers = in.createTypedArrayList(User.CREATOR);
         this.favorCount = in.readLong();
         this.hasFavor = in.readByte() != 0;
+        this.hasRead = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Collection> CREATOR = new Parcelable.Creator<Collection>() {
+    public static final Creator<Collection> CREATOR = new Creator<Collection>() {
         @Override
         public Collection createFromParcel(Parcel source) {return new Collection(source);}
 

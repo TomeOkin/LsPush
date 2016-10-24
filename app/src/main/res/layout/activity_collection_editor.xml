@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_content"
     android:layout_width="match_parent"
@@ -80,9 +79,9 @@
             android:id="@+id/description_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/row_vertical_padding"
             android:adjustViewBounds="true"
             android:maxHeight="@dimen/list_item_max_content"
-            android:padding="@dimen/row_vertical_padding"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_add_image" />
 
@@ -100,15 +99,16 @@
         <com.tomeokin.lspush.ui.widget.tag.TagGroup
             android:id="@+id/tagGroup"
             android:layout_width="match_parent"
-            app:atg_isAppendMode="true"
-            app:atg_textSize="@dimen/font_medium"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/row_vertical_padding"
             app:atg_inputHint="@string/tag"
-            app:atg_checkedMarkerColor="@color/colorAccent"
-            app:atg_checkedTextColor="@color/black_87_transparent"
-            app:atg_dashBorderColor="#66bd2b"
-            app:atg_borderColor="#66bd2b"
-            app:atg_checkedBorderColor="#66bd2b"
-            android:layout_height="wrap_content" />
+            app:atg_isAppendMode="true"
+            app:atg_textSize="@dimen/font_medium" />
+
+        <!--app:atg_checkedBorderColor="#66bd2b"-->
+        <!--app:atg_checkedMarkerColor="@color/colorAccent"-->
+        <!--app:atg_checkedTextColor="@color/white"-->
+        <!--app:atg_dashBorderColor="#66bd2b"-->
 
     </LinearLayout>
 

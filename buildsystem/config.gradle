@@ -14,7 +14,7 @@ ext {
     stethoVersion = "1.4.1"
     junit4Version = "4.12"
     mockitoVersion = "1.10.19"
-    mockito2Version = "2.2.5"
+    mockito2Version = "2.2.7"
 
     File file = project.rootProject.file('local.properties')
     Properties properties = new Properties()
@@ -91,7 +91,7 @@ ext {
 
             // crash report
             // bugly, https://bugly.qq.com/androidfast
-            crashreport          : "com.tencent.bugly:crashreport:2.3.0",
+            crashreport          : "com.tencent.bugly:crashreport:2.3.1",
             nativecrashreport    : "com.tencent.bugly:nativecrashreport:3.0"
     ]
 
