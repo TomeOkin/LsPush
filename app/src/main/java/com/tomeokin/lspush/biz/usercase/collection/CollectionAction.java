@@ -50,7 +50,7 @@ public class CollectionAction extends BaseAction {
 
     public void postCollection(Collection collection) {
         checkAndCancel(mPostCollectionCall);
-        mPostCollectionCall = mLsPushService.postCollection(mLsPushUserState.getExpireToken(), collection);
+        mPostCollectionCall = mLsPushService.postCollection(mLsPushUserState.getExpireTokenString(), collection);
         mPostCollectionCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_POST_COLLECTION, mCallback));
     }
 

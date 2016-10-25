@@ -20,10 +20,9 @@ import android.content.Context;
 
 import com.evernote.android.job.JobManager;
 import com.google.gson.Gson;
-import com.squareup.sqlbrite.BriteDatabase;
-import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
+import com.tomeokin.lspush.biz.home.CollectionHolder;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
-import com.tomeokin.lspush.common.PreferenceUtils;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.injection.module.AppModule;
 import com.tomeokin.lspush.injection.module.DataModule;
@@ -47,13 +46,11 @@ public interface AppComponent {
 
     Gson gson();
 
-    BriteDatabase briteDatabase();
-
-    PreferenceUtils preferenceUtils();
-
     LsPushUserState lspushUserState();
 
     LocalUserInfoAction localUserInfoAction();
 
     JobManager jobManager();
+
+    CollectionHolder collectionHolder();
 }

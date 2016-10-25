@@ -19,6 +19,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.evernote.android.job.JobManager;
+import com.google.gson.Gson;
+import com.tomeokin.lspush.biz.home.CollectionHolder;
 import com.tomeokin.lspush.biz.job.LsPushJobCreator;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.injection.qualifier.AppContext;
@@ -51,8 +53,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    LsPushUserState provideLsPushUserState() {
-        return new LsPushUserState();
+    LsPushUserState provideLsPushUserState(Gson gson) {
+        return new LsPushUserState(gson);
     }
 
     @Provides
@@ -60,5 +62,11 @@ public class AppModule {
     JobManager provideJobManager(@AppContext Context context) {
         JobManager.create(context).addJobCreator(new LsPushJobCreator(context));
         return JobManager.instance();
+    }
+
+    @Provides
+    @Singleton
+    CollectionHolder provideCollectionHolder() {
+        return new CollectionHolder();
     }
 }

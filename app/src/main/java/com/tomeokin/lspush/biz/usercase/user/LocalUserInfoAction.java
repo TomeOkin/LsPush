@@ -49,6 +49,7 @@ public class LocalUserInfoAction extends BaseAction {
     private final PreferenceUtils mPreferenceUtils;
     private final LsPushUserState mLsPushUserState;
     private final Context mContext;
+
     private Subscription mUserLoginSubscription;
     private Subscription mUserLogoutSubscription;
     private Subscription mGetAccessResponseSubscription;

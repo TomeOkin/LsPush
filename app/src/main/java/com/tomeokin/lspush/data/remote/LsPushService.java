@@ -72,7 +72,7 @@ public interface LsPushService {
         @Part MultipartBody.Part image);
 
     @POST("api/collection/post")
-    Call<BaseResponse> postCollection(@Header(value = "token") CryptoToken cryptoToken, @Body Collection collection);
+    Call<BaseResponse> postCollection(@Header(value = "token") String token, @Body Collection collection);
 
     @GET("api/collection/get")
     Call<CollectionResponse> getCollections(@Query("uid") String uid, @Query("page") int page, @Query("size") int size);
@@ -86,10 +86,10 @@ public interface LsPushService {
         @Query("size") int size);
 
     @POST("/api/favor/set")
-    Call<BaseResponse> addFavor(@Header(value = "token") CryptoToken cryptoToken, @Body CollectionBinding colBinding);
+    Call<BaseResponse> addFavor(@Header(value = "token") String token, @Body CollectionBinding colBinding);
 
     @POST("/api/favor/remove")
-    Call<BaseResponse> removeFavor(@Header(value = "token") CryptoToken cryptoToken, @Body long colId);
+    Call<BaseResponse> removeFavor(@Header(value = "token") String token, @Body long colId);
 
     @GET("/api/link/fetch")
     Call<UrlFetchResponse> getUrlInfo(@Query("url") String url);

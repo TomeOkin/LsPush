@@ -54,13 +54,13 @@ public class FavorAction extends BaseAction {
         binding.setCollectionId(collection.getId());
 
         checkAndCancel(mAddFavorCall);
-        mAddFavorCall = mLsPushService.addFavor(mLsPushUserState.getExpireToken(), binding);
+        mAddFavorCall = mLsPushService.addFavor(mLsPushUserState.getExpireTokenString(), binding);
         mAddFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_ADD_FAVOR, mCallback));
     }
 
     public void removeFavor(@NonNull Collection collection) {
         checkAndCancel(mRemoveFavorCall);
-        mRemoveFavorCall = mLsPushService.removeFavor(mLsPushUserState.getExpireToken(), collection.getId());
+        mRemoveFavorCall = mLsPushService.removeFavor(mLsPushUserState.getExpireTokenString(), collection.getId());
         mRemoveFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_REMOVE_FAVOR, mCallback));
     }
 

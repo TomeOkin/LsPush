@@ -62,12 +62,13 @@ public class CollectionEditorActivity extends BaseActivity
     @BindView(R.id.description_image) ImageView mDescriptionImageField;
 
     @Inject CollectionAction mCollectionAction;
+    @Inject CollectionHolder mCollectionHolder;
 
     public static void start(@NonNull Fragment source, @Nullable Collection collection, int requestCode) {
         Intent starter = new Intent(source.getContext(), CollectionEditorActivity.class);
-        if (collection != null) {
-            starter.putExtra(EXTRA_COLLECTION, collection);
-        }
+        //if (collection != null) {
+        //    starter.putExtra(EXTRA_COLLECTION, collection);
+        //}
         source.startActivityForResult(starter, requestCode);
         source.getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
     }
@@ -90,7 +91,10 @@ public class CollectionEditorActivity extends BaseActivity
         setContentView(R.layout.activity_collection_editor);
         ButterKnife.bind(this);
 
-        mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
+        //mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
+        component().inject(this);
+        mCollection = mCollectionHolder.getCollection();
+
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.edit);
@@ -116,14 +120,15 @@ public class CollectionEditorActivity extends BaseActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        component().inject(this);
+        //component().inject(this);
         mCollectionAction.attach(this);
     }
 
     @Override
     public void onBackPressed() {
         Intent data = new Intent();
-        data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
+        //data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
+        mCollectionHolder.setCollection(mCollection);
         setResult(Activity.RESULT_OK, data);
         super.onBackPressed();
     }
@@ -155,8 +160,9 @@ public class CollectionEditorActivity extends BaseActivity
         if (requestCode == REQUEST_IMAGE_URL) {
             String url = data.getStringExtra(CollectionTargetActivity.REQUEST_RESULT_IMAGE_URL);
             if (!TextUtils.isEmpty(url)) {
-                Timber.i("image url %s", url);
+                Timber.v("image url %s", url);
                 ImageLoader.loadImage(this, mDescriptionImageField, url);
+                mCollection.setImage(url);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

@@ -56,6 +56,7 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
     private BottomBar mBottomBar;
 
     @Inject FavorAction mFavorAction;
+    @Inject CollectionHolder mCollectionHolder;
 
     @Override
     public CollectionWebViewComponent component() {
@@ -69,16 +70,20 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
         return mComponent;
     }
 
-    public static void start(@NonNull Fragment source, @NonNull Collection col, int requestCode) {
+    public static void start(@NonNull Fragment source, @Nullable Collection col, int requestCode) {
         Intent starter = new Intent(source.getContext(), CollectionWebViewActivity.class);
-        starter.putExtra(EXTRA_COLLECTION, col);
+        //if (col != null) {
+        //    starter.putExtra(EXTRA_COLLECTION, col);
+        //}
         source.startActivityForResult(starter, requestCode);
         source.getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
     }
 
     @Override
     protected boolean onPrepareActivity() {
-        mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
+        //mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
+        component().inject(this);
+        mCollection = mCollectionHolder.getCollection();
         return mCollection != null && mCollection.getLink() != null;
     }
 
@@ -138,7 +143,8 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
     @Override
     public void onBackPressed() {
         Intent data = new Intent();
-        data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
+        mCollectionHolder.setCollection(mCollection);
+        //data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
         setResult(Activity.RESULT_OK, data);
         super.onBackPressed();
     }
@@ -152,7 +158,7 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        component().inject(this);
+        //component().inject(this);
         mFavorAction.attach(this);
     }
 
@@ -190,7 +196,7 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
     }
 
     private void updateFavor(boolean favor) {
-        if (mCollection.isHasRead() != favor) {
+        if (mCollection.isHasFavor() != favor) {
             mCollection.setFavorCount(mCollection.getFavorCount() + (favor ? 1 : -1));
             mCollection.setHasFavor(favor);
         }

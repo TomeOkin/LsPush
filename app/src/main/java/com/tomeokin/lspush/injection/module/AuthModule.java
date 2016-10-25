@@ -33,6 +33,7 @@ import dagger.Provides;
 
 @Module
 public class AuthModule {
+
     @Provides
     @PerActivity
     public SendCaptchaAction provideSendCaptchaAction(@ActivityContext Context context, LsPushService lsPushService) {

@@ -17,6 +17,7 @@ package com.tomeokin.lspush.biz.usercase.user;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 
@@ -25,8 +26,11 @@ import com.tomeokin.lspush.data.model.CryptoToken;
  */
 public class LsPushUserState {
     private AccessResponse mAccessResponse;
+    private final Gson mGson;
+    private String mExpireTokenString;
 
-    public LsPushUserState() {
+    public LsPushUserState(Gson gson) {
+        mGson = gson;
     }
 
     @Nullable
@@ -36,6 +40,13 @@ public class LsPushUserState {
 
     public synchronized void setAccessResponse(@Nullable AccessResponse accessResponse) {
         mAccessResponse = accessResponse;
+        try {
+            if (accessResponse != null) {
+                mExpireTokenString = mGson.toJson(accessResponse.getExpireToken());
+            }
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     @Nullable
@@ -49,6 +60,10 @@ public class LsPushUserState {
 
     public CryptoToken getExpireToken() {
         return mAccessResponse == null ? null : mAccessResponse.getExpireToken();
+    }
+
+    public String getExpireTokenString() {
+        return mExpireTokenString;
     }
 
     //public static boolean checkNeedToRefreshExpireToken(@NonNull AccessResponse accessResponse) {

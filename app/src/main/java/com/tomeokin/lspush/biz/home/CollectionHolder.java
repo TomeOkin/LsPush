@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.injection.scope;
+package com.tomeokin.lspush.biz.home;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.tomeokin.lspush.data.model.Collection;
 
-import javax.inject.Scope;
+public class CollectionHolder {
+    private Collection mCollection;
 
-/**
- * for those need auth service
- */
+    public Collection getCollection() {
+        return mCollection;
+    }
 
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UserScope { }
+    public void setCollection(Collection collection) {
+        this.mCollection = collection;
+    }
+}

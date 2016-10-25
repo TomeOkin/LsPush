@@ -50,6 +50,7 @@ import org.threeten.bp.Instant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class HomeFragment extends BaseFragment
     implements BaseActionCallback, CollectionListAdapter.Callback, UriDialogFragment.OnUrlConfirmListener {
     private static final int REQUEST_OPEN_COLLECTION = 201;
     private static final int REQUEST_EDIT_COLLECTION = 202;
-    private static final int REQUEST_GET_URL_INFO = 2;
+    private static final int REQUEST_GET_URL_INFO = 203;
 
     private Unbinder mUnBinder;
     private List<Collection> mColList;
@@ -75,6 +76,7 @@ public class HomeFragment extends BaseFragment
     @BindView(R.id.col_rv) RecyclerView mColRv;
 
     @Inject CollectionAction mCollectionAction;
+    @Inject CollectionHolder mCollectionHolder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class HomeFragment extends BaseFragment
         Date create = DateTimeUtils.toDate(now);
         collection.setCreateDate(create);
         collection.setUpdateDate(create);
-        collection.setExplorers(Arrays.asList(user));
+        collection.setExplorers(Collections.singletonList(user));
         collection.setTags(Arrays.asList("github", "热修复", "Tencent", "hot-fix"));
         collection.setFavorCount(101);
         collection.setHasFavor(true);
@@ -216,14 +218,18 @@ public class HomeFragment extends BaseFragment
 
     @Override
     public void onOpenCollectionUrl(Collection collection) {
-        CollectionWebViewActivity.start(this, collection, REQUEST_OPEN_COLLECTION);
+        //CollectionWebViewActivity.start(this, collection, REQUEST_OPEN_COLLECTION);
+        mCollectionHolder.setCollection(collection);
+        CollectionWebViewActivity.start(this, null, REQUEST_OPEN_COLLECTION);
     }
 
     @Override
     public void onUrlConfirm(@Nullable WebPageInfo webPageInfo) {
         if (webPageInfo != null) {
             Timber.i("url info: %s", webPageInfo.toString());
-            CollectionEditorActivity.start(this, webPageInfo.toCollection(), REQUEST_EDIT_COLLECTION);
+            //CollectionEditorActivity.start(this, webPageInfo.toCollection(), REQUEST_EDIT_COLLECTION);
+            mCollectionHolder.setCollection(webPageInfo.toCollection());
+            CollectionEditorActivity.start(this, null, REQUEST_EDIT_COLLECTION);
         } else {
             Timber.i("WebPageInfo is null");
         }
@@ -239,7 +245,8 @@ public class HomeFragment extends BaseFragment
 
         if (requestCode == REQUEST_OPEN_COLLECTION) {
             if (data != null) {
-                Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
+                //Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
+                Collection collection = mCollectionHolder.getCollection();
                 if (collection != null) {
                     mColListAdapter.updateColList(collection);
                 }

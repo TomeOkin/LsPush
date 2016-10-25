@@ -72,6 +72,11 @@ public class CollectionTargetActivity extends BaseWebViewActivity
     }
 
     @Override
+    protected String onPrepareUrl() {
+        return mUrl;
+    }
+
+    @Override
     public void onDialogActionClick(DialogInterface dialog, int requestCode, int which) {
         if (requestCode == REQUEST_DIALOG) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
