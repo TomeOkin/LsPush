@@ -96,7 +96,8 @@
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.WebView" />
 
         <service
             android:name=".biz.job.sync.SyncService"

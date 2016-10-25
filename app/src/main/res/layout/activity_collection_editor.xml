@@ -38,13 +38,14 @@
             android:textColorHint="@color/colorAccent"
             android:textSize="@dimen/font_medium" />
 
+        <!-- copyable but not editable -->
         <EditText
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:inputType="textNoSuggestions"
+            android:inputType="none"
             android:textColor="@color/black_87_transparent"
+            android:textIsSelectable="true"
             android:textSize="@dimen/font_medium" />
 
         <TextView

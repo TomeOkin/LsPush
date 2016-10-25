@@ -48,8 +48,8 @@ import butterknife.ButterKnife;
 
 public class CollectionWebViewActivity extends BaseWebViewActivity
     implements BaseActionCallback, ProvideComponent<CollectionWebViewComponent> {
-    public static final String REQUEST_RESULT_COLLECTION = "request.result.collection";
-    private static final String EXTRA_COLLECTION = "extra.collection";
+    //public static final String REQUEST_RESULT_COLLECTION = "request.result.collection";
+    //private static final String EXTRA_COLLECTION = "extra.collection";
 
     private CollectionWebViewComponent mComponent;
     private Collection mCollection;
@@ -165,7 +165,6 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // when onPrepareActivity is false, we will finish activity, in this time, mFavorAction will be null
         if (mFavorAction != null) {
             mFavorAction.detach();
             mFavorAction = null;

@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,6 +71,12 @@ public class CollectionTargetActivity extends BaseWebViewActivity
         webView.removeJavascriptInterface("accessibilityTraversal");
         webView.removeJavascriptInterface("accessibility");
         webView.setOnTouchListener(this);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setSubTitle(getString(R.string.select_description_image));
     }
 
     @Override

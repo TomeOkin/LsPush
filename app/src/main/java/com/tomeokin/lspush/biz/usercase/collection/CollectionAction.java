@@ -24,6 +24,7 @@ import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.CollectionResponse;
+import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import retrofit2.Call;
@@ -49,6 +50,9 @@ public class CollectionAction extends BaseAction {
     }
 
     public void postCollection(Collection collection) {
+        User user = new User();
+        user.setUid(mLsPushUserState.getUid());
+        collection.setUser(user);
         checkAndCancel(mPostCollectionCall);
         mPostCollectionCall = mLsPushService.postCollection(mLsPushUserState.getExpireTokenString(), collection);
         mPostCollectionCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_POST_COLLECTION, mCallback));

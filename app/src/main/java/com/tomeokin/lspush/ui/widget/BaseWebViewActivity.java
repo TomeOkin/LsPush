@@ -60,6 +60,7 @@ public class BaseWebViewActivity extends BaseActivity
     @BindView(R.id.toolbar) Toolbar mToolBar;
     @BindView(R.id.titleLayout) LinearLayout mTitleLayout;
     @BindView(R.id.title_tv) TextView mTitle;
+    @BindView(R.id.subTitle_tv) TextView mSubTitle;
     @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
     @BindView(R.id.toolbar_action_more) ImageButton mMoreButton;
 
@@ -105,6 +106,11 @@ public class BaseWebViewActivity extends BaseActivity
 
     protected String onPrepareTitle() {
         return null;
+    }
+
+    protected void setSubTitle(CharSequence subTitle) {
+        mSubTitle.setVisibility(View.VISIBLE);
+        mSubTitle.setText(subTitle);
     }
 
     private void setupWebView() {

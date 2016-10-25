@@ -706,12 +706,12 @@ public class TagGroup extends ViewGroup {
      * The tag view which has two states can be either NORMAL or INPUT.
      */
     public class TagView extends AppCompatTextView {
-        private final OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return ((TagView) v).isEditable();
-            }
-        };
+        //private final OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
+        //    @Override
+        //    public boolean onLongClick(View v) {
+        //        return ((TagView) v).isEditable();
+        //    }
+        //};
 
         /** The offset to the text. */
         private static final int CHECKED_MARKER_OFFSET = 3;
@@ -778,7 +778,7 @@ public class TagGroup extends ViewGroup {
             setWillNotDraw(false);
             setRawInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             // Interrupted long click event to avoid PAUSE popup.
-            setOnLongClickListener(mOnLongClickListener);
+            //setOnLongClickListener(mOnLongClickListener);
 
             mEditable = true;
             setEditable(false, null);

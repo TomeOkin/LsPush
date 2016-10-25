@@ -95,4 +95,10 @@
     <string name="description_image">Description Image</string>
     <string name="tag">Tag</string>
     <string name="edit">Edit</string>
+    <string name="complete">Complete</string>
+    <string name="waiting_post_collection">The collection is posting now.</string>
+    <string name="post_collection_success">Post collection success.</string>
+    <string name="post_collection_failure">Post collection failure.</string>
+    <string name="select_description_image">Select Description Image</string>
+    <string name="ignore_change_of_collection">Collection has change, ignore them ?</string>
 </resources>

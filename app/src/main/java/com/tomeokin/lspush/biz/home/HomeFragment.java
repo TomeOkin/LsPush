@@ -93,7 +93,6 @@ public class HomeFragment extends BaseFragment
         Link link = new Link();
         link.setTitle("Tencent/tinker");
         link.setUrl("https://github.com/Tencent/tinker");
-        //link.setUrl("http://thefinestartist.com");
 
         Collection collection = new Collection();
         collection.setUser(user);
@@ -151,6 +150,8 @@ public class HomeFragment extends BaseFragment
         super.onDestroy();
         mUnBinder = null;
         mCollectionAction = null;
+        mCollectionHolder.setCollection(null);
+        mCollectionHolder = null;
     }
 
     private void setupToolbar() {
@@ -244,15 +245,16 @@ public class HomeFragment extends BaseFragment
         }
 
         if (requestCode == REQUEST_OPEN_COLLECTION) {
-            if (data != null) {
-                //Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
-                Collection collection = mCollectionHolder.getCollection();
-                if (collection != null) {
-                    mColListAdapter.updateColList(collection);
-                }
+            Collection collection = mCollectionHolder.getCollection();
+            if (collection != null) {
+                mColListAdapter.updateColList(collection);
             }
+            //if (data != null) {
+            //    //Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
+            //
+            //}
         } else if (requestCode == REQUEST_EDIT_COLLECTION) {
-
+            // TODO: 2016/10/25 移动到最上方，刷新
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

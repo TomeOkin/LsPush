@@ -87,4 +87,10 @@
     <string name="description_image">描述图片</string>
     <string name="tag">标签</string>
     <string name="edit">编辑</string>
+    <string name="complete">完成</string>
+    <string name="waiting_post_collection">正在提交收藏。</string>
+    <string name="post_collection_success">收藏提交成功。</string>
+    <string name="post_collection_failure">收藏提交失败。</string>
+    <string name="select_description_image">选择描述图片</string>
+    <string name="ignore_change_of_collection">编辑结果未保存，忽略？</string>
 </resources>
