@@ -47,7 +47,8 @@
     <dimen name="list_item_header_height">48dp</dimen>
     <dimen name="list_item_avatar_size">32dp</dimen>
     <dimen name="list_item_padding">16dp</dimen>
-    <dimen name="list_item_max_content">320dp</dimen>
+    <dimen name="list_item_max_content">300dp</dimen>
+    <dimen name="editText_max_height">100dp</dimen>
 
     <dimen name="icon_small">28dp</dimen>
     <dimen name="icon_medium">36dp</dimen>

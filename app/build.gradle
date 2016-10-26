@@ -176,6 +176,7 @@ dependencies {
     compile releaseDependencies.recyclerview
     compile releaseDependencies.cardview
     compile releaseDependencies.design
+    compile releaseDependencies.palette
     // log
     compile releaseDependencies.timber
     compile releaseDependencies.logger
@@ -224,7 +225,7 @@ dependencies {
     //compile 'jp.wasabeef:glide-transformations:2.0.1'
 
     // secure-share-preference
-    compile "com.orhanobut:hawk:2.0.0-Alpha"
+    compile "com.orhanobut:hawk:2.0.1"
 
     compile "com.squareup.sqlbrite:sqlbrite:0.8.0"
 

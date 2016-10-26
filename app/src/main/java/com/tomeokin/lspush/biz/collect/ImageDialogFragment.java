@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.common.ImageUtils;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogBuilder;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 
@@ -78,11 +79,8 @@ public class ImageDialogFragment extends BaseDialogFragment {
         final int maxWidth = content.getWidth() - container.getPaddingLeft() - container.getPaddingRight() - 50;
         final int maxHeight = content.getHeight() / 2 - container.getPaddingTop() - container.getPaddingBottom();
         //Timber.i("maxWidth: %d, maxHeight: %d", maxWidth, maxHeight);
-        final float radioWidth = maxWidth / width * 1.0f;
-        final float radioHeight = maxHeight / height * 1.0f;
-        //Timber.i("radioWidth: %f, radioHeight: %f", radioWidth, radioHeight);
-        //Timber.i("radio: %f", radio);
-        return (float) Math.floor(Math.min(radioWidth, radioHeight) * 5) / 5;
+
+        return ImageUtils.optimumRadio(maxWidth, maxHeight, width, height);
     }
 
     public static class Builder extends BaseDialogBuilder<Builder, ImageDialogFragment> {

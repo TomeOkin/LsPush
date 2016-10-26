@@ -18,37 +18,51 @@ package com.tomeokin.lspush.biz.home;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.collect.CollectionTargetActivity;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
+import com.tomeokin.lspush.common.ImageUtils;
+import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.CollectionEditorComponent;
 import com.tomeokin.lspush.injection.component.DaggerCollectionEditorComponent;
 import com.tomeokin.lspush.injection.module.CollectionModule;
-import com.tomeokin.lspush.ui.glide.ImageLoader;
 import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -62,11 +76,15 @@ public class CollectionEditorActivity extends BaseActivity
 
     private CollectionEditorComponent mComponent;
     private Collection mCollection;
-    private String mImageUrl;
+    private Image mImage = new Image();
     private boolean mIsPostingCollection = false;
     private boolean mHasChange;
+    private MenuItem mOkButton;
+
+    @BindDimen(R.dimen.list_item_max_content) float mMaxContentHeight;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.content_layout) LinearLayout mContentContainer;
     @BindView(R.id.title) EditText mTitleField;
     @BindView(R.id.description) EditText mDescriptionField;
     @BindView(R.id.description_image) ImageView mDescriptionImageField;
@@ -138,6 +156,12 @@ public class CollectionEditorActivity extends BaseActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mDescriptionField.requestFocus();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mCollectionAction != null) {
@@ -181,6 +205,7 @@ public class CollectionEditorActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_collection_editor_menu, menu);
+        mOkButton = menu.findItem(R.id.action_ok);
         return true;
     }
 
@@ -200,8 +225,9 @@ public class CollectionEditorActivity extends BaseActivity
             Toast.makeText(this, getString(R.string.waiting_post_collection), Toast.LENGTH_SHORT).show();
         } else {
             mIsPostingCollection = true;
+            mOkButton.setEnabled(false);
             mCollection.setDescription(mDescriptionField.getText().toString());
-            mCollection.setImage(mImageUrl);
+            mCollection.setImage(mImage);
             mCollectionAction.postCollection(mCollection);
         }
     }
@@ -233,15 +259,63 @@ public class CollectionEditorActivity extends BaseActivity
         }
 
         if (requestCode == REQUEST_IMAGE_URL) {
-            String url = data.getStringExtra(CollectionTargetActivity.REQUEST_RESULT_IMAGE_URL);
-            if (!TextUtils.isEmpty(url)) {
-                Timber.v("image url %s", url);
-                ImageLoader.loadImage(this, mDescriptionImageField, url);
-                mImageUrl = url;
+            Image image = data.getParcelableExtra(CollectionTargetActivity.REQUEST_RESULT_IMAGE_URL);
+            if (image != null && !TextUtils.isEmpty(image.getUrl())) {
+                mImage = image;
                 mHasChange = true;
+                Timber.v("image %s", mImage.toString());
+
+                float radio = optimumRadio();
+                Glide.with(this)
+                    .load(mImage.getUrl())
+                    .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .error(R.drawable.ic_action_add_image)
+                    .override((int) (image.getWidth() * radio), (int) (image.getHeight() * radio))
+                    .into(new BitmapImageViewTarget(mDescriptionImageField) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            super.onResourceReady(resource, glideAnimation);
+                            resolveImageColor(resource);
+                        }
+                    });
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void resolveImageColor(@NonNull Bitmap resource) {
+        Palette.from(resource).maximumColorCount(2).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                List<Palette.Swatch> swatches = palette.getSwatches();
+                if (swatches.size() >= 1) {
+                    Palette.Swatch swatch = swatches.get(0);
+                    mImage.setColor(swatch.getRgb());
+                    Timber.v("swatch color: %s", StringUtils.parseColor(swatch.getRgb()));
+                } else {
+                    resolveDefaultColor();
+                }
+            }
+        });
+    }
+
+    private void resolveDefaultColor() {
+        int color = ContextCompat.getColor(CollectionEditorActivity.this, R.color.grey_3_whiteout);
+        mImage.setColor(color);
+        Timber.v("using color: %s", StringUtils.parseColor(color));
+    }
+
+    private float optimumRadio() {
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mDescriptionImageField.getLayoutParams();
+        float maxWidth = mContentContainer.getWidth()
+            - mContentContainer.getPaddingLeft()
+            - mContentContainer.getPaddingRight()
+            - lp.leftMargin
+            - lp.rightMargin
+            - 50;
+        float maxHeight = mMaxContentHeight - lp.topMargin - lp.topMargin;
+        return ImageUtils.optimumRadio(maxWidth, maxHeight, mImage.getWidth(), mImage.getHeight());
     }
 }

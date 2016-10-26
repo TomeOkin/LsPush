@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.data.model.Image;
+import com.tomeokin.lspush.ui.widget.SizeColorDrawable;
 
 public class ImageLoader {
     public static void loadAvatar(Context context, ImageView avatar, @Nullable String image) {
@@ -35,12 +37,47 @@ public class ImageLoader {
             .into(avatar);
     }
 
-    public static void loadImage(Context context, ImageView target, @Nullable String image) {
-        if (TextUtils.isEmpty(image)) {
+    public static void loadImage(Context context, ImageView target, @Nullable Image image, float radio) {
+        if (image == null || TextUtils.isEmpty(image.getUrl()) || image.getWidth() <= 0 || image.getHeight() <= 0) {
             target.setVisibility(View.GONE);
         } else {
             target.setVisibility(View.VISIBLE);
-            Glide.with(context).load(image).diskCacheStrategy(DiskCacheStrategy.ALL).into(target);
+            int width = (int) (image.getWidth() * radio);
+            int height = (int) (image.getHeight() * radio);
+
+            SizeColorDrawable drawable = new SizeColorDrawable(image.getColor());
+            drawable.setBounds(0, 0, width, height);
+
+            Glide.with(context)
+                .load(image.getUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(drawable)
+                .override(width, height)
+                .error(drawable)
+                .into(target);
         }
     }
+
+    public static void loadImage(Context context, ImageView target, @Nullable String image, int error, int width,
+        int height) {
+        Glide.with(context)
+            .load(image)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .error(error)
+            .override(width, height)
+            .into(target);
+    }
+
+    //public static void loadImage(Context context, ImageView target, @Nullable Image image) {
+    //    if (image == null || image.getUrl() == null) {
+    //        target.setVisibility(View.GONE);
+    //    } else {
+    //        target.setVisibility(View.VISIBLE);
+    //        //float maxHeight = context.getResources().getDimension(R.dimen.list_item_max_content);
+    //        //if (maxHeight >= image.getHeight()) {
+    //        //
+    //        //}
+    //        //int radio = image.getHeight() / ;
+    //    }
+    //}
 }

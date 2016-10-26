@@ -120,4 +120,8 @@ public class StringUtils {
     public static boolean isEqual(@NonNull CharSequence one, CharSequence two) {
         return two != null && one.toString().equals(two.toString());
     }
+
+    public static String parseColor(int color) {
+        return String.format("#%06X", 0xFFFFFF & color);
+    }
 }

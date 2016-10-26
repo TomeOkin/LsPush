@@ -15,7 +15,9 @@
  */
 package com.tomeokin.lspush.biz.home;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -24,13 +26,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.common.DateUtils;
+import com.tomeokin.lspush.common.ImageUtils;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.ui.glide.ImageLoader;
 import com.tomeokin.lspush.ui.widget.tag.TagGroup;
@@ -43,6 +48,8 @@ import timber.log.Timber;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
     implements View.OnClickListener {
+    private final float mMaxHeight;
+    private final float mMaxWidth;
     private Callback mCallback = null;
     private final SortedList.BatchedCallback<Collection> mBatchCallback =
         new SortedList.BatchedCallback<>(new CollectionSortCallback());
@@ -56,7 +63,13 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         }
     };
 
-    public CollectionListAdapter(List<Collection> colList, @Nullable Callback callback) {
+    public CollectionListAdapter(Activity activity, List<Collection> colList, @Nullable Callback callback) {
+        final Resources resources = activity.getResources();
+        mMaxHeight = resources.getDimension(R.dimen.list_item_max_content) - resources.getDimension(
+            R.dimen.row_vertical_padding);
+        final View content = activity.getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+        mMaxWidth = content.getWidth() - 2 * resources.getDimension(R.dimen.page_vertical_margin);
+
         setColList(colList);
         setCallback(callback);
     }
@@ -133,6 +146,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         final Collection collection = mColSortList.get(position);
         final User user = collection.getUser();
         final Context context = holder.itemView.getContext();
+        final Image image = collection.getImage();
 
         holder.itemView.setTag(position);
         holder.explorersMore.setTag(position);
@@ -145,7 +159,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         holder.title.setText(collection.getLink().getTitle());
         updateTitleColor(context, holder.title, collection.isHasRead());
         holder.description.setText(collection.getDescription());
-        ImageLoader.loadImage(context, holder.descriptionImage, collection.getImage());
+        final float radio = optimumRadio(image.getWidth(), image.getHeight());
+        ImageLoader.loadImage(context, holder.descriptionImage, image, radio);
 
         holder.tagGroup.setTags(collection.getTags());
         setExplorers(holder.explorersContainer, collection.getExplorers());
@@ -201,7 +216,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         final int position = (int) v.getTag();
         final Collection collection = mColSortList.get(position);
         collection.setHasRead(true);
-        TextView title = (TextView) v.findViewById(R.id.title_tv);
+        TextView title = (TextView) v.findViewById(R.id.title);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
         if (mCallback != null) {
             mClickIndex = position;
@@ -214,13 +229,20 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         return mColSortList.size();
     }
 
+    private float optimumRadio(int width, int height) {
+        return ImageUtils.optimumRadio(mMaxWidth, mMaxHeight, width, height);
+    }
+
     public final class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.avatar_iv) ImageView avatar;
         @BindView(R.id.nickname_tv) TextView nickname;
         @BindView(R.id.updateDate) TextView updateDate;
-        @BindView(R.id.title_tv) TextView title;
-        @BindView(R.id.description_tv) TextView description;
-        @BindView(R.id.description_iv) ImageView descriptionImage;
+
+        @BindView(R.id.content_layout) LinearLayout mContentLayout;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.description) TextView description;
+        @BindView(R.id.description_image) ImageView descriptionImage;
+
         @BindView(R.id.tagGroup) TagGroup tagGroup;
         @BindView(R.id.explorers_container) LinearLayout explorersContainer;
         @BindView(R.id.explorers_more_tv) TextView explorersMore;

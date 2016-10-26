@@ -26,9 +26,12 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.tomeokin.lspush.R;
+import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.ui.widget.BaseWebViewActivity;
 import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 
@@ -42,7 +45,7 @@ public class CollectionTargetActivity extends BaseWebViewActivity
 
     private String mUrl;
     private float mTouchX, mTouchY;
-    private String mImageUrl;
+    private Image mImage = new Image();
     private boolean mSelect;
 
     public static void start(Activity activity, String url, int requestCode) {
@@ -62,6 +65,12 @@ public class CollectionTargetActivity extends BaseWebViewActivity
     @Override
     protected void onPrepareWebView(WebView webView) {
         super.onPrepareWebView(webView);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false; // let the web view handle the url
+            }
+        });
         webView.getSettings().setJavaScriptEnabled(true);
         // https://labs.mwrinfosecurity.com/blog/webview-addjavascriptinterface-remote-code-execution/
         // FIXME: 2016/9/20 fix it later
@@ -106,10 +115,12 @@ public class CollectionTargetActivity extends BaseWebViewActivity
 
         @JavascriptInterface
         public void click(String url, int width, int height) {
-            mImageUrl = url;
             final float density = getResources().getDisplayMetrics().density;
+            mImage.setUrl(url);
+            mImage.setWidth((int) (width * density));
+            mImage.setHeight((int) (height * density));
             new ImageDialogFragment.Builder(mContext, getSupportFragmentManager()).setRequestCode(REQUEST_DIALOG)
-                .show(url, (int) (width * density), (int) (height * density));
+                .show(url, mImage.getWidth(), mImage.getHeight());
         }
     }
 
@@ -143,7 +154,7 @@ public class CollectionTargetActivity extends BaseWebViewActivity
     public void onBackPressed() {
         Intent data = new Intent();
         if (mSelect) {
-            data.putExtra(REQUEST_RESULT_IMAGE_URL, mImageUrl);
+            data.putExtra(REQUEST_RESULT_IMAGE_URL, mImage);
         }
         setResult(Activity.RESULT_OK, data);
         super.onBackPressed();

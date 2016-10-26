@@ -28,7 +28,7 @@ public class Collection implements Parcelable {
     private User user;
     private Link link;
     private String description;
-    private String image;
+    private Image image;
     private Date createDate;
     private Date updateDate;
 
@@ -71,11 +71,11 @@ public class Collection implements Parcelable {
         this.description = description;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
@@ -142,7 +142,7 @@ public class Collection implements Parcelable {
             ", user=" + user +
             ", link=" + link +
             ", description='" + description + '\'' +
-            ", image='" + image + '\'' +
+            ", image=" + image +
             ", createDate=" + createDate +
             ", updateDate=" + updateDate +
             ", tags=" + tags +
@@ -153,7 +153,6 @@ public class Collection implements Parcelable {
             '}';
     }
 
-    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -201,7 +200,7 @@ public class Collection implements Parcelable {
         dest.writeParcelable(this.user, flags);
         dest.writeParcelable(this.link, flags);
         dest.writeString(this.description);
-        dest.writeString(this.image);
+        dest.writeParcelable(this.image, flags);
         dest.writeLong(this.createDate != null ? this.createDate.getTime() : -1);
         dest.writeLong(this.updateDate != null ? this.updateDate.getTime() : -1);
         dest.writeStringList(this.tags);
@@ -218,7 +217,7 @@ public class Collection implements Parcelable {
         this.user = in.readParcelable(User.class.getClassLoader());
         this.link = in.readParcelable(Link.class.getClassLoader());
         this.description = in.readString();
-        this.image = in.readString();
+        this.image = in.readParcelable(Image.class.getClassLoader());
         long tmpCreateDate = in.readLong();
         this.createDate = tmpCreateDate == -1 ? null : new Date(tmpCreateDate);
         long tmpUpdateDate = in.readLong();

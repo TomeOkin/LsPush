@@ -140,6 +140,8 @@
 # lspush
 -keep public class com.tomeokin.lspush.data.model.**
 -keep public class com.tomeokin.lspush.data.support.GsonIgnore
+# js will call java function
+-keep public class com.tomeokin.lspush.biz.collect.CollectionTargetActivity
 
 # mob sms sdk
 -keepattributes EnclosingMethod

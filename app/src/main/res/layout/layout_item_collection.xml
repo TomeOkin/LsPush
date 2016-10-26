@@ -54,12 +54,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title_tv"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -68,20 +69,21 @@
                 tools:text="Tencent/tinker" />
 
             <TextView
-                android:id="@+id/description_tv"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
-                android:paddingTop="@dimen/row_vertical_padding"
+                android:layout_marginTop="@dimen/row_vertical_padding"
                 android:textSize="@dimen/font_medium"
                 tools:text="tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk." />
 
             <ImageView
-                android:id="@+id/description_iv"
+                android:id="@+id/description_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxHeight="@dimen/list_item_max_content"
-                android:paddingTop="@dimen/row_vertical_padding"
+                android:layout_marginTop="@dimen/row_vertical_padding"
+                android:adjustViewBounds="true"
                 android:scaleType="centerInside"
                 tools:src="@drawable/tinker" />
 

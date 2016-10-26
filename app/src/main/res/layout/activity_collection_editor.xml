@@ -7,6 +7,111 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/page_horizontal_margin">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textSize="@dimen/font_medium" />
+
+            <!-- copyable but not editable -->
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:gravity="top"
+                android:textColor="@color/black_87_transparent"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/font_medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/description"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textSize="@dimen/font_medium" />
+
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/editText_max_height"
+                android:clipToPadding="false">
+
+                <EditText
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:maxLength="120"
+                    android:textColor="@color/black_87_transparent"
+                    android:textSize="@dimen/font_medium" />
+
+            </android.support.v4.widget.NestedScrollView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/description_image"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textSize="@dimen/font_medium" />
+
+            <ImageView
+                android:id="@+id/description_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/row_vertical_padding"
+                android:adjustViewBounds="true"
+                android:maxHeight="@dimen/list_item_max_content"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_action_add_image" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/tag"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textSize="@dimen/font_medium" />
+
+            <com.tomeokin.lspush.ui.widget.tag.TagGroup
+                android:id="@+id/tagGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/row_vertical_padding"
+                app:atg_inputHint="@string/tag"
+                app:atg_isAppendMode="true"
+                app:atg_textSize="@dimen/font_medium" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -20,95 +125,5 @@
             android:layout_height="@dimen/toolbar_size" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_size"
-        android:orientation="vertical"
-        android:padding="@dimen/page_horizontal_margin">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="@dimen/font_medium" />
-
-        <!-- copyable but not editable -->
-        <EditText
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            android:textColor="@color/black_87_transparent"
-            android:textIsSelectable="true"
-            android:textSize="@dimen/font_medium" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/description"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="@dimen/font_medium" />
-
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLength="120"
-            android:textColor="@color/black_87_transparent"
-            android:textSize="@dimen/font_medium" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/description_image"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="@dimen/font_medium" />
-
-        <ImageView
-            android:id="@+id/description_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/row_vertical_padding"
-            android:adjustViewBounds="true"
-            android:maxHeight="@dimen/list_item_max_content"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_action_add_image" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/tag"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
-            android:textSize="@dimen/font_medium" />
-
-        <com.tomeokin.lspush.ui.widget.tag.TagGroup
-            android:id="@+id/tagGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/row_vertical_padding"
-            app:atg_inputHint="@string/tag"
-            app:atg_isAppendMode="true"
-            app:atg_textSize="@dimen/font_medium" />
-
-    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -59,7 +59,7 @@ public class BaseWebViewActivity extends BaseActivity
     @BindView(R.id.appBar) AppBarLayout mAppBar;
     @BindView(R.id.toolbar) Toolbar mToolBar;
     @BindView(R.id.titleLayout) LinearLayout mTitleLayout;
-    @BindView(R.id.title_tv) TextView mTitle;
+    @BindView(R.id.title) TextView mTitle;
     @BindView(R.id.subTitle_tv) TextView mSubTitle;
     @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
     @BindView(R.id.toolbar_action_more) ImageButton mMoreButton;

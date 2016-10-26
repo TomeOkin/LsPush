@@ -40,6 +40,7 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.model.Link;
 import com.tomeokin.lspush.data.model.User;
 import com.tomeokin.lspush.data.model.WebPageInfo;
@@ -99,7 +100,12 @@ public class HomeFragment extends BaseFragment
         collection.setLink(link);
         collection.setDescription(
             "tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
-        collection.setImage("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
+        Image image = new Image();
+        image.setWidth(660);
+        image.setHeight(386);
+        image.setColor(0);
+        image.setUrl("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
+        collection.setImage(image);
         collection.setId(1);
         Instant now = Instant.now();
         Date create = DateTimeUtils.toDate(now);
@@ -126,7 +132,7 @@ public class HomeFragment extends BaseFragment
         mUnBinder = ButterKnife.bind(this, view);
         setupToolbar();
 
-        mColListAdapter = new CollectionListAdapter(mColList, this);
+        mColListAdapter = new CollectionListAdapter(getActivity(), mColList, this);
         mColRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mColRv.setAdapter(mColListAdapter);
         return view;
