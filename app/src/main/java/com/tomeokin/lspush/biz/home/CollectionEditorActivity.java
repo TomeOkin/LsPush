@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,11 +29,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -132,11 +126,10 @@ public class CollectionEditorActivity extends BaseActivity
 
         //mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
         component().inject(this);
-        //// TODO: 2016/10/27 uncomment it later
-        //mCollection = mCollectionHolder.getCollection();
-        //if (mCollection == null) {
-        //    finish();
-        //}
+        mCollection = mCollectionHolder.getCollection();
+        if (mCollection == null) {
+            finish();
+        }
 
         setupToolbar();
         mPostWaiting.setSvgPath("M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z");
@@ -144,21 +137,21 @@ public class CollectionEditorActivity extends BaseActivity
             @Override
             public void onStateChange(int state) {
                 if (state == State.FINISHED && mIsPostingCollection) {
+                    mPostWaiting.setStrokeDrawingDuration(0);
                     mPostWaiting.start();
                 }
             }
         });
 
-        //// TODO: 2016/10/27 uncomment it later
-        //mTitleField.setText(mCollection.getLink().getTitle());
-        //mDescriptionField.setText(mCollection.getDescription());
-        //mDescriptionImageField.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
-        //            REQUEST_IMAGE_URL);
-        //    }
-        //});
+        mTitleField.setText(mCollection.getLink().getTitle());
+        mDescriptionField.setText(mCollection.getDescription());
+        mDescriptionImageField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
+                    REQUEST_IMAGE_URL);
+            }
+        });
     }
 
     private void setupToolbar() {
@@ -166,13 +159,6 @@ public class CollectionEditorActivity extends BaseActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.edit);
         }
-        //mToolbar.setNavigationIcon(R.drawable.ic_nav_arrow_left);
-        //mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        onBackPressed();
-        //    }
-        //});
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,63 +168,9 @@ public class CollectionEditorActivity extends BaseActivity
         mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2016/10/27
-
-                //showDialog();
-                //postCollection();
-                mIsPostingCollection = true;
-                mPostButton.setVisibility(View.GONE);
-                mPostWaiting.setVisibility(View.VISIBLE);
-                mPostWaiting.start();
+                postCollection();
             }
         });
-    }
-
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-    //    getMenuInflater().inflate(R.menu.activity_collection_editor_menu, menu);
-    //    return true;
-    //}
-
-    //@Override
-    //public boolean onOptionsItemSelected(MenuItem item) {
-    //    switch (item.getItemId()) {
-    //        case R.id.action_ok:
-    //            // TODO: 2016/10/27
-    //            showDialog();
-    //            //postCollection();
-    //            return true;
-    //        default:
-    //            return super.onOptionsItemSelected(item);
-    //    }
-    //}
-
-    private Rect mPosRect = new Rect();
-
-    private void showDialog() {
-        final View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
-        final int contentWidth = content.getWidth(), contentHeight = content.getHeight();
-        mPostButton.getGlobalVisibleRect(mPosRect);
-
-        float radio = 300 / mPosRect.width();
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.setDuration(300);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        float xDelta = ((contentWidth - 300) / 2.0f - mPosRect.left) * (1 / radio);
-        float yDelta = ((contentHeight - 300) / 2.0f - mPosRect.top) * (1 / radio);
-
-        TranslateAnimation translateAnimation=new TranslateAnimation(0, xDelta, 0, yDelta);
-        animationSet.addAnimation(translateAnimation);
-
-        ScaleAnimation scaleAnimation=new ScaleAnimation(1.0f, radio, 1.0f, radio);
-        animationSet.addAnimation(scaleAnimation);
-        animationSet.setFillAfter(true);
-
-        //mPostButton.setVisibility(View.INVISIBLE);
-        mPostButton.getBackground().setTint(ContextCompat.getColor(this, R.color.colorPrimary));
-        mPostButton.startAnimation(animationSet);
     }
 
     private void postCollection() {

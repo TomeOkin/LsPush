@@ -248,8 +248,8 @@ public class FillableLoader extends View {
         }
         long elapsedTime = System.currentTimeMillis() - initialTime;
         drawStroke(canvas, elapsedTime);
-        canvas.drawPath(pathData.path, preFillPaint);
         if (isStrokeTotallyDrawn(elapsedTime)) {
+            canvas.drawPath(pathData.path, preFillPaint);
             if (drawingState < State.FILL_STARTED) {
                 changeState(State.FILL_STARTED);
                 previousFramePercentageTime = System.currentTimeMillis() - initialTime;
