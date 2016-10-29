@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+apply plugin: 'checkstyle'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 24
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    def releaseDependencies = rootProject.ext.releaseDependencies
+    compile releaseDependencies.supportV4
+}
+

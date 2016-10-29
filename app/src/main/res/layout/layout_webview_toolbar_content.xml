@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbarLayout"
     android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_size"
     android:orientation="horizontal"
-    android:layout_height="@dimen/toolbar_size">
+    tools:background="@color/colorPrimary">
 
     <ImageButton
         android:id="@+id/toolbar_action_close"
@@ -12,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_menu_action_close" />
+        android:src="@drawable/ic_nav_close" />
 
     <LinearLayout
         android:id="@+id/titleLayout"
@@ -35,7 +37,8 @@
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/font_medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="标题" />
 
         <TextView
             android:id="@+id/subTitle_tv"
@@ -51,7 +54,9 @@
             android:paddingRight="2dp"
             android:textColor="@color/grey_10_transparent"
             android:textSize="@dimen/font_small"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="子标题"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
@@ -61,6 +66,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_menu_action_more" />
+        android:src="@drawable/ic_nav_more" />
 
 </LinearLayout>

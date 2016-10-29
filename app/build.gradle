@@ -236,6 +236,8 @@ dependencies {
 
     compile 'com.evernote:android-job:1.1.2'
 
+    compile project(':fillableloaders')
+
     // stetho
     debugCompile debugDependencies.stetho
     debugCompile debugDependencies.stethoJsRhino

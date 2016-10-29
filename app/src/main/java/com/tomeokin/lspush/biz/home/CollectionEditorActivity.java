@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,11 +28,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,6 +45,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.github.jorgecastillo.FillableLoader;
+import com.github.jorgecastillo.State;
+import com.github.jorgecastillo.listener.OnStateChangeListener;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseActivity;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
@@ -79,11 +87,14 @@ public class CollectionEditorActivity extends BaseActivity
     private Image mImage = new Image();
     private boolean mIsPostingCollection = false;
     private boolean mHasChange;
-    private MenuItem mOkButton;
 
     @BindDimen(R.dimen.list_item_max_content) float mMaxContentHeight;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
+    @BindView(R.id.toolbar_action_post) ImageButton mPostButton;
+    @BindView(R.id.toolbar_post_waiting) FillableLoader mPostWaiting;
+
     @BindView(R.id.content_layout) LinearLayout mContentContainer;
     @BindView(R.id.title) EditText mTitleField;
     @BindView(R.id.description) EditText mDescriptionField;
@@ -121,31 +132,127 @@ public class CollectionEditorActivity extends BaseActivity
 
         //mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
         component().inject(this);
-        mCollection = mCollectionHolder.getCollection();
-        if (mCollection == null) {
-            finish();
-        }
+        //// TODO: 2016/10/27 uncomment it later
+        //mCollection = mCollectionHolder.getCollection();
+        //if (mCollection == null) {
+        //    finish();
+        //}
 
+        setupToolbar();
+        mPostWaiting.setSvgPath("M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z");
+        mPostWaiting.setOnStateChangeListener(new OnStateChangeListener() {
+            @Override
+            public void onStateChange(int state) {
+                if (state == State.FINISHED && mIsPostingCollection) {
+                    mPostWaiting.start();
+                }
+            }
+        });
+
+        //// TODO: 2016/10/27 uncomment it later
+        //mTitleField.setText(mCollection.getLink().getTitle());
+        //mDescriptionField.setText(mCollection.getDescription());
+        //mDescriptionImageField.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
+        //            REQUEST_IMAGE_URL);
+        //    }
+        //});
+    }
+
+    private void setupToolbar() {
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.edit);
         }
-        mToolbar.setNavigationIcon(R.drawable.ic_nav_arrow_left);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        //mToolbar.setNavigationIcon(R.drawable.ic_nav_arrow_left);
+        //mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        onBackPressed();
+        //    }
+        //});
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        mTitleField.setText(mCollection.getLink().getTitle());
-        mDescriptionField.setText(mCollection.getDescription());
-        mDescriptionImageField.setOnClickListener(new View.OnClickListener() {
+        mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
-                    REQUEST_IMAGE_URL);
+                // TODO: 2016/10/27
+
+                //showDialog();
+                //postCollection();
+                mIsPostingCollection = true;
+                mPostButton.setVisibility(View.GONE);
+                mPostWaiting.setVisibility(View.VISIBLE);
+                mPostWaiting.start();
             }
         });
+    }
+
+    //@Override
+    //public boolean onCreateOptionsMenu(Menu menu) {
+    //    getMenuInflater().inflate(R.menu.activity_collection_editor_menu, menu);
+    //    return true;
+    //}
+
+    //@Override
+    //public boolean onOptionsItemSelected(MenuItem item) {
+    //    switch (item.getItemId()) {
+    //        case R.id.action_ok:
+    //            // TODO: 2016/10/27
+    //            showDialog();
+    //            //postCollection();
+    //            return true;
+    //        default:
+    //            return super.onOptionsItemSelected(item);
+    //    }
+    //}
+
+    private Rect mPosRect = new Rect();
+
+    private void showDialog() {
+        final View content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+        final int contentWidth = content.getWidth(), contentHeight = content.getHeight();
+        mPostButton.getGlobalVisibleRect(mPosRect);
+
+        float radio = 300 / mPosRect.width();
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.setDuration(300);
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        float xDelta = ((contentWidth - 300) / 2.0f - mPosRect.left) * (1 / radio);
+        float yDelta = ((contentHeight - 300) / 2.0f - mPosRect.top) * (1 / radio);
+
+        TranslateAnimation translateAnimation=new TranslateAnimation(0, xDelta, 0, yDelta);
+        animationSet.addAnimation(translateAnimation);
+
+        ScaleAnimation scaleAnimation=new ScaleAnimation(1.0f, radio, 1.0f, radio);
+        animationSet.addAnimation(scaleAnimation);
+        animationSet.setFillAfter(true);
+
+        //mPostButton.setVisibility(View.INVISIBLE);
+        mPostButton.getBackground().setTint(ContextCompat.getColor(this, R.color.colorPrimary));
+        mPostButton.startAnimation(animationSet);
+    }
+
+    private void postCollection() {
+        if (mIsPostingCollection) {
+            Toast.makeText(this, getString(R.string.waiting_post_collection), Toast.LENGTH_SHORT).show();
+        } else {
+            mIsPostingCollection = true;
+            mPostButton.setVisibility(View.GONE);
+            mPostWaiting.setVisibility(View.VISIBLE);
+            mPostWaiting.start();
+            mCollection.setDescription(mDescriptionField.getText().toString());
+            mCollection.setImage(mImage);
+            mCollectionAction.postCollection(mCollection);
+        }
     }
 
     @Override
@@ -158,7 +265,7 @@ public class CollectionEditorActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mDescriptionField.requestFocus();
+        mTitleField.requestFocus();
     }
 
     @Override
@@ -203,40 +310,13 @@ public class CollectionEditorActivity extends BaseActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_collection_editor_menu, menu);
-        mOkButton = menu.findItem(R.id.action_ok);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_ok:
-                postCollection();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void postCollection() {
-        if (mIsPostingCollection) {
-            Toast.makeText(this, getString(R.string.waiting_post_collection), Toast.LENGTH_SHORT).show();
-        } else {
-            mIsPostingCollection = true;
-            mOkButton.setEnabled(false);
-            mCollection.setDescription(mDescriptionField.getText().toString());
-            mCollection.setImage(mImage);
-            mCollectionAction.postCollection(mCollection);
-        }
-    }
-
-    @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_POST_COLLECTION) {
             mIsPostingCollection = false;
             mHasChange = false;
+            mPostWaiting.setToFinishedFrame();
+            mPostWaiting.setVisibility(View.GONE);
+            mPostButton.setVisibility(View.VISIBLE);
             Toast.makeText(this, getString(R.string.post_collection_success), Toast.LENGTH_SHORT).show();
             onBackPressed();
         }
@@ -246,6 +326,9 @@ public class CollectionEditorActivity extends BaseActivity
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == UserScene.ACTION_POST_COLLECTION) {
             mIsPostingCollection = false;
+            mPostWaiting.setToFinishedFrame();
+            mPostWaiting.setVisibility(View.GONE);
+            mPostButton.setVisibility(View.VISIBLE);
             Toast.makeText(this, getString(R.string.post_collection_failure), Toast.LENGTH_SHORT).show();
         }
     }
@@ -264,6 +347,8 @@ public class CollectionEditorActivity extends BaseActivity
                 mImage = image;
                 mHasChange = true;
                 Timber.v("image %s", mImage.toString());
+                mPostButton.setVisibility(View.INVISIBLE);
+                mPostButton.setEnabled(false);
 
                 float radio = optimumRadio();
                 Glide.with(this)
@@ -297,6 +382,8 @@ public class CollectionEditorActivity extends BaseActivity
                 } else {
                     resolveDefaultColor();
                 }
+                mPostButton.setVisibility(View.VISIBLE);
+                mPostButton.setEnabled(true);
             }
         });
     }
