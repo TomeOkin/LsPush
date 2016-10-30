@@ -24,8 +24,10 @@ import com.google.gson.GsonBuilder;
 import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.data.support.GsonStrategy;
+import com.tomeokin.lspush.data.support.ImageTypeConverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,8 +140,13 @@ public class LsPushApiModule {
     @Provides
     @Singleton
     public Gson provideGson() {
+        // provide a base gson for image converter,
+        // it is a little hack
+        // (gson perhaps should provide a @GsonString or @GsonStringAdapter for bean detail transparent of server).
+        Gson gson = new Gson();
         return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .setExclusionStrategies(new GsonStrategy())
+            .registerTypeAdapter(Image.class, new ImageTypeConverter(gson))
             .create();
     }
 
