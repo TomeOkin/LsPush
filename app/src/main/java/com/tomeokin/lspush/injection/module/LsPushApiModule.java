@@ -107,7 +107,7 @@ public class LsPushApiModule {
                 Response response = chain.proceed(chain.request());
 
                 // re-write response header to force use of cache
-                CacheControl cacheControl = new CacheControl.Builder().maxAge(2, TimeUnit.MINUTES)
+                CacheControl cacheControl = new CacheControl.Builder().maxAge(0, TimeUnit.SECONDS)
                     .onlyIfCached()
                     .maxStale(0, TimeUnit.SECONDS) // 清除离线时的配置
                     .build();

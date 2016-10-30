@@ -30,6 +30,7 @@ import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.sync.RefreshTokenAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
+import com.tomeokin.lspush.common.DateUtils;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.LoginData;
@@ -181,7 +182,7 @@ public class SyncService extends Service {
 
                 @Override
                 public void onError(Throwable e) {
-                    Timber.v("onError");
+                    Timber.v(e, "onError");
                     if (callback != null) {
                         callback.onFailure(e);
                     }
@@ -192,7 +193,7 @@ public class SyncService extends Service {
                 public void onNext(AccessResponse accessResponse) {
                     Timber.v("onNext");
                     LocalDateTime now = LocalDateTime.now();
-                    Instant instantExpire = Instant.ofEpochSecond(accessResponse.getExpireTime());
+                    Instant instantExpire = DateUtils.ofSecond(accessResponse.getExpireTime());
                     LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());
 
                     Duration duration = Duration.between(now, targetExpire);
@@ -217,14 +218,15 @@ public class SyncService extends Service {
 
                 mLsPushUserState.setAccessResponse(old);
                 LocalDateTime now = LocalDateTime.now();
-                Instant instantExpire = Instant.ofEpochSecond(old.getExpireTime());
+                Instant instantExpire = DateUtils.ofSecond(old.getExpireTime());
                 LocalDateTime targetExpire = LocalDateTime.ofInstant(instantExpire, ZoneId.systemDefault());
 
                 Duration duration = Duration.between(now, targetExpire);
+                Timber.v("now is %s, target is %s", now.toString(), targetExpire.toString());
                 Duration diff = duration.minus(SHOULD_EXPIRE_DURATION);
                 if (!diff.isNegative()) { // no need refresh
                     scheduleJob(duration);
-                    Timber.i("No Need refresh, active");
+                    Timber.v("No Need refresh, active");
                     subscriber.onCompleted();
                     return;
                 }
@@ -262,7 +264,7 @@ public class SyncService extends Service {
     }
 
     private boolean shouldUpdateByPassword(LocalDateTime now, long refreshTime) {
-        Instant instantRefresh = Instant.ofEpochSecond(refreshTime);
+        Instant instantRefresh = DateUtils.ofSecond(refreshTime);
         LocalDateTime targetRefresh = LocalDateTime.ofInstant(instantRefresh, ZoneId.systemDefault());
         return now.isAfter(targetRefresh);
     }

@@ -79,5 +79,7 @@ public class DateUtils {
         //}
     }
 
-
+    public static Instant ofSecond(long second) {
+        return DateTimeUtils.toInstant(new Date(second));
+    }
 }

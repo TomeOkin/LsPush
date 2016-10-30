@@ -20,7 +20,6 @@ import com.tomeokin.lspush.data.crypt.Crypto;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.RefreshData;
-import com.tomeokin.lspush.data.model.RegisterData;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import rx.Observable;
@@ -48,7 +47,7 @@ public class RefreshTokenAction {
                 RefreshData refreshData = new RefreshData();
                 refreshData.setRefreshToken(accessResponse.getRefreshToken());
                 refreshData.setUserId(accessResponse.getUser().getUid());
-                String data = mGson.toJson(refreshData, RegisterData.class);
+                String data = mGson.toJson(refreshData, RefreshData.class);
                 try {
                     CryptoToken cryptoToken = Crypto.get().encrypt(data);
                     subscriber.onNext(cryptoToken);
