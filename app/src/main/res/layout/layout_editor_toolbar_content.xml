@@ -55,6 +55,7 @@
         app:fl_originalWidth="56"
         app:fl_preFillColor="@color/white_70_transparent"
         app:fl_strokeColor="@color/white_70_transparent"
+        app:fl_strokeDrawingDuration="500"
         app:fl_strokeWidth="1dp" />
 
 </LinearLayout>

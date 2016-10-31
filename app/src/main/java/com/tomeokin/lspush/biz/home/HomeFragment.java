@@ -37,22 +37,15 @@ import android.widget.Toast;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
+import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
-import com.tomeokin.lspush.data.model.Image;
-import com.tomeokin.lspush.data.model.Link;
-import com.tomeokin.lspush.data.model.User;
+import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.data.model.WebPageInfo;
 import com.tomeokin.lspush.injection.component.HomeComponent;
 
-import org.threeten.bp.DateTimeUtils;
-import org.threeten.bp.Instant;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -69,9 +62,13 @@ public class HomeFragment extends BaseFragment
     private static final int REQUEST_GET_URL_INFO = 203;
 
     private Unbinder mUnBinder;
-    private List<Collection> mColList;
+    private List<Collection> mColList = new ArrayList<>();
     private CollectionListAdapter mColListAdapter;
     private UriDialogFragment.Builder mUriDialogBuilder;
+
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private int mPage = 0;
+    private int mSize = DEFAULT_PAGE_SIZE;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.col_rv) RecyclerView mColRv;
@@ -87,38 +84,38 @@ public class HomeFragment extends BaseFragment
 
         component(HomeComponent.class).inject(this);
 
-        User user = new User();
-        user.setUid("one");
-        user.setNickname("One");
-
-        Link link = new Link();
-        link.setTitle("Tencent/tinker");
-        link.setUrl("https://github.com/Tencent/tinker");
-
-        Collection collection = new Collection();
-        collection.setUser(user);
-        collection.setLink(link);
-        collection.setDescription(
-            "tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
-        Image image = new Image();
-        image.setWidth(660);
-        image.setHeight(386);
-        image.setColor(0);
-        image.setUrl("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
-        collection.setImage(image);
-        collection.setId(1);
-        Instant now = Instant.now();
-        Date create = DateTimeUtils.toDate(now);
-        collection.setCreateDate(create);
-        collection.setUpdateDate(create);
-        collection.setExplorers(Collections.singletonList(user));
-        collection.setTags(Arrays.asList("github", "热修复", "Tencent", "hot-fix"));
-        collection.setFavorCount(101);
-        collection.setHasFavor(true);
-        collection.setHasRead(false);
-
-        mColList = new ArrayList<>(1);
-        mColList.add(collection);
+        //User user = new User();
+        //user.setUid("one");
+        //user.setNickname("One");
+        //
+        //Link link = new Link();
+        //link.setTitle("Tencent/tinker");
+        //link.setUrl("https://github.com/Tencent/tinker");
+        //
+        //Collection collection = new Collection();
+        //collection.setUser(user);
+        //collection.setLink(link);
+        //collection.setDescription(
+        //    "tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
+        //Image image = new Image();
+        //image.setWidth(660);
+        //image.setHeight(386);
+        //image.setColor(0);
+        //image.setUrl("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
+        //collection.setImage(image);
+        //collection.setId(1);
+        //Instant now = Instant.now();
+        //Date create = DateTimeUtils.toDate(now);
+        //collection.setCreateDate(create);
+        //collection.setUpdateDate(create);
+        //collection.setExplorers(Collections.singletonList(user));
+        //collection.setTags(Arrays.asList("github", "热修复", "Tencent", "hot-fix"));
+        //collection.setFavorCount(101);
+        //collection.setHasFavor(true);
+        //collection.setHasRead(false);
+        //
+        //mColList = new ArrayList<>(1);
+        //mColList.add(collection);
 
         //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
         //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
@@ -130,6 +127,7 @@ public class HomeFragment extends BaseFragment
         @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mUnBinder = ButterKnife.bind(this, view);
+
         setupToolbar();
 
         mColListAdapter = new CollectionListAdapter(getActivity(), mColList, this);
@@ -142,6 +140,7 @@ public class HomeFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCollectionAction.attach(this);
+        mCollectionAction.obtainLatestCollection(mPage++, mSize);
     }
 
     @Override
@@ -205,7 +204,15 @@ public class HomeFragment extends BaseFragment
 
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
-
+        if (action == UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS) {
+            CollectionResponse colResponse = (CollectionResponse) response;
+            if (colResponse != null) {
+                List<Collection> colList = colResponse.getCollections();
+                for (Collection col : colList) {
+                    Timber.i("col: %s", col.toString());
+                }
+            }
+        }
     }
 
     @Override

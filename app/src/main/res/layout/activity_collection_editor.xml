@@ -86,6 +86,7 @@
                 android:adjustViewBounds="true"
                 android:maxHeight="@dimen/list_item_max_content"
                 android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_action_add_image" />
 
             <TextView

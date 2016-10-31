@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.InputType;
@@ -263,7 +264,7 @@ public class TagGroup extends ViewGroup {
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
-        ss.tags = getTags();
+        ss.tags = getTagArray();
         ss.checkedPosition = getCheckedTagIndex();
         if (getInputTag() != null) {
             ss.input = getInputTag().getText().toString();
@@ -338,7 +339,8 @@ public class TagGroup extends ViewGroup {
      *
      * @return the tag array.
      */
-    public String[] getTags() {
+    @NonNull
+    public List<String> getTags() {
         final int count = getChildCount();
         final List<String> tagList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -348,6 +350,11 @@ public class TagGroup extends ViewGroup {
             }
         }
 
+        return tagList;
+    }
+
+    public String[] getTagArray() {
+        List<String> tagList = getTags();
         return tagList.toArray(new String[tagList.size()]);
     }
 

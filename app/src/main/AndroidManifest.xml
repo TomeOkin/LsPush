@@ -77,7 +77,7 @@
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.WebView" />
@@ -87,7 +87,7 @@
             android:alwaysRetainTaskState="true"
             android:clearTaskOnLaunch="false"
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
@@ -98,6 +98,7 @@
             android:configChanges="locale|keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:theme="@style/AppTheme.WebView" />
 
         <service

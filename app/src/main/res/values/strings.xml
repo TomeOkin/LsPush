@@ -101,4 +101,5 @@
     <string name="post_collection_failure">Post collection failure.</string>
     <string name="select_description_image">Select Description Image</string>
     <string name="ignore_change_of_collection">Collection has change, ignore them ?</string>
+    <string name="svg_up" translatable="false">M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z</string>
 </resources>

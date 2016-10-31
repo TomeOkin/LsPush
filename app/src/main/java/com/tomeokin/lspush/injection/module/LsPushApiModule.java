@@ -26,11 +26,13 @@ import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.common.NetworkUtils;
 import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.remote.LsPushService;
+import com.tomeokin.lspush.data.support.DateTypeConverter;
 import com.tomeokin.lspush.data.support.GsonStrategy;
 import com.tomeokin.lspush.data.support.ImageTypeConverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -144,9 +146,9 @@ public class LsPushApiModule {
         // it is a little hack
         // (gson perhaps should provide a @GsonString or @GsonStringAdapter for bean detail transparent of server).
         Gson gson = new Gson();
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            .setExclusionStrategies(new GsonStrategy())
+        return new GsonBuilder().setExclusionStrategies(new GsonStrategy())
             .registerTypeAdapter(Image.class, new ImageTypeConverter(gson))
+            .registerTypeAdapter(Date.class, new DateTypeConverter())
             .create();
     }
 

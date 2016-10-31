@@ -63,18 +63,20 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         }
     };
 
-    public CollectionListAdapter(Activity activity, List<Collection> colList, @Nullable Callback callback) {
+    public CollectionListAdapter(Activity activity, @Nullable List<Collection> colList, @Nullable Callback callback) {
         final Resources resources = activity.getResources();
         mMaxHeight = resources.getDimension(R.dimen.list_item_max_content) - resources.getDimension(
             R.dimen.row_vertical_padding);
         final View content = activity.getWindow().findViewById(Window.ID_ANDROID_CONTENT);
         mMaxWidth = content.getWidth() - 2 * resources.getDimension(R.dimen.page_vertical_margin);
 
-        setColList(colList);
+        if (colList != null) {
+            setColList(colList);
+        }
         setCallback(callback);
     }
 
-    public void setColList(List<Collection> colList) {
+    public void setColList(@NonNull List<Collection> colList) {
         mColSortList.beginBatchedUpdates();
         try {
             mColSortList.clear();

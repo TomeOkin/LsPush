@@ -59,6 +59,7 @@ import com.tomeokin.lspush.injection.component.DaggerCollectionEditorComponent;
 import com.tomeokin.lspush.injection.module.CollectionModule;
 import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 import com.tomeokin.lspush.ui.widget.dialog.SimpleDialogBuilder;
+import com.tomeokin.lspush.ui.widget.tag.TagGroup;
 
 import java.util.List;
 
@@ -93,6 +94,7 @@ public class CollectionEditorActivity extends BaseActivity
     @BindView(R.id.title) EditText mTitleField;
     @BindView(R.id.description) EditText mDescriptionField;
     @BindView(R.id.description_image) ImageView mDescriptionImageField;
+    @BindView(R.id.tagGroup) TagGroup mTagGroup;
 
     @Inject CollectionAction mCollectionAction;
     @Inject CollectionHolder mCollectionHolder;
@@ -132,7 +134,7 @@ public class CollectionEditorActivity extends BaseActivity
         }
 
         setupToolbar();
-        mPostWaiting.setSvgPath("M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z");
+        mPostWaiting.setSvgPath(getString(R.string.svg_up));
         mPostWaiting.setOnStateChangeListener(new OnStateChangeListener() {
             @Override
             public void onStateChange(int state) {
@@ -150,6 +152,12 @@ public class CollectionEditorActivity extends BaseActivity
             public void onClick(View v) {
                 CollectionTargetActivity.start(CollectionEditorActivity.this, mCollection.getLink().getUrl(),
                     REQUEST_IMAGE_URL);
+            }
+        });
+        mTagGroup.setOnTagClickListener(new TagGroup.OnTagClickListener() {
+            @Override
+            public void onTagClick(TagGroup tagGroup, CharSequence tag) {
+                // TODO: 2016/10/31
             }
         });
     }
@@ -181,8 +189,11 @@ public class CollectionEditorActivity extends BaseActivity
             mPostButton.setVisibility(View.GONE);
             mPostWaiting.setVisibility(View.VISIBLE);
             mPostWaiting.start();
+
+            mTagGroup.submitTag();
             mCollection.setDescription(mDescriptionField.getText().toString());
             mCollection.setImage(mImage);
+            mCollection.setTags(mTagGroup.getTags());
             mCollectionAction.postCollection(mCollection);
         }
     }
@@ -286,7 +297,7 @@ public class CollectionEditorActivity extends BaseActivity
                 Glide.with(this)
                     .load(mImage.getUrl())
                     .asBitmap()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .error(R.drawable.ic_action_add_image)
                     .override((int) (image.getWidth() * radio), (int) (image.getHeight() * radio))
                     .into(new BitmapImageViewTarget(mDescriptionImageField) {
