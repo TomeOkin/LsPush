@@ -52,7 +52,8 @@ import com.tomeokin.lspush.biz.usercase.collection.LinkAction;
 import com.tomeokin.lspush.common.ClipboardUtil;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
-import com.tomeokin.lspush.data.model.UrlFetchResponse;
+import com.tomeokin.lspush.data.model.Collection;
+import com.tomeokin.lspush.data.model.UrlCollectionResponse;
 import com.tomeokin.lspush.data.model.WebPageInfo;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.HomeComponent;
@@ -218,8 +219,8 @@ public class UriDialogFragment extends BaseDialogFragment implements BaseActionC
     @Override
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_GET_URL_INFO) {
-            UrlFetchResponse target = (UrlFetchResponse) response;
-            setUrlInfoResult(target == null ? null : target.getWebPageInfo());
+            UrlCollectionResponse target = (UrlCollectionResponse) response;
+            setUrlInfoResult(target == null ? null : target.getCollection());
         }
     }
 
@@ -232,20 +233,20 @@ public class UriDialogFragment extends BaseDialogFragment implements BaseActionC
         }
     }
 
-    public void setUrlInfoResult(@Nullable WebPageInfo info) {
+    public void setUrlInfoResult(@Nullable Collection col) {
         OnUrlConfirmListener listener = getDialogListener(OnUrlConfirmListener.class);
         if (listener != null) {
-            listener.onUrlConfirm(info);
+            listener.onUrlConfirm(col);
         } else {
             Intent data = new Intent();
-            data.putExtra(REQUEST_RESULT_URL, info != null ? info : new WebPageInfo());
+            data.putExtra(REQUEST_RESULT_URL, col != null ? col : new WebPageInfo());
             setResult(requestCode, Activity.RESULT_OK, data);
         }
         dismiss();
     }
 
     public interface OnUrlConfirmListener {
-        void onUrlConfirm(@Nullable WebPageInfo webPageInfo);
+        void onUrlConfirm(@Nullable Collection collection);
     }
 
     public static class Builder extends BaseDialogBuilder<Builder, UriDialogFragment> {

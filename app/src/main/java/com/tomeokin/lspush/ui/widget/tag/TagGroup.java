@@ -361,8 +361,12 @@ public class TagGroup extends ViewGroup {
     /**
      * @see #setTags(String...)
      */
-    public void setTags(List<String> tagList) {
-        setTags(tagList.toArray(new String[tagList.size()]));
+    public void setTags(@Nullable List<String> tagList) {
+        if (tagList != null) {
+            setTags(tagList.toArray(new String[tagList.size()]));
+        } else {
+            setTags();
+        }
     }
 
     /**

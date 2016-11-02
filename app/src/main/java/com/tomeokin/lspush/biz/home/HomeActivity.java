@@ -31,9 +31,10 @@ import timber.log.Timber;
 
 public class HomeActivity extends BaseActivity implements BaseActionCallback, ProvideComponent<HomeComponent> {
     private HomeComponent mComponent;
+    private ServiceConnection mServiceConnection;
+
     @Inject LocalUserInfoAction mLocalUserInfoAction;
     @Inject LsPushUserState mLsPushUserState;
-    private ServiceConnection mServiceConnection;
 
     @Override
     public HomeComponent component() {

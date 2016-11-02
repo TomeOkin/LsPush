@@ -50,12 +50,12 @@
         android:visibility="gone"
         app:fl_clippingTransform="plain"
         app:fl_fillColor="@color/white_75_transparent"
-        app:fl_fillDuration="1200"
+        app:fl_fillDuration="@integer/svg_fill_duration"
         app:fl_originalHeight="56"
         app:fl_originalWidth="56"
         app:fl_preFillColor="@color/white_70_transparent"
         app:fl_strokeColor="@color/white_70_transparent"
-        app:fl_strokeDrawingDuration="500"
+        app:fl_strokeDrawingDuration="@integer/svg_stroke_drawing_duration"
         app:fl_strokeWidth="1dp" />
 
 </LinearLayout>

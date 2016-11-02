@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="email_hint">Email</string>
     <string name="phone_hint">Phone</string>
     <string name="email">Email</string>
@@ -102,4 +102,6 @@
     <string name="select_description_image">Select Description Image</string>
     <string name="ignore_change_of_collection">Collection has change, ignore them ?</string>
     <string name="svg_up" translatable="false">M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z</string>
+    <string name="no_collections" translatable="false">No collections?\n\nLet\'s push and share!</string>
+    <string name="start">Start</string>
 </resources>

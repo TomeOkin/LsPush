@@ -22,7 +22,8 @@ import com.tomeokin.lspush.data.model.Collection;
 public class CollectionSortCallback extends SortedList.Callback<Collection> {
     @Override
     public int compare(Collection o1, Collection o2) {
-        return o1.getUpdateDate().compareTo(o2.getUpdateDate());
+        // DESC
+        return o2.getUpdateDate().compareTo(o1.getUpdateDate());
     }
 
     @Override

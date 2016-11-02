@@ -20,26 +20,29 @@ import android.content.res.Resources;
 import com.tomeokin.lspush.biz.base.support.BaseAction;
 import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.data.model.UrlFetchResponse;
+import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
+import com.tomeokin.lspush.data.model.UrlCollectionResponse;
 import com.tomeokin.lspush.data.remote.LsPushService;
 
 import retrofit2.Call;
 
 public class LinkAction extends BaseAction {
     private final LsPushService mLsPushService;
+    private final LsPushUserState mLsPushUserState;
 
-    private Call<UrlFetchResponse> mGetUrlInfoAction;
+    private Call<UrlCollectionResponse> mGetUrlInfoAction;
 
-    public LinkAction(Resources resources, LsPushService mLsPushService) {
+    public LinkAction(Resources resources, LsPushService lsPushService, LsPushUserState lsPushUserState) {
         super(resources);
-        this.mLsPushService = mLsPushService;
+        mLsPushService = lsPushService;
+        mLsPushUserState = lsPushUserState;
     }
 
     public void getUrlInfo(String url) {
         checkAndCancel(mGetUrlInfoAction);
-        mGetUrlInfoAction = mLsPushService.getUrlInfo(url);
+        mGetUrlInfoAction = mLsPushService.getUrlInfo(mLsPushUserState.getExpireTokenString(), url);
         mGetUrlInfoAction.enqueue(
-            new CommonCallback<UrlFetchResponse>(mResource, UserScene.ACTION_GET_URL_INFO, mCallback));
+            new CommonCallback<UrlCollectionResponse>(mResource, UserScene.ACTION_GET_URL_INFO, mCallback));
     }
 
     @Override

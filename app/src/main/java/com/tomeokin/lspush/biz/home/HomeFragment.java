@@ -20,8 +20,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,19 +43,18 @@ import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
+import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.CollectionResponse;
-import com.tomeokin.lspush.data.model.WebPageInfo;
 import com.tomeokin.lspush.injection.component.HomeComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
@@ -62,7 +65,6 @@ public class HomeFragment extends BaseFragment
     private static final int REQUEST_GET_URL_INFO = 203;
 
     private Unbinder mUnBinder;
-    private List<Collection> mColList = new ArrayList<>();
     private CollectionListAdapter mColListAdapter;
     private UriDialogFragment.Builder mUriDialogBuilder;
 
@@ -70,8 +72,16 @@ public class HomeFragment extends BaseFragment
     private int mPage = 0;
     private int mSize = DEFAULT_PAGE_SIZE;
 
+    private Snackbar mSnackbar;
+    private CharSequence mSequence;
+
+    @BindColor(R.color.colorPrimary) int mColorPrimary;
+
+    @BindView(R.id.layout_content) CoordinatorLayout mContentLayout;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.col_rv) RecyclerView mColRv;
+    @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.empty_layout) View mEmptyLayout;
 
     @Inject CollectionAction mCollectionAction;
     @Inject CollectionHolder mCollectionHolder;
@@ -130,9 +140,18 @@ public class HomeFragment extends BaseFragment
 
         setupToolbar();
 
-        mColListAdapter = new CollectionListAdapter(getActivity(), mColList, this);
+        mEmptyLayout.setVisibility(View.VISIBLE);
+        mColListAdapter = new CollectionListAdapter(getActivity(), null, this);
+        mColRv.setVisibility(View.GONE);
         mColRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mColRv.setAdapter(mColListAdapter);
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshCollection();
+            }
+        });
         return view;
     }
 
@@ -140,7 +159,14 @@ public class HomeFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCollectionAction.attach(this);
-        mCollectionAction.obtainLatestCollection(mPage++, mSize);
+        refreshCollection();
+    }
+
+    private void refreshCollection() {
+        Timber.v("refresh collection");
+        mSwipeRefreshLayout.setRefreshing(true);
+        mPage = 0;
+        mCollectionAction.obtainLatestCollection(mPage, mSize);
     }
 
     @Override
@@ -206,18 +232,31 @@ public class HomeFragment extends BaseFragment
     public void onActionSuccess(int action, @Nullable BaseResponse response) {
         if (action == UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS) {
             CollectionResponse colResponse = (CollectionResponse) response;
-            if (colResponse != null) {
-                List<Collection> colList = colResponse.getCollections();
-                for (Collection col : colList) {
-                    Timber.i("col: %s", col.toString());
+            if (colResponse != null
+                && colResponse.getCollections() != null
+                && colResponse.getCollections().size() > 0) {
+                mColRv.setVisibility(View.VISIBLE);
+                mEmptyLayout.setVisibility(View.GONE);
+                if (mPage == 0) {
+                    mColListAdapter.setColList(colResponse.getCollections());
+                } else {
+                    mColListAdapter.insertColList(colResponse.getCollections());
                 }
+                mPage++;
+            } else {
+                // there is no more data
+                mColRv.setVisibility(View.GONE);
+                mEmptyLayout.setVisibility(View.VISIBLE);
             }
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
     @Override
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
-
+        if (action == UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -232,18 +271,16 @@ public class HomeFragment extends BaseFragment
 
     @Override
     public void onOpenCollectionUrl(Collection collection) {
-        //CollectionWebViewActivity.start(this, collection, REQUEST_OPEN_COLLECTION);
         mCollectionHolder.setCollection(collection);
         CollectionWebViewActivity.start(this, null, REQUEST_OPEN_COLLECTION);
     }
 
     @Override
-    public void onUrlConfirm(@Nullable WebPageInfo webPageInfo) {
-        if (webPageInfo != null) {
-            Timber.i("url info: %s", webPageInfo.toString());
-            //CollectionEditorActivity.start(this, webPageInfo.toCollection(), REQUEST_EDIT_COLLECTION);
-            mCollectionHolder.setCollection(webPageInfo.toCollection());
-            CollectionEditorActivity.start(this, null, REQUEST_EDIT_COLLECTION);
+    public void onUrlConfirm(@Nullable Collection collection) {
+        if (collection != null) {
+            Timber.i("url info: %s", collection.toString());
+            mCollectionHolder.setCollection(collection);
+            CollectionEditorActivity.start(this, REQUEST_EDIT_COLLECTION);
         } else {
             Timber.i("WebPageInfo is null");
         }
@@ -267,9 +304,36 @@ public class HomeFragment extends BaseFragment
             //
             //}
         } else if (requestCode == REQUEST_EDIT_COLLECTION) {
-            // TODO: 2016/10/25 移动到最上方，刷新
+            mColRv.scrollToPosition(0);
+            refreshCollection();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @OnClick(R.id.start_edit)
+    public void startEditCollection() {
+        showUriDialog();
+    }
+
+    public void showSnackbarNotification(@NonNull CharSequence sequence) {
+        if (mSnackbar == null) {
+            mSequence = sequence;
+            mSnackbar = Snackbar.make(mContentLayout, sequence, Snackbar.LENGTH_SHORT);
+            final View snackbarView = mSnackbar.getView();
+            snackbarView.setBackgroundColor(mColorPrimary);
+            mSnackbar.show();
+        } else if (mSnackbar.isShown()) {
+            if (!StringUtils.isEqual(sequence, mSequence)) {
+                mSequence = sequence;
+                mSnackbar.dismiss();
+                mSnackbar.setText(sequence);
+                mSnackbar.show();
+            }
+        } else {
+            mSequence = sequence;
+            mSnackbar.setText(sequence);
+            mSnackbar.show();
         }
     }
 }

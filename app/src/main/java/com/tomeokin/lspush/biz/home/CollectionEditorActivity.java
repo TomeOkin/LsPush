@@ -66,6 +66,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindDimen;
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -84,6 +85,7 @@ public class CollectionEditorActivity extends BaseActivity
     private boolean mHasChange;
 
     @BindDimen(R.dimen.list_item_max_content) float mMaxContentHeight;
+    @BindInt(R.integer.svg_stroke_drawing_duration) int mStrokeDrawingDuration;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.toolbar_action_close) ImageButton mCloseButton;
@@ -99,11 +101,8 @@ public class CollectionEditorActivity extends BaseActivity
     @Inject CollectionAction mCollectionAction;
     @Inject CollectionHolder mCollectionHolder;
 
-    public static void start(@NonNull Fragment source, @Nullable Collection collection, int requestCode) {
+    public static void start(@NonNull Fragment source, int requestCode) {
         Intent starter = new Intent(source.getContext(), CollectionEditorActivity.class);
-        //if (collection != null) {
-        //    starter.putExtra(EXTRA_COLLECTION, collection);
-        //}
         source.startActivityForResult(starter, requestCode);
         source.getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.hold);
     }
@@ -129,7 +128,7 @@ public class CollectionEditorActivity extends BaseActivity
         //mCollection = getIntent().getParcelableExtra(EXTRA_COLLECTION);
         component().inject(this);
         mCollection = mCollectionHolder.getCollection();
-        if (mCollection == null) {
+        if (mCollection == null || mCollection.getLink() == null) {
             finish();
         }
 
@@ -176,6 +175,7 @@ public class CollectionEditorActivity extends BaseActivity
         mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPostWaiting.setStrokeDrawingDuration(mStrokeDrawingDuration);
                 postCollection();
             }
         });

@@ -8,4 +8,9 @@
     <integer name="direct_max_message_length">500</integer>
     <integer name="max_comments_length">2200</integer>
     <integer name="slide_animation_duration">300</integer>
+
+    <integer name="svg_fill_duration">1200</integer>
+    <integer name="svg_stroke_drawing_duration">500</integer>
+
+    <integer name="collection_description_length">140</integer>
 </resources>

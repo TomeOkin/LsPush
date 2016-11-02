@@ -23,7 +23,7 @@ import com.tomeokin.lspush.data.model.CollectionBinding;
 import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.data.model.CryptoToken;
 import com.tomeokin.lspush.data.model.UploadResponse;
-import com.tomeokin.lspush.data.model.UrlFetchResponse;
+import com.tomeokin.lspush.data.model.UrlCollectionResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -92,5 +92,5 @@ public interface LsPushService {
     Call<BaseResponse> removeFavor(@Header(value = "token") String token, @Body long colId);
 
     @GET("/api/link/fetch")
-    Call<UrlFetchResponse> getUrlInfo(@Query("url") String url);
+    Call<UrlCollectionResponse> getUrlInfo(@Header(value = "token") String token, @Query("url") String url);
 }

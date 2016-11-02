@@ -84,9 +84,10 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         } finally {
             mColSortList.endBatchedUpdates();
         }
+        notifyDataSetChanged();
     }
 
-    public void insertColList(List<Collection> colList) {
+    public void insertColList(@NonNull List<Collection> colList) {
         mColSortList.beginBatchedUpdates();
         try {
             mColSortList.addAll(colList);
