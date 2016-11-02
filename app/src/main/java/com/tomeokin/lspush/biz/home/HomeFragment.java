@@ -94,41 +94,8 @@ public class HomeFragment extends BaseFragment
 
         component(HomeComponent.class).inject(this);
 
-        //User user = new User();
-        //user.setUid("one");
-        //user.setNickname("One");
-        //
-        //Link link = new Link();
-        //link.setTitle("Tencent/tinker");
-        //link.setUrl("https://github.com/Tencent/tinker");
-        //
-        //Collection collection = new Collection();
-        //collection.setUser(user);
-        //collection.setLink(link);
-        //collection.setDescription(
-        //    "tinker - Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstall apk.");
-        //Image image = new Image();
-        //image.setWidth(660);
-        //image.setHeight(386);
-        //image.setColor(0);
-        //image.setUrl("https://github.com/Tencent/tinker/raw/dev/assets/tinker.png");
-        //collection.setImage(image);
-        //collection.setId(1);
-        //Instant now = Instant.now();
-        //Date create = DateTimeUtils.toDate(now);
-        //collection.setCreateDate(create);
-        //collection.setUpdateDate(create);
-        //collection.setExplorers(Collections.singletonList(user));
-        //collection.setTags(Arrays.asList("github", "热修复", "Tencent", "hot-fix"));
-        //collection.setFavorCount(101);
-        //collection.setHasFavor(true);
-        //collection.setHasRead(false);
-        //
-        //mColList = new ArrayList<>(1);
-        //mColList.add(collection);
-
-        //Bundle bundle = CollectionTargetFragment.prepareArgument("http://www.jianshu.com/p/2a9fcf3c11e4");
-        //Navigator.moveTo(this, CollectionTargetFragment.class, bundle);
+        // https://github.com/Tencent/tinker
+        // http://www.jianshu.com/p/2a9fcf3c11e4
     }
 
     @Nullable
@@ -270,6 +237,8 @@ public class HomeFragment extends BaseFragment
                 && colResponse.getCollections().size() > 0) {
                 mColRv.setVisibility(View.VISIBLE);
                 mEmptyLayout.setVisibility(View.GONE);
+
+                mHasMoreData = colResponse.getCollections().size() == DEFAULT_PAGE_SIZE;
                 // task is refresh collection
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     mColListAdapter.setColList(colResponse.getCollections());
@@ -293,6 +262,7 @@ public class HomeFragment extends BaseFragment
     public void onActionFailure(int action, @Nullable BaseResponse response, String message) {
         if (action == UserScene.ACTION_OBTAIN_LATEST_COLLECTIONS) {
             mSwipeRefreshLayout.setRefreshing(false);
+            mColListAdapter.hideLoadingProgress();
         }
     }
 
@@ -320,6 +290,7 @@ public class HomeFragment extends BaseFragment
             CollectionEditorActivity.start(this, REQUEST_EDIT_COLLECTION);
         } else {
             Timber.v("Url Info Collection is null");
+            Toast.makeText(getContext(), R.string.could_not_get_url_info, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -94,4 +94,5 @@
     <string name="select_description_image">选择描述图片</string>
     <string name="ignore_change_of_collection">编辑结果未保存，忽略？</string>
     <string name="start">开始</string>
+    <string name="could_not_get_url_info">无法查询到 Url 相关信息。</string>
 </resources>

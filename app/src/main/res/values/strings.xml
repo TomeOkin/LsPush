@@ -104,4 +104,5 @@
     <string name="svg_up" translatable="false">M25,32L31,32L31,26L35,26L28,19L21,26L25,26L25,32Z</string>
     <string name="no_collections" translatable="false">No collections?\n\nLet\'s push and share!</string>
     <string name="start">Start</string>
+    <string name="could_not_get_url_info">Could not get the url info.</string>
 </resources>
