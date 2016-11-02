@@ -62,7 +62,6 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Callback mCallback = null;
 
     private boolean mIsLoading = false;
-    private int mClickIndex; // the index of the Collection Opened
     private View.OnClickListener mExplorerListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -105,12 +104,12 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    public void updateColList(@NonNull Collection collection) {
-        if (mColSortList.get(mClickIndex).getId() != collection.getId()) {
+    public void updateColList(int position, @NonNull Collection collection) {
+        if (mColSortList.get(position).getId() != collection.getId()) {
             Timber.w("Error matching on collection list");
         }
-        mColSortList.updateItemAt(mClickIndex, collection);
-        notifyItemChanged(mClickIndex);
+        mColSortList.updateItemAt(position, collection);
+        notifyItemChanged(position);
     }
 
     public void showLoadingProgress() {
@@ -174,7 +173,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
 
                 if (mCallback != null) {
-                    mCallback.onFavorChange(collection);
+                    mCallback.onFavorChange(v, position, collection);
                 }
             }
         });
@@ -277,8 +276,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         TextView title = (TextView) v.findViewById(R.id.title);
         updateTitleColor(v.getContext(), title, collection.isHasRead());
         if (mCallback != null) {
-            mClickIndex = position;
-            mCallback.onOpenCollectionUrl(collection);
+            mCallback.onOpenCollectionUrl(position, collection);
         }
     }
 
@@ -321,10 +319,10 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public interface Callback {
-        void onFavorChange(Collection collection);
+        void onFavorChange(View favorButton, int position, Collection collection);
 
         void onShowMoreExplorers(Collection collection);
 
-        void onOpenCollectionUrl(Collection collection);
+        void onOpenCollectionUrl(int position, Collection collection);
     }
 }

@@ -43,6 +43,7 @@ import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
+import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
 import com.tomeokin.lspush.common.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
@@ -59,7 +60,8 @@ import butterknife.Unbinder;
 import timber.log.Timber;
 
 public class HomeFragment extends BaseFragment
-    implements BaseActionCallback, CollectionListAdapter.Callback, UriDialogFragment.OnUrlConfirmListener {
+    implements BaseActionCallback, FavorAction.OnFavorActionCallback, CollectionListAdapter.Callback,
+    UriDialogFragment.OnUrlConfirmListener {
     private static final int REQUEST_OPEN_COLLECTION = 201;
     private static final int REQUEST_EDIT_COLLECTION = 202;
     private static final int REQUEST_GET_URL_INFO = 203;
@@ -83,6 +85,7 @@ public class HomeFragment extends BaseFragment
     @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.empty_layout) View mEmptyLayout;
 
+    @Inject FavorAction mFavorAction;
     @Inject CollectionAction mCollectionAction;
     @Inject CollectionHolder mCollectionHolder;
 
@@ -159,6 +162,7 @@ public class HomeFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mCollectionAction.attach(this);
+        mFavorAction.attach(this);
         refreshCollection();
     }
 
@@ -174,6 +178,7 @@ public class HomeFragment extends BaseFragment
         super.onDestroyView();
         mUnBinder.unbind();
         mCollectionAction.detach();
+        mFavorAction.detach();
     }
 
     @Override
@@ -181,6 +186,7 @@ public class HomeFragment extends BaseFragment
         super.onDestroy();
         mUnBinder = null;
         mCollectionAction = null;
+        mFavorAction = null;
         mCollectionHolder.setCollection(null);
         mCollectionHolder = null;
     }
@@ -267,8 +273,27 @@ public class HomeFragment extends BaseFragment
     }
 
     @Override
-    public void onFavorChange(Collection collection) {
+    public void onFavorChange(View favorButton, int position, Collection collection) {
+        favorButton.setEnabled(false);
+        if (collection.isHasFavor()) {
+            mFavorAction.addFavor(favorButton, position, collection);
+        } else {
+            mFavorAction.removeFavor(favorButton, position, collection);
+        }
+    }
 
+    @Override
+    public void onFavorActionSuccess(View favorButton, int position, Collection collection) {
+        favorButton.setEnabled(true);
+    }
+
+    @Override
+    public void onFavorActionFailure(View favorButton, int position, Collection collection) {
+        favorButton.setEnabled(true);
+        showSnackbarNotification(
+            getString(collection.isHasFavor() ? R.string.add_favor_failure : R.string.remove_favor_failure));
+        collection.setHasFavor(!collection.isHasFavor());
+        mColListAdapter.updateColList(position, collection);
     }
 
     @Override
@@ -277,9 +302,10 @@ public class HomeFragment extends BaseFragment
     }
 
     @Override
-    public void onOpenCollectionUrl(Collection collection) {
+    public void onOpenCollectionUrl(int position, Collection collection) {
+        mCollectionHolder.setPosition(position);
         mCollectionHolder.setCollection(collection);
-        CollectionWebViewActivity.start(this, null, REQUEST_OPEN_COLLECTION);
+        CollectionWebViewActivity.start(this, REQUEST_OPEN_COLLECTION);
     }
 
     @Override
@@ -303,9 +329,10 @@ public class HomeFragment extends BaseFragment
         }
 
         if (requestCode == REQUEST_OPEN_COLLECTION) {
+            int position = mCollectionHolder.getPosition();
             Collection collection = mCollectionHolder.getCollection();
             if (collection != null) {
-                mColListAdapter.updateColList(collection);
+                mColListAdapter.updateColList(position, collection);
             }
         } else if (requestCode == REQUEST_EDIT_COLLECTION) {
             mColRv.scrollToPosition(0);

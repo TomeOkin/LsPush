@@ -147,6 +147,7 @@ public class LsPushApiModule {
         // (gson perhaps should provide a @GsonString or @GsonStringAdapter for bean detail transparent of server).
         Gson gson = new Gson();
         return new GsonBuilder().setExclusionStrategies(new GsonStrategy())
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             .registerTypeAdapter(Image.class, new ImageTypeConverter(gson))
             .registerTypeAdapter(Date.class, new DateTypeConverter())
             .create();

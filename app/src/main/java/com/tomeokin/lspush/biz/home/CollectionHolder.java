@@ -18,6 +18,7 @@ package com.tomeokin.lspush.biz.home;
 import com.tomeokin.lspush.data.model.Collection;
 
 public class CollectionHolder {
+    private int mPosition;
     private Collection mCollection;
 
     public Collection getCollection() {
@@ -25,6 +26,14 @@ public class CollectionHolder {
     }
 
     public void setCollection(Collection collection) {
-        this.mCollection = collection;
+        mCollection = collection;
+    }
+
+    public int getPosition() {
+        return mPosition;
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
     }
 }

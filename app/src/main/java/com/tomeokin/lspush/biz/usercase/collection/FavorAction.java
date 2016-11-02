@@ -15,11 +15,10 @@
  */
 package com.tomeokin.lspush.biz.usercase.collection;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.view.View;
 
-import com.tomeokin.lspush.biz.base.support.BaseAction;
-import com.tomeokin.lspush.biz.base.support.CommonCallback;
+import com.tomeokin.lspush.biz.base.support.CommonAction;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
 import com.tomeokin.lspush.data.model.BaseResponse;
@@ -31,21 +30,20 @@ import java.util.Collections;
 import java.util.Date;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
-public class FavorAction extends BaseAction {
+public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCallback> {
     private final LsPushService mLsPushService;
     private final LsPushUserState mLsPushUserState;
 
-    private Call<BaseResponse> mAddFavorCall;
-    private Call<BaseResponse> mRemoveFavorCall;
-
-    public FavorAction(Resources resources, LsPushService lsPushService, LsPushUserState lsPushUserState) {
-        super(resources);
-        this.mLsPushService = lsPushService;
-        this.mLsPushUserState = lsPushUserState;
+    public FavorAction(LsPushService lsPushService, LsPushUserState lsPushUserState) {
+        mLsPushService = lsPushService;
+        mLsPushUserState = lsPushUserState;
     }
 
-    public void addFavor(@NonNull Collection collection) {
+    public void addFavor(View favorButton, int position, @NonNull Collection collection) {
         CollectionBinding.Data data = new CollectionBinding.Data();
         data.uid = mLsPushUserState.getUid();
         data.date = new Date();
@@ -53,31 +51,62 @@ public class FavorAction extends BaseAction {
         binding.setFavors(Collections.singletonList(data));
         binding.setCollectionId(collection.getId());
 
-        checkAndCancel(mAddFavorCall);
-        mAddFavorCall = mLsPushService.addFavor(mLsPushUserState.getExpireTokenString(), binding);
-        mAddFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_ADD_FAVOR, mCallback));
+        Call<BaseResponse> addFavorCall = mLsPushService.addFavor(mLsPushUserState.getExpireTokenString(), binding);
+        addFavorCall.enqueue(new FavorActionCallback(favorButton, position, collection));
     }
 
-    public void removeFavor(@NonNull Collection collection) {
-        checkAndCancel(mRemoveFavorCall);
-        mRemoveFavorCall = mLsPushService.removeFavor(mLsPushUserState.getExpireTokenString(), collection.getId());
-        mRemoveFavorCall.enqueue(new CommonCallback<>(mResource, UserScene.ACTION_REMOVE_FAVOR, mCallback));
+    public void removeFavor(View favorButton, int position, @NonNull Collection collection) {
+        Call<BaseResponse> removeFavorCall =
+            mLsPushService.removeFavor(mLsPushUserState.getExpireTokenString(), collection.getId());
+        removeFavorCall.enqueue(new FavorActionCallback(favorButton, position, collection));
     }
 
-    @Override
-    public void cancel(int action) {
-        super.cancel(action);
-        if (action == UserScene.ACTION_ADD_FAVOR) {
-            checkAndCancel(mAddFavorCall);
-        } else if (action == UserScene.ACTION_REMOVE_FAVOR) {
-            checkAndCancel(mRemoveFavorCall);
+    public final class FavorActionCallback implements Callback<BaseResponse> {
+        private final View favorButton;
+        private final int position;
+        private final Collection collection;
+
+        public FavorActionCallback(View favorButton, int position, @NonNull Collection collection) {
+            this.favorButton = favorButton;
+            this.position = position;
+            this.collection = collection;
+        }
+
+        @Override
+        public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+            if (response.isSuccessful()) {
+                BaseResponse baseResponse = response.body();
+                if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
+                    if (mCallback != null) {
+                        mCallback.onFavorActionSuccess(favorButton, position, collection);
+                    }
+                } else {
+                    if (mCallback != null) {
+                        mCallback.onFavorActionFailure(favorButton, position, collection);
+                    }
+                }
+            } else {
+                try {
+                    Timber.tag(UserScene.TAG_NETWORK).w(response.errorBody().string());
+                } catch (Exception e) {
+                    // ignore
+                }
+                if (mCallback != null) {
+                    mCallback.onFavorActionFailure(favorButton, position, collection);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseResponse> call, Throwable t) {
+            Timber.w(t);
+            mCallback.onFavorActionFailure(favorButton, position, collection);
         }
     }
 
-    @Override
-    public void detach() {
-        super.detach();
-        checkAndCancel(mAddFavorCall);
-        checkAndCancel(mRemoveFavorCall);
+    public interface OnFavorActionCallback {
+        void onFavorActionSuccess(View favorButton, int position, Collection collection);
+
+        void onFavorActionFailure(View favorButton, int position, Collection collection);
     }
 }

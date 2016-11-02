@@ -39,9 +39,8 @@ public class CollectionModule {
 
     @Provides
     @PerActivity
-    public FavorAction provideFavorAction(@ActivityContext Context context, LsPushService lsPushService,
-        LsPushUserState lsPushUserState) {
-        return new FavorAction(context.getResources(), lsPushService, lsPushUserState);
+    public FavorAction provideFavorAction(LsPushService lsPushService, LsPushUserState lsPushUserState) {
+        return new FavorAction(lsPushService, lsPushUserState);
     }
 
     @Provides

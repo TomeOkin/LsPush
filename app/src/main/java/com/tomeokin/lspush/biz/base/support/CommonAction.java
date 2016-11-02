@@ -15,29 +15,20 @@
  */
 package com.tomeokin.lspush.biz.base.support;
 
-import android.content.res.Resources;
+import android.support.annotation.CallSuper;
 
-import retrofit2.Call;
-import rx.Subscription;
+public class CommonAction<C> {
+    protected C mCallback;
 
-public class BaseAction extends CommonAction<BaseActionCallback> {
-    protected final Resources mResource;
+    public CommonAction() {}
 
-    public BaseAction(Resources resources) {
-        mResource = resources;
+    @CallSuper
+    public void attach(C callback) {
+        mCallback = callback;
     }
 
-    protected void checkAndCancel(Call<?> call) {
-        if (call != null && !call.isCanceled()) {
-            call.cancel();
-        }
+    @CallSuper
+    public void detach() {
+        mCallback = null;
     }
-
-    protected void checkAndUnsubscribe(Subscription subscription) {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-    }
-
-    public void cancel(int action) {}
 }
