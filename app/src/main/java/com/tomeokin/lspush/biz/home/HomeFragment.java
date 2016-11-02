@@ -70,7 +70,7 @@ public class HomeFragment extends BaseFragment
 
     private static final int DEFAULT_PAGE_SIZE = 20;
     private int mPage = 0;
-    private int mSize = DEFAULT_PAGE_SIZE;
+    private boolean mHasMoreData = true;
 
     private Snackbar mSnackbar;
     private CharSequence mSequence;
@@ -143,7 +143,27 @@ public class HomeFragment extends BaseFragment
         mEmptyLayout.setVisibility(View.VISIBLE);
         mColListAdapter = new CollectionListAdapter(getActivity(), null, this);
         mColRv.setVisibility(View.GONE);
-        mColRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mColRv.setLayoutManager(linearLayoutManager);
+        mColRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int mVisibleThreshold = 5;
+            private int mLastVisibleItem, mTotalItemCount;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mTotalItemCount = linearLayoutManager.getItemCount();
+                mLastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                // 在刷新、在加载更多或者没达到上限前不加载更多
+                if (!mSwipeRefreshLayout.isRefreshing()
+                    && !mColListAdapter.isLoading()
+                    && mHasMoreData
+                    && mTotalItemCount <= mLastVisibleItem + mVisibleThreshold) {
+                    loadMoreCollection();
+                }
+            }
+        });
         mColRv.setAdapter(mColListAdapter);
         mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -153,6 +173,19 @@ public class HomeFragment extends BaseFragment
             }
         });
         return view;
+    }
+
+    private void loadMoreCollection() {
+        // this is faster than come to state idle
+        mColRv.post(new Runnable() {
+            @Override
+            public void run() {
+                Timber.i("mColRv Runnable.run");
+                mPage = mColListAdapter.getItemCount() / DEFAULT_PAGE_SIZE;
+                mColListAdapter.showLoadingProgress();
+                mCollectionAction.obtainLatestCollection(mPage, DEFAULT_PAGE_SIZE);
+            }
+        });
     }
 
     @Override
@@ -166,7 +199,7 @@ public class HomeFragment extends BaseFragment
         Timber.v("refresh collection");
         mSwipeRefreshLayout.setRefreshing(true);
         mPage = 0;
-        mCollectionAction.obtainLatestCollection(mPage, mSize);
+        mCollectionAction.obtainLatestCollection(mPage, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -237,18 +270,22 @@ public class HomeFragment extends BaseFragment
                 && colResponse.getCollections().size() > 0) {
                 mColRv.setVisibility(View.VISIBLE);
                 mEmptyLayout.setVisibility(View.GONE);
-                if (mPage == 0) {
+                // task is refresh collection
+                if (mSwipeRefreshLayout.isRefreshing()) {
                     mColListAdapter.setColList(colResponse.getCollections());
-                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                } else { // task is load more collection
+                    mColListAdapter.hideLoadingProgress();
                     mColListAdapter.insertColList(colResponse.getCollections());
                 }
-                mPage++;
             } else {
-                // there is no more data
+                // there is no or no more data
+                mHasMoreData = false;
                 mColRv.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                mColListAdapter.hideLoadingProgress();
                 mEmptyLayout.setVisibility(View.VISIBLE);
             }
-            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -278,11 +315,11 @@ public class HomeFragment extends BaseFragment
     @Override
     public void onUrlConfirm(@Nullable Collection collection) {
         if (collection != null) {
-            Timber.i("url info: %s", collection.toString());
+            Timber.v("url info: %s", collection.toString());
             mCollectionHolder.setCollection(collection);
             CollectionEditorActivity.start(this, REQUEST_EDIT_COLLECTION);
         } else {
-            Timber.i("WebPageInfo is null");
+            Timber.v("Url Info Collection is null");
         }
     }
 
@@ -299,10 +336,6 @@ public class HomeFragment extends BaseFragment
             if (collection != null) {
                 mColListAdapter.updateColList(collection);
             }
-            //if (data != null) {
-            //    //Collection collection = data.getParcelableExtra(CollectionWebViewActivity.REQUEST_RESULT_COLLECTION);
-            //
-            //}
         } else if (requestCode == REQUEST_EDIT_COLLECTION) {
             mColRv.scrollToPosition(0);
             refreshCollection();

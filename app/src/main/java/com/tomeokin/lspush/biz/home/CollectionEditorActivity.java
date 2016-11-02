@@ -223,7 +223,6 @@ public class CollectionEditorActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         Intent data = new Intent();
-        //data.putExtra(REQUEST_RESULT_COLLECTION, mCollection);
         String description = TextUtils.isEmpty(mCollection.getDescription()) ? "" : mCollection.getDescription();
         if (!mHasChange && description.equals(mDescriptionField.getText().toString())) {
             mCollectionHolder.setCollection(mCollection);

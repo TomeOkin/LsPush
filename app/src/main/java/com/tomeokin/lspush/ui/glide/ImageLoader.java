@@ -52,7 +52,7 @@ public class ImageLoader {
                 .load(image.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(drawable)
-                .crossFade(500)
+                .crossFade(600)
                 .override(width, height)
                 .error(drawable)
                 .into(target);

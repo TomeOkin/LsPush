@@ -32,8 +32,8 @@ import dagger.Provides;
 public class CollectionModule {
     @Provides
     @PerActivity
-    public CollectionAction provideCollectionAction(@ActivityContext Context context,
-        LsPushService lsPushService, LsPushUserState lsPushUserState) {
+    public CollectionAction provideCollectionAction(@ActivityContext Context context, LsPushService lsPushService,
+        LsPushUserState lsPushUserState) {
         return new CollectionAction(context.getResources(), lsPushService, lsPushUserState);
     }
 
@@ -46,7 +46,8 @@ public class CollectionModule {
 
     @Provides
     @PerActivity
-    public LinkAction provideLinkAction(@ActivityContext Context context, LsPushService lsPushService) {
-        return new LinkAction(context.getResources(), lsPushService);
+    public LinkAction provideLinkAction(@ActivityContext Context context, LsPushService lsPushService,
+        LsPushUserState lsPushUserState) {
+        return new LinkAction(context.getResources(), lsPushService, lsPushUserState);
     }
 }

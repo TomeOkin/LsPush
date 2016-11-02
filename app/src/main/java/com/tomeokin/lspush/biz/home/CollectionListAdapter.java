@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,14 +47,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder>
+public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements View.OnClickListener {
+    private final int VIEW_TYPE_NORMAL = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
     private final float mMaxHeight;
     private final float mMaxWidth;
-    private Callback mCallback = null;
+
     private final SortedList.BatchedCallback<Collection> mBatchCallback =
         new SortedList.BatchedCallback<>(new CollectionSortCallback());
     private SortedList<Collection> mColSortList = new SortedList<>(Collection.class, mBatchCallback);
+
+    private Callback mCallback = null;
+
+    private boolean mIsLoading = false;
     private int mClickIndex; // the index of the Collection Opened
     private View.OnClickListener mExplorerListener = new View.OnClickListener() {
         @Override
@@ -105,15 +113,44 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         notifyItemChanged(mClickIndex);
     }
 
-    public void setCallback(Callback callback) {
-        mCallback = callback;
+    public void showLoadingProgress() {
+        mIsLoading = true;
+        notifyItemInserted(mColSortList.size());
+    }
+
+    public void hideLoadingProgress() {
+        mIsLoading = false;
+        notifyItemRemoved(mColSortList.size());
+    }
+
+    public boolean isLoading() {
+        return mIsLoading;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        return position < mColSortList.size() ? VIEW_TYPE_NORMAL : VIEW_TYPE_LOADING;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mColSortList.size() + (mIsLoading ? 1 : 0);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == VIEW_TYPE_NORMAL) {
+            return createCollectionHolder(inflater, parent);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            return createLoadingViewHolder(inflater, parent);
+        }
+        return null;
+    }
+
+    private RecyclerView.ViewHolder createCollectionHolder(LayoutInflater inflater, ViewGroup parent) {
         final View view = inflater.inflate(R.layout.layout_item_collection, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+        final CollectionViewHolder holder = new CollectionViewHolder(view);
         holder.itemView.setOnClickListener(this);
         holder.explorersMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +181,21 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         return holder;
     }
 
+    private LoadingViewHolder createLoadingViewHolder(LayoutInflater inflater, ViewGroup parent) {
+        final View view = inflater.inflate(R.layout.layout_loading, parent, false);
+        return new LoadingViewHolder(view);
+    }
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CollectionViewHolder) {
+            onBindCollectionViewHolder((CollectionViewHolder) holder, position);
+        } else {
+            onBindLoadingViewHolder((LoadingViewHolder) holder, position);
+        }
+    }
+
+    private void onBindCollectionViewHolder(CollectionViewHolder holder, int position) {
         final Collection collection = mColSortList.get(position);
         final User user = collection.getUser();
         final Context context = holder.itemView.getContext();
@@ -170,6 +220,11 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
         updateFavorIcon(holder.favorIcon, collection.isHasFavor());
         holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    private void onBindLoadingViewHolder(LoadingViewHolder holder, int position) {
+        holder.mProgressBar.show();
     }
 
     private void updateTitleColor(Context context, TextView title, boolean hasRead) {
@@ -227,21 +282,19 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mColSortList.size();
+    public void setCallback(Callback callback) {
+        mCallback = callback;
     }
 
     private float optimumRadio(int width, int height) {
         return ImageUtils.optimumRadio(mMaxWidth, mMaxHeight, width, height);
     }
 
-    public final class ViewHolder extends RecyclerView.ViewHolder {
+    public final class CollectionViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.avatar_iv) ImageView avatar;
         @BindView(R.id.nickname_tv) TextView nickname;
         @BindView(R.id.updateDate) TextView updateDate;
 
-        @BindView(R.id.content_layout) LinearLayout mContentLayout;
         @BindView(R.id.title) TextView title;
         @BindView(R.id.description) TextView description;
         @BindView(R.id.description_image) ImageView descriptionImage;
@@ -252,7 +305,16 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         @BindView(R.id.favor_iv) ImageView favorIcon;
         @BindView(R.id.favor_count) TextView favorCount;
 
-        public ViewHolder(View itemView) {
+        public CollectionViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public final class LoadingViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.loading_progress_bar) ContentLoadingProgressBar mProgressBar;
+
+        public LoadingViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
