@@ -59,7 +59,7 @@ ext {
 
             // rx
             rxandroid            : "io.reactivex:rxandroid:1.2.1",
-            rxjava               : "io.reactivex:rxjava:1.2.1",
+            rxjava               : "io.reactivex:rxjava:1.2.2",
 
             rxbindingV7          : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxbindingVersion}",
             rxbindingRecyclerview: "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${rxbindingVersion}",
@@ -104,7 +104,7 @@ ext {
 
     testDependencies = [
             junit       : "junit:junit:${junit4Version}",
-            robolectric : "org.robolectric:robolectric:3.1.3",
+            robolectric : "org.robolectric:robolectric:3.1.4",
             assertjCore : "org.assertj:assertj-core:3.5.2",
             mockitoCore : "org.mockito:mockito-core:${mockitoVersion}",
             mockitoCore2: "org.mockito:mockito-core:${mockito2Version}",

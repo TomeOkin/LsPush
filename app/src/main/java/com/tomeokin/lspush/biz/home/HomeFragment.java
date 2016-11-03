@@ -135,6 +135,7 @@ public class HomeFragment extends BaseFragment
             }
         });
         mColRv.setAdapter(mColListAdapter);
+        mColRv.setItemAnimator(new CollectionItemAnimator());
         mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -150,7 +151,6 @@ public class HomeFragment extends BaseFragment
         mColRv.post(new Runnable() {
             @Override
             public void run() {
-                Timber.i("mColRv Runnable.run");
                 mPage = mColListAdapter.getItemCount() / DEFAULT_PAGE_SIZE;
                 mColListAdapter.showLoadingProgress();
                 mCollectionAction.obtainLatestCollection(mPage, DEFAULT_PAGE_SIZE);
@@ -274,22 +274,20 @@ public class HomeFragment extends BaseFragment
 
     @Override
     public void onFavorChange(View favorButton, int position, Collection collection) {
-        favorButton.setEnabled(false);
         if (collection.isHasFavor()) {
-            mFavorAction.addFavor(favorButton, position, collection);
+            mFavorAction.addFavor(position, collection);
         } else {
-            mFavorAction.removeFavor(favorButton, position, collection);
+            mFavorAction.removeFavor(position, collection);
         }
     }
 
     @Override
-    public void onFavorActionSuccess(View favorButton, int position, Collection collection) {
-        favorButton.setEnabled(true);
+    public void onFavorActionSuccess(int position, Collection collection) {
+
     }
 
     @Override
-    public void onFavorActionFailure(View favorButton, int position, Collection collection) {
-        favorButton.setEnabled(true);
+    public void onFavorActionFailure(int position, Collection collection) {
         showSnackbarNotification(
             getString(collection.isHasFavor() ? R.string.add_favor_failure : R.string.remove_favor_failure));
         collection.setHasFavor(!collection.isHasFavor());

@@ -49,6 +49,9 @@ import timber.log.Timber;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     implements View.OnClickListener {
+    public static final String ACTION_ADD_FAVOR = "ACTION_ADD_FAVOR";
+    public static final String ACTION_REMOVE_FAVOR = "ACTION_REMOVE_FAVOR";
+
     private final int VIEW_TYPE_NORMAL = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
@@ -169,8 +172,9 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final boolean hasFavor = !collection.isHasFavor();
                 collection.setHasFavor(hasFavor);
                 collection.setFavorCount(collection.getFavorCount() + (hasFavor ? 1 : -1));
-                updateFavorIcon(holder.favorIcon, hasFavor);
-                holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
+                //updateFavorIcon(holder.favorIcon, hasFavor);
+                updateFavorText(holder.favorCount, collection.getFavorCount());
+                notifyItemChanged(position, hasFavor ? ACTION_ADD_FAVOR : ACTION_REMOVE_FAVOR);
 
                 if (mCallback != null) {
                     mCallback.onFavorChange(v, position, collection);
@@ -216,9 +220,11 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         holder.tagGroup.setTags(collection.getTags());
         setExplorers(holder.explorersContainer, collection.getExplorers());
+        boolean hasMore = collection.getExplorers() != null && collection.getExplorers().size() > 5;
+        holder.explorersMore.setVisibility(hasMore ? View.VISIBLE : View.GONE);
 
         updateFavorIcon(holder.favorIcon, collection.isHasFavor());
-        holder.favorCount.setText(String.valueOf(collection.getFavorCount()));
+        updateFavorText(holder.favorCount, collection.getFavorCount());
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -231,8 +237,12 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ContextCompat.getColor(context, hasRead ? R.color.grey_40_transparent : R.color.black_87_transparent));
     }
 
-    private void updateFavorIcon(ImageView favorIcon, boolean hasFavor) {
+    public static void updateFavorIcon(ImageView favorIcon, boolean hasFavor) {
         favorIcon.setImageResource(hasFavor ? R.drawable.ic_action_heart_solid : R.drawable.ic_action_heart_hollow);
+    }
+
+    public static void updateFavorText(TextView favorText, long favorCount) {
+        favorText.setText(String.valueOf(favorCount));
     }
 
     private void setExplorers(ViewGroup container, @Nullable List<User> explorers) {
@@ -247,7 +257,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         //}
 
         final int count = container.getChildCount();
-        final int targetCount = explorers == null ? 0 : explorers.size();
+        int targetCount = explorers == null ? 0 : explorers.size();
+        targetCount = targetCount >= 5 ? 5 : targetCount;
         final LayoutInflater inflater = LayoutInflater.from(context);
         if (count > targetCount) {
             container.removeViews(targetCount, count - targetCount);

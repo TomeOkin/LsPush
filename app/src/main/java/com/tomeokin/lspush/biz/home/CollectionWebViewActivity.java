@@ -15,6 +15,8 @@
  */
 package com.tomeokin.lspush.biz.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -131,6 +133,8 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
         mBottomBar.forwardButton.setOnClickListener(this);
         mBottomBar.favorButton.setOnClickListener(this);
         updateFavor(mCollection.isHasFavor());
+
+
     }
 
     @Override
@@ -175,9 +179,9 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
                 updateFavor(!mCollection.isHasFavor());
                 mBottomBar.favorButton.setEnabled(false);
                 if (mCollection.isHasFavor()) {
-                    mFavorAction.addFavor(mBottomBar.favorButton, mPosition, mCollection);
+                    mFavorAction.addFavor(mPosition, mCollection);
                 } else {
-                    mFavorAction.removeFavor(mBottomBar.favorButton, mPosition, mCollection);
+                    mFavorAction.removeFavor(mPosition, mCollection);
                 }
                 return true;
             default:
@@ -185,24 +189,46 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
         }
     }
 
-    private void updateFavor(boolean favor) {
+    private void updateFavor(final boolean favor) {
         if (mCollection.isHasFavor() != favor) {
             mCollection.setFavorCount(mCollection.getFavorCount() + (favor ? 1 : -1));
             mCollection.setHasFavor(favor);
+
+            if (favor) {
+                CollectionItemAnimator.animateAddFavor(mBottomBar.favorButton, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        updateFavorIcon(mBottomBar.favorButton, true);
+                        updateFavorText(mBottomBar.favorCount, mCollection.getFavorCount());
+                    }
+                });
+            } else {
+                updateFavorIcon(mBottomBar.favorButton, false);
+                updateFavorText(mBottomBar.favorCount, mCollection.getFavorCount());
+            }
+        } else {
+            updateFavorIcon(mBottomBar.favorButton, favor);
+            updateFavorText(mBottomBar.favorCount, mCollection.getFavorCount());
         }
-        mBottomBar.favorButton.setImageResource(
-            favor ? R.drawable.ic_action_heart_solid : R.drawable.ic_action_heart_hollow);
-        mBottomBar.favorCount.setText(getString(R.string.favor_count, mCollection.getFavorCount()));
+    }
+
+    private void updateFavorIcon(ImageButton favorIcon, boolean hasFavor) {
+        favorIcon.setImageResource(hasFavor ? R.drawable.ic_action_heart_solid : R.drawable.ic_action_heart_hollow);
+    }
+
+    private void updateFavorText(TextView favorText, long favorCount) {
+        favorText.setText(getString(R.string.favor_count, favorCount));
     }
 
     @Override
-    public void onFavorActionSuccess(View favorButton, int position, Collection collection) {
-        favorButton.setEnabled(true);
+    public void onFavorActionSuccess(int position, Collection collection) {
+        mBottomBar.favorButton.setEnabled(true);
     }
 
     @Override
-    public void onFavorActionFailure(View favorButton, int position, Collection collection) {
-        favorButton.setEnabled(true);
+    public void onFavorActionFailure(int position, Collection collection) {
+        mBottomBar.favorButton.setEnabled(true);
         showSnackbarNotification(
             getString(mCollection.isHasFavor() ? R.string.add_favor_failure : R.string.remove_favor_failure));
         updateFavor(!mCollection.isHasFavor());

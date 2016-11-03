@@ -16,7 +16,6 @@
 package com.tomeokin.lspush.biz.usercase.collection;
 
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.tomeokin.lspush.biz.base.support.CommonAction;
 import com.tomeokin.lspush.biz.common.UserScene;
@@ -43,7 +42,7 @@ public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCal
         mLsPushUserState = lsPushUserState;
     }
 
-    public void addFavor(View favorButton, int position, @NonNull Collection collection) {
+    public void addFavor(int position, @NonNull Collection collection) {
         CollectionBinding.Data data = new CollectionBinding.Data();
         data.uid = mLsPushUserState.getUid();
         data.date = new Date();
@@ -52,22 +51,20 @@ public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCal
         binding.setCollectionId(collection.getId());
 
         Call<BaseResponse> addFavorCall = mLsPushService.addFavor(mLsPushUserState.getExpireTokenString(), binding);
-        addFavorCall.enqueue(new FavorActionCallback(favorButton, position, collection));
+        addFavorCall.enqueue(new FavorActionCallback(position, collection));
     }
 
-    public void removeFavor(View favorButton, int position, @NonNull Collection collection) {
+    public void removeFavor(int position, @NonNull Collection collection) {
         Call<BaseResponse> removeFavorCall =
             mLsPushService.removeFavor(mLsPushUserState.getExpireTokenString(), collection.getId());
-        removeFavorCall.enqueue(new FavorActionCallback(favorButton, position, collection));
+        removeFavorCall.enqueue(new FavorActionCallback(position, collection));
     }
 
     public final class FavorActionCallback implements Callback<BaseResponse> {
-        private final View favorButton;
         private final int position;
         private final Collection collection;
 
-        public FavorActionCallback(View favorButton, int position, @NonNull Collection collection) {
-            this.favorButton = favorButton;
+        public FavorActionCallback(int position, @NonNull Collection collection) {
             this.position = position;
             this.collection = collection;
         }
@@ -78,11 +75,11 @@ public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCal
                 BaseResponse baseResponse = response.body();
                 if (baseResponse.getResultCode() == BaseResponse.COMMON_SUCCESS) {
                     if (mCallback != null) {
-                        mCallback.onFavorActionSuccess(favorButton, position, collection);
+                        mCallback.onFavorActionSuccess(position, collection);
                     }
                 } else {
                     if (mCallback != null) {
-                        mCallback.onFavorActionFailure(favorButton, position, collection);
+                        mCallback.onFavorActionFailure(position, collection);
                     }
                 }
             } else {
@@ -92,7 +89,7 @@ public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCal
                     // ignore
                 }
                 if (mCallback != null) {
-                    mCallback.onFavorActionFailure(favorButton, position, collection);
+                    mCallback.onFavorActionFailure(position, collection);
                 }
             }
         }
@@ -100,13 +97,13 @@ public final class FavorAction extends CommonAction<FavorAction.OnFavorActionCal
         @Override
         public void onFailure(Call<BaseResponse> call, Throwable t) {
             Timber.w(t);
-            mCallback.onFavorActionFailure(favorButton, position, collection);
+            mCallback.onFavorActionFailure(position, collection);
         }
     }
 
     public interface OnFavorActionCallback {
-        void onFavorActionSuccess(View favorButton, int position, Collection collection);
+        void onFavorActionSuccess(int position, Collection collection);
 
-        void onFavorActionFailure(View favorButton, int position, Collection collection);
+        void onFavorActionFailure(int position, Collection collection);
     }
 }

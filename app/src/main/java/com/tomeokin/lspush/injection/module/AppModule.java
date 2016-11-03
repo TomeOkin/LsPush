@@ -59,8 +59,14 @@ public class AppModule {
 
     @Provides
     @Singleton
-    JobManager provideJobManager(@AppContext Context context) {
-        JobManager.create(context).addJobCreator(new LsPushJobCreator(context));
+    LsPushJobCreator provideLsPushJobCreator(@AppContext Context context) {
+        return new LsPushJobCreator(context);
+    }
+
+    @Provides
+    @Singleton
+    JobManager provideJobManager(@AppContext Context context, LsPushJobCreator jobCreator) {
+        JobManager.create(context).addJobCreator(jobCreator);
         return JobManager.instance();
     }
 
