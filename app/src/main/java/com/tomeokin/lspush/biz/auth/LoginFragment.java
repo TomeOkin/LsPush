@@ -49,7 +49,7 @@ import com.tomeokin.lspush.biz.home.HomeActivity;
 import com.tomeokin.lspush.biz.model.UserInfoModel;
 import com.tomeokin.lspush.biz.usercase.auth.LoginAction;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
-import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.ui.navigator.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;

@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.BaseActivity;
-import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.ui.navigator.Navigator;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.AuthComponent;

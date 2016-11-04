@@ -17,7 +17,7 @@ import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.job.sync.SyncService;
 import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.biz.usercase.user.LsPushUserState;
-import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.ui.navigator.Navigator;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.injection.ProvideComponent;

@@ -133,8 +133,6 @@ public class CollectionWebViewActivity extends BaseWebViewActivity
         mBottomBar.forwardButton.setOnClickListener(this);
         mBottomBar.favorButton.setOnClickListener(this);
         updateFavor(mCollection.isHasFavor());
-
-
     }
 
     @Override

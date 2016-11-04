@@ -66,7 +66,7 @@ import com.tomeokin.lspush.biz.usercase.user.LocalUserInfoAction;
 import com.tomeokin.lspush.common.FileNameUtils;
 import com.tomeokin.lspush.common.ImageIntentUtils;
 import com.tomeokin.lspush.common.MimeTypeUtils;
-import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.ui.navigator.Navigator;
 import com.tomeokin.lspush.common.SoftInputUtils;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;

@@ -44,7 +44,7 @@ import com.tomeokin.lspush.biz.base.support.BaseStateCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.common.CountryCodeUtils;
-import com.tomeokin.lspush.common.Navigator;
+import com.tomeokin.lspush.ui.navigator.Navigator;
 import com.tomeokin.lspush.common.ValidateUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
