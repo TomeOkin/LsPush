@@ -105,4 +105,6 @@
     <string name="no_collections" translatable="false">No collections?\n\nLet\'s push and share!</string>
     <string name="start">Start</string>
     <string name="could_not_get_url_info">Could not get the url info.</string>
+    <string name="posts">Posts</string>
+    <string name="favors">Favors</string>
 </resources>

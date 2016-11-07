@@ -89,6 +89,11 @@ public class Navigator {
 
     public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
         Bundle args, @IdRes int containerId, boolean addToBackStack) {
+        moveTo(context, fragmentManager, fragment, args, containerId, addToBackStack, null);
+    }
+
+    public static void moveTo(Context context, FragmentManager fragmentManager, Class<? extends Fragment> fragment,
+        Bundle args, @IdRes int containerId, boolean addToBackStack, int[] anim) {
         final String tag = fragment.getName();
         Fragment current = fragmentManager.findFragmentById(containerId);
         Fragment target = fragmentManager.findFragmentByTag(tag);
@@ -104,11 +109,17 @@ public class Navigator {
             }
 
             FragmentTransaction transaction = fragmentManager.beginTransaction();
+            if (anim == null || (anim.length != 2 && anim.length != 4)) {
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            } else if (anim.length == 2) {
+                transaction.setCustomAnimations(anim[0], anim[1]);
+            } else {
+                transaction.setCustomAnimations(anim[0], anim[1], anim[2], anim[3]);
+            }
             if (current == null) {
                 transaction.add(containerId, target, tag);
             } else {
                 transaction.replace(containerId, target, tag);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 if (addToBackStack) {
                     transaction.addToBackStack(tag);
                 }

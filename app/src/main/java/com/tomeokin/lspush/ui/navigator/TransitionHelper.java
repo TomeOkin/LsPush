@@ -40,15 +40,15 @@ public class TransitionHelper {
     private static final String ARG_TRANSITION_OPTION = "arg.transition.option";
 
     public static void moveTo(@NonNull final Activity source, @NonNull Class<? extends Activity> target,
-        @Nullable Bundle args, @NonNull final View view) {
+        @Nullable Bundle args, @NonNull final View sharedElement) {
         final Intent intent = new Intent(source, target);
         if (args != null) {
             intent.putExtras(args);
         }
-        view.post(new Runnable() {
+        sharedElement.post(new Runnable() {
             @Override
             public void run() {
-                Bundle option = TransitionOption.from(view);
+                Bundle option = TransitionOption.from(sharedElement);
                 intent.putExtra(ARG_TRANSITION_OPTION, option);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 source.startActivity(intent);
