@@ -42,6 +42,7 @@ import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.base.BaseFragment;
 import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.common.UserScene;
+import com.tomeokin.lspush.biz.user.UserActivity;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
 import com.tomeokin.lspush.common.StringUtils;
@@ -304,6 +305,11 @@ public class HomeFragment extends BaseFragment
         mCollectionHolder.setPosition(position);
         mCollectionHolder.setCollection(collection);
         CollectionWebViewActivity.start(this, REQUEST_OPEN_COLLECTION);
+    }
+
+    @Override
+    public void onOpenUserPage(String uid) {
+        UserActivity.start(getContext(), uid);
     }
 
     @Override

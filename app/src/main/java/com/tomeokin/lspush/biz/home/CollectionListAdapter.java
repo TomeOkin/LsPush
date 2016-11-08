@@ -65,11 +65,48 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Callback mCallback = null;
 
     private boolean mIsLoading = false;
-    private View.OnClickListener mExplorerListener = new View.OnClickListener() {
+    private final View.OnClickListener mExplorerListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             final int uid = (int) v.getTag(R.id.avatar_tag_uid);
             // TODO: 2016/10/20 user page
+        }
+    };
+    private final View.OnClickListener mUserClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String uid = (String) v.getTag();
+            if (mCallback != null) {
+                mCallback.onOpenUserPage(uid);
+            }
+        }
+    };
+    private final View.OnClickListener mExplorersMoreListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int position = (int) v.getTag();
+            final Collection collection = mColSortList.get(position);
+            if (mCallback != null) {
+                mCallback.onShowMoreExplorers(collection);
+            }
+        }
+    };
+    private final View.OnClickListener mFavorChangeListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int position = (int) v.getTag();
+            final Collection collection = mColSortList.get(position);
+            final boolean hasFavor = !collection.isHasFavor();
+            collection.setHasFavor(hasFavor);
+            collection.setFavorCount(collection.getFavorCount() + (hasFavor ? 1 : -1));
+            //updateFavorIcon(holder.favorIcon, hasFavor);
+            //updateFavorText(holder.favorCount, collection.getFavorCount());
+            notifyItemChanged(position,
+                new Payload(hasFavor ? ACTION_ADD_FAVOR : ACTION_REMOVE_FAVOR, collection.getFavorCount()));
+
+            if (mCallback != null) {
+                mCallback.onFavorChange(v, position, collection);
+            }
         }
     };
 
@@ -154,33 +191,9 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         final View view = inflater.inflate(R.layout.layout_item_collection, parent, false);
         final CollectionViewHolder holder = new CollectionViewHolder(view);
         holder.itemView.setOnClickListener(this);
-        holder.explorersMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int position = (int) v.getTag();
-                final Collection collection = mColSortList.get(position);
-                if (mCallback != null) {
-                    mCallback.onShowMoreExplorers(collection);
-                }
-            }
-        });
-        holder.favorIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int position = (int) v.getTag();
-                final Collection collection = mColSortList.get(position);
-                final boolean hasFavor = !collection.isHasFavor();
-                collection.setHasFavor(hasFavor);
-                collection.setFavorCount(collection.getFavorCount() + (hasFavor ? 1 : -1));
-                //updateFavorIcon(holder.favorIcon, hasFavor);
-                updateFavorText(holder.favorCount, collection.getFavorCount());
-                notifyItemChanged(position, hasFavor ? ACTION_ADD_FAVOR : ACTION_REMOVE_FAVOR);
-
-                if (mCallback != null) {
-                    mCallback.onFavorChange(v, position, collection);
-                }
-            }
-        });
+        holder.userField.setOnClickListener(mUserClickListener);
+        holder.explorersMore.setOnClickListener(mExplorersMoreListener);
+        holder.favorIcon.setOnClickListener(mFavorChangeListener);
         return holder;
     }
 
@@ -207,6 +220,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         holder.itemView.setTag(position);
         holder.explorersMore.setTag(position);
         holder.favorIcon.setTag(position);
+
+        holder.userField.setTag(user.getUid());
 
         ImageLoader.loadAvatar(context, holder.avatar, user.getImage());
         holder.nickname.setText(user.getNickname());
@@ -300,6 +315,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public final class CollectionViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.user_field) View userField;
         @BindView(R.id.avatar_iv) ImageView avatar;
         @BindView(R.id.nickname_tv) TextView nickname;
         @BindView(R.id.updateDate) TextView updateDate;
@@ -335,5 +351,17 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         void onShowMoreExplorers(Collection collection);
 
         void onOpenCollectionUrl(int position, Collection collection);
+
+        void onOpenUserPage(String uid);
+    }
+
+    public final class Payload {
+        public String action;
+        public long favorCount;
+
+        public Payload(String action, long favorCount) {
+            this.action = action;
+            this.favorCount = favorCount;
+        }
     }
 }

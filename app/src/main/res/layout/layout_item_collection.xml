@@ -24,23 +24,32 @@
             android:layout_height="@dimen/list_item_header_height"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/avatar_iv"
-                android:layout_width="@dimen/list_item_avatar_size"
-                android:layout_height="@dimen/list_item_avatar_size"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                tools:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/nickname_tv"
+            <LinearLayout
+                android:id="@+id/user_field"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="6dp"
-                android:textSize="@dimen/font_medium"
-                android:textStyle="bold"
-                tools:text="shwenzhang" />
+                android:orientation="horizontal"
+                android:background="?android:attr/selectableItemBackgroundBorderless">
+
+                <ImageView
+                    android:id="@+id/avatar_iv"
+                    android:layout_width="@dimen/list_item_avatar_size"
+                    android:layout_height="@dimen/list_item_avatar_size"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    tools:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/nickname_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="6dp"
+                    android:textSize="@dimen/font_medium"
+                    android:textStyle="bold"
+                    tools:text="shwenzhang" />
+
+            </LinearLayout>
 
             <android.support.v4.widget.Space
                 android:layout_width="0dp"

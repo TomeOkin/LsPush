@@ -46,8 +46,8 @@ public class CollectionItemAnimator extends DefaultItemAnimator {
 
         if (changeFlags == FLAG_CHANGED) {
             for (Object payload : payloads) {
-                if (payload instanceof String) {
-                    return new CollectionItemHolderInfo((String) payload);
+                if (payload instanceof CollectionListAdapter.Payload) {
+                    return new CollectionItemHolderInfo((CollectionListAdapter.Payload) payload);
                 }
             }
         }
@@ -65,9 +65,10 @@ public class CollectionItemAnimator extends DefaultItemAnimator {
 
             resetItem(holder);
             if (CollectionListAdapter.ACTION_ADD_FAVOR.equals(holderInfo.updateAction)) {
-                animateAddFavor(holder);
+                animateAddFavor(holder, holderInfo);
             } else if (CollectionListAdapter.ACTION_REMOVE_FAVOR.equals(holderInfo.updateAction)) {
                 CollectionListAdapter.updateFavorIcon(holder.favorIcon, false);
+                CollectionListAdapter.updateFavorText(holder.favorCount, holderInfo.favorCount);
             }
         }
 
@@ -81,13 +82,15 @@ public class CollectionItemAnimator extends DefaultItemAnimator {
         holder.favorIcon.setEnabled(true);
     }
 
-    private void animateAddFavor(final CollectionListAdapter.CollectionViewHolder holder) {
+    private void animateAddFavor(final CollectionListAdapter.CollectionViewHolder holder,
+        final CollectionItemHolderInfo holderInfo) {
         AnimatorSet animatorSet = animateAddFavor(holder.favorIcon, new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 holder.favorIcon.setEnabled(false);
                 CollectionListAdapter.updateFavorIcon(holder.favorIcon, true);
+                CollectionListAdapter.updateFavorText(holder.favorCount, holderInfo.favorCount);
             }
 
             @Override
@@ -141,9 +144,11 @@ public class CollectionItemAnimator extends DefaultItemAnimator {
 
     public class CollectionItemHolderInfo extends ItemHolderInfo {
         public String updateAction;
+        public long favorCount;
 
-        public CollectionItemHolderInfo(String updateAction) {
-            this.updateAction = updateAction;
+        public CollectionItemHolderInfo(CollectionListAdapter.Payload payload) {
+            this.updateAction = payload.action;
+            this.favorCount = payload.favorCount;
         }
     }
 }

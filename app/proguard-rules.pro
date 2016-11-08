@@ -69,6 +69,12 @@
 # for DexGuard only
 #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
+# Okio
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+
 # retrofit 2.1.0
 # https://square.github.io/retrofit/
 # Platform calls Class.forName on types which do not exist on Android to determine platform.

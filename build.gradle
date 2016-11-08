@@ -18,12 +18,17 @@ buildscript {
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
         // run help->dependencyUpdates to see new available version
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-        classpath 'com.antfortune.freeline:gradle:0.8.1'
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("lint")) {
+        task.enabled = false
+    }
 }
 
 apply from: 'buildsystem/config.gradle'

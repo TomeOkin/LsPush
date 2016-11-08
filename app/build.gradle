@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'bugly'
-apply plugin: 'com.antfortune.freeline'
 //apply plugin: 'com.getkeepsafe.dexcount'
 //apply from: rootProject.file('buildsystem/quality.gradle')
 //apply from: rootProject.file('buildsystem/jacoco.gradle')
@@ -73,6 +72,8 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             resValue "string", "app_name", "LsPush (debug)"
+            minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.debugConfig
         }
         release {
@@ -95,11 +96,7 @@ android {
 
     dexOptions {
         preDexLibraries !Boolean.valueOf(System.getenv("TRAVIS"))
-    }
-
-    freeline {
-        hack true
-        productFlavor "dev"
+        dexInProcess = true
     }
 
     productFlavors {

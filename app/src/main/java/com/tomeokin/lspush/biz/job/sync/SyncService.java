@@ -98,7 +98,7 @@ public class SyncService extends Service {
     }
 
     protected AppComponent getAppComponent() {
-        return LsPushApplication.get(this).appComponent();
+        return ((LsPushApplication) getApplication()).appComponent();
     }
 
     public SyncComponent component() {
