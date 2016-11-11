@@ -58,7 +58,7 @@
     <dimen name="icon_largest">56dp</dimen>
 
     <dimen name="avatar_small">32dp</dimen>
-    <dimen name="avatar_large">72dp</dimen>
+    <dimen name="avatar_large">64dp</dimen>
     <dimen name="avatar_extraLarge">88dp</dimen>
 
     <dimen name="menu_item_left_padding">16dp</dimen>

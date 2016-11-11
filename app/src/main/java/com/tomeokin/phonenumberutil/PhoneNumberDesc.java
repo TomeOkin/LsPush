@@ -21,6 +21,8 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public final class PhoneNumberDesc implements Externalizable {
+    private static final long serialVersionUID = 6747498348665729721L;
+
     boolean hasNationalNumberPattern;
     String nationalNumberPattern;
     boolean hasPossibleNumberPattern;

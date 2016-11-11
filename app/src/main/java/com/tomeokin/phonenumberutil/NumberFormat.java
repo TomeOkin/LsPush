@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class NumberFormat implements Externalizable {
+    private static final long serialVersionUID = -6910879075156208506L;
+
     String pattern = "";
     String format = "";
     List<String> leadingDigitsPattern; // always

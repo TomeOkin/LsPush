@@ -26,13 +26,13 @@ public class GlideLoggingListener<T, D> implements RequestListener<T, D> {
     public static final String TAG = "GLIDE";
 
     @Override
-    public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+    public boolean onException(Exception e, T model, Target<D> target, boolean isFirstResource) {
         Log.d(TAG, String.format(Locale.ROOT, "onException(%s, %s, %s, %s)", e, model, target, isFirstResource), e);
         return false;
     }
 
     @Override
-    public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache,
+    public boolean onResourceReady(D resource, T model, Target<D> target, boolean isFromMemoryCache,
         boolean isFirstResource) {
         Log.d(TAG, String.format(Locale.ROOT, "onResourceReady(%s, %s, %s, %s, %s)", resource, model, target,
             isFromMemoryCache, isFirstResource));

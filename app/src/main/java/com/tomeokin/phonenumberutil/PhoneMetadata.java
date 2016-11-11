@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PhoneMetadata implements Externalizable {
+    private static final long serialVersionUID = 7470647292004848871L;
+
     boolean hasGeneralDesc;
     PhoneNumberDesc generalDesc;
     boolean hasFixedLine;

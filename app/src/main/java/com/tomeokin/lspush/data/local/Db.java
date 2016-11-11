@@ -28,6 +28,7 @@ public class Db {
     private Db() {}
 
     public static class DatabaseException extends RuntimeException {
+        private static final long serialVersionUID = 8091840972021327488L;
         private final int errorCode;
 
         public DatabaseException(int errorCode) {

@@ -30,10 +30,10 @@ import com.tomeokin.lspush.ui.widget.SizeColorDrawable;
 public class ImageLoader {
     public static void loadAvatar(Context context, ImageView avatar, @Nullable String image) {
         Glide.with(context)
-            .load(TextUtils.isEmpty(image) ? R.drawable.avatar : image)
+            .load(TextUtils.isEmpty(image) ? R.drawable.ic_avatar : image)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .transform(new CircleTransform(context))
-            .placeholder(R.drawable.avatar)
+            .placeholder(R.drawable.ic_avatar)
             .into(avatar);
     }
 

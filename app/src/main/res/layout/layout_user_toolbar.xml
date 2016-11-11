@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    tools:background="@color/colorPrimary">
+
+    <ImageButton
+        android:id="@+id/toolbar_action_close"
+        android:layout_width="@dimen/icon_large"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_nav_arrow_left" />
+
+    <!-- don't hide the toolbar_user_field in xml, so we can get avatar and username position first -->
+    <LinearLayout
+        android:id="@+id/toolbar_user_field"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_small"
+            android:layout_height="@dimen/avatar_small"
+            android:layout_gravity="center_vertical"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_avatar" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/row_padding_small"
+            android:text="shwenzhang"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>

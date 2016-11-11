@@ -37,7 +37,7 @@
                     android:layout_height="@dimen/list_item_avatar_size"
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    tools:src="@mipmap/ic_launcher" />
+                    tools:src="@drawable/ic_avatar" />
 
                 <TextView
                     android:id="@+id/nickname_tv"

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PhoneMetadataCollection implements Externalizable {
+    private static final long serialVersionUID = 1228756896209803162L;
+
     final List<PhoneMetadata> metadata;
 
     public PhoneMetadataCollection() {

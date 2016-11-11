@@ -39,7 +39,7 @@ android {
     buildToolsVersion "25"
     defaultConfig {
         applicationId "com.tomeokin.lspush"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
@@ -104,7 +104,7 @@ android {
             minSdkVersion 21
         }
         prod {
-            minSdkVersion 15
+            minSdkVersion 16
         }
     }
 
@@ -172,6 +172,7 @@ dependencies {
     def androidTestDependencies = rootProject.ext.androidTestDependencies
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     // support
     compile releaseDependencies.supportV7
     compile releaseDependencies.supportV4
@@ -180,34 +181,43 @@ dependencies {
     compile releaseDependencies.cardview
     compile releaseDependencies.design
     compile releaseDependencies.palette
+
     // log
     compile releaseDependencies.timber
     compile releaseDependencies.logger
+
     // rx
     compile releaseDependencies.rxandroid
     compile releaseDependencies.rxjava
+
     // dagger2
     compile releaseDependencies.dagger2
     apt releaseDependencies.dagger2Compiler
+
     // butterknife
     compile releaseDependencies.butterknife
     apt releaseDependencies.butterknifeCompiler
+
     // network
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile releaseDependencies.retrofit2Rxjava
     compile releaseDependencies.retrofit2
     compile releaseDependencies.okhttp3
     compile releaseDependencies.retrofit2Gson
     // also compile, but will be disabled release
     compile releaseDependencies.okhttp3Logging
     compile debugDependencies.stethoOkhttp3
+
     // binding
 //    compile releaseDependencies.rxbindingV7
 //    compile releaseDependencies.rxbindingRecyclerview
+
     // gson
     compile releaseDependencies.gson
+
     // image
     compile releaseDependencies.glide
     compile releaseDependencies.glideOkhttp3
+
     // bugly, https://bugly.qq.com/androidfast
     compile releaseDependencies.crashreport
     compile releaseDependencies.nativecrashreport

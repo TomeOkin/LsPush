@@ -217,21 +217,22 @@
         <item name="android:gravity">center_vertical|left</item>
     </style>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!--<item name="android:titleTextAppearance">@style/TitleTextAppearance</item>-->
         <item name="android:windowBackground">@color/grey_10_transparent</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorPrimaryInverse">@color/black</item>
         <!--<item name="android:windowIsTranslucent">true</item>-->
     </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="BaseAppTheme" />
 
     <style name="AppTheme.WebView">
         <item name="android:windowBackground">@color/white</item>

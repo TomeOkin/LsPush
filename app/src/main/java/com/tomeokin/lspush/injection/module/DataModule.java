@@ -49,12 +49,12 @@ public class DataModule {
     @Provides
     @Singleton
     SqlBrite provideSqlBrite() {
-        return SqlBrite.create(new SqlBrite.Logger() {
+        return new SqlBrite.Builder().logger(new SqlBrite.Logger() {
             @Override
             public void log(String message) {
                 Timber.tag(UserScene.TAG_DATABASE).v(message);
             }
-        });
+        }).build();
     }
 
     @Provides
