@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -22,7 +22,7 @@ import android.util.Patterns;
 import java.util.regex.Pattern;
 
 public class ValidateUtils {
-    private ValidateUtils() {}
+    private ValidateUtils() { }
 
     private static final String PHONE_NUMBER_REGEX = "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile(PHONE_NUMBER_REGEX);

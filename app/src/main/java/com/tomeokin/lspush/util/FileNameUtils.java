@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.Context;
 
@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileNameUtils {
-    private FileNameUtils() {}
+    private FileNameUtils() { }
 
     private static final AtomicInteger sIndex = new AtomicInteger(0);
 

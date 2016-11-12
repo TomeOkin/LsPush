@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.common.ImageUtils;
+import com.tomeokin.lspush.util.ImageUtils;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogBuilder;
 import com.tomeokin.lspush.ui.widget.dialog.BaseDialogFragment;
 

@@ -15,7 +15,7 @@
  */
 package com.tomeokin.lspush.biz.model;
 
-import com.tomeokin.lspush.common.StringUtils;
+import com.tomeokin.lspush.util.StringUtils;
 
 import java.util.Arrays;
 

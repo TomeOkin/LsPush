@@ -29,7 +29,7 @@ import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.biz.auth.CaptchaView;
 import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
-import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.util.SoftInputUtils;
 
 import java.util.Arrays;
 import java.util.Collections;

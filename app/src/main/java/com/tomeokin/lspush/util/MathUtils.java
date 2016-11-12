@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
-import android.content.Context;
-import android.net.Uri;
+/**
+ * Borrowed from github.com/romannurik/muzei
+ */
+public class MathUtils {
 
-public class UriUtils {
-    public static final String ANDROID_RESOURCE = "android.resource://";
-    public static final String FORWARD_SLASH = "/";
+    private MathUtils() { }
 
-    public static Uri resourceIdToUri(Context context, int resourceId) {
-        return Uri.parse(ANDROID_RESOURCE + context.getPackageName() + FORWARD_SLASH + resourceId);
-    }
-
-    public static boolean isEmpty(Uri uri) {
-        return uri == null || Uri.EMPTY.equals(uri);
+    public static float constrain(float min, float max, float v) {
+        return Math.max(min, Math.min(max, v));
     }
 }

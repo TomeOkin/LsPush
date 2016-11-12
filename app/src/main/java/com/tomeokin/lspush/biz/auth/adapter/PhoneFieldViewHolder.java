@@ -29,7 +29,7 @@ import com.tomeokin.lspush.biz.auth.CaptchaView;
 import com.tomeokin.lspush.biz.auth.CountryCodePickerDialog;
 import com.tomeokin.lspush.ui.widget.listener.TextWatcherAdapter;
 import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListener;
-import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.util.SoftInputUtils;
 import com.tomeokin.lspush.data.model.CountryCodeData;
 import com.tomeokin.lspush.ui.widget.SearchEditText;
 

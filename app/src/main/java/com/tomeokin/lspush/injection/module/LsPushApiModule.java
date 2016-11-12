@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tomeokin.lspush.BuildConfig;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.util.NetworkUtils;
 import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.remote.LsPushService;
 import com.tomeokin.lspush.data.support.DateTypeConverter;

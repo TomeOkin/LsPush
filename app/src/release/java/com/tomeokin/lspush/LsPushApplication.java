@@ -20,7 +20,7 @@ import android.content.Context;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.orhanobut.hawk.Hawk;
-import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.util.NetworkUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -21,7 +21,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
 
-public class ClipboardUtil {
+public class ClipboardUtils {
+    private ClipboardUtils() { }
+
     @SuppressWarnings("deprecation")
     public static void setText(Context context, CharSequence sequence) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

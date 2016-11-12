@@ -33,8 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.common.DateUtils;
-import com.tomeokin.lspush.common.ImageUtils;
+import com.tomeokin.lspush.util.DateUtils;
+import com.tomeokin.lspush.util.ImageUtils;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.Image;
 import com.tomeokin.lspush.data.model.User;

@@ -18,7 +18,7 @@ package com.tomeokin.lspush.data.crypt;
 import android.util.Base64;
 
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.util.CharsetsSupport;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.model.CryptoToken;
 

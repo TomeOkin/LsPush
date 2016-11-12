@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 public class ImageUtils {
+    private ImageUtils() { }
+
     public static float optimumRadio(float maxWidth, float maxHeight, float imageWidth, float imageHeight) {
         float radio = 1;
         if (imageWidth > maxWidth || imageHeight > maxHeight) {

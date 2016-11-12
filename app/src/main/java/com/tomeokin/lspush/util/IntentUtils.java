@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntentUtils {
+    private IntentUtils() { }
+
     public static void openInBrowser(Context context, String url) {
         final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         PackageManager packageManager = context.getPackageManager();

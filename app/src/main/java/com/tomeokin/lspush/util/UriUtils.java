@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.ui.widget.listener;
+package com.tomeokin.lspush.util;
 
-import android.view.animation.Animation;
+import android.content.Context;
+import android.net.Uri;
 
-public class AnimationListenerAdapter implements Animation.AnimationListener {
-    @Override
-    public void onAnimationStart(Animation animation) {}
+public class UriUtils {
+    public static final String ANDROID_RESOURCE = "android.resource://";
+    public static final String FORWARD_SLASH = "/";
 
-    @Override
-    public void onAnimationEnd(Animation animation) {}
+    private UriUtils() { }
 
-    @Override
-    public void onAnimationRepeat(Animation animation) {}
+    public static Uri resourceIdToUri(Context context, int resourceId) {
+        return Uri.parse(ANDROID_RESOURCE + context.getPackageName() + FORWARD_SLASH + resourceId);
+    }
+
+    public static boolean isEmpty(Uri uri) {
+        return uri == null || Uri.EMPTY.equals(uri);
+    }
 }

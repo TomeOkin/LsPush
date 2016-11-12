@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.Manifest;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import android.provider.MediaStore;
 import java.io.File;
 
 public class ImageIntentUtils {
-    private ImageIntentUtils() {}
+    private ImageIntentUtils() { }
 
     public static final String[] PERMISSION_PICK_IMAGE;
     public static final String[] PERMISSION_TAKE_PHOTO;

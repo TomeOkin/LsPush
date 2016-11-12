@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.Context;
 
@@ -29,6 +29,8 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
+
+    private DateUtils() { }
 
     public static String toDurationFriendly(Context context, Date date) {
         final Instant instant = DateTimeUtils.toInstant(date);

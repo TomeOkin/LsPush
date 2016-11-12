@@ -26,7 +26,7 @@ import com.facebook.android.crypto.keychain.FixedSecureRandom;
 import com.facebook.crypto.CryptoConfig;
 import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.crypto.keychain.KeyChain;
-import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.util.CharsetsSupport;
 
 import java.util.Arrays;
 

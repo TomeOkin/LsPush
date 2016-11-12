@@ -19,7 +19,7 @@ import android.content.Context;
 
 import com.alibaba.wireless.security.jaq.JAQException;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.util.CharsetsSupport;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.CommonCrypto;
 

@@ -49,8 +49,8 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.support.BaseStateAdapter;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.collection.LinkAction;
-import com.tomeokin.lspush.common.ClipboardUtil;
-import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.util.ClipboardUtils;
+import com.tomeokin.lspush.util.SoftInputUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.UrlCollectionResponse;
@@ -125,7 +125,7 @@ public class UriDialogFragment extends BaseDialogFragment implements BaseActionC
         mNextButton.setCompoundDrawables(null, null, clear, null);
         mProgressBar = (ProgressBar) view.findViewById(R.id.next_progress);
 
-        final String text = ClipboardUtil.getText(getContext());
+        final String text = ClipboardUtils.getText(getContext());
         if (!TextUtils.isEmpty(text) && isValidWebUri(text)) {
             mUrlField.setText(text);
             activeNextButton();

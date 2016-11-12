@@ -14,15 +14,15 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_nav_arrow_left" />
 
-    <!-- don't hide the toolbar_user_field in xml, so we can get avatar and username position first -->
+    <!-- don't hide the toolbar_user_layout in xml, so we can get avatar and username position first -->
     <LinearLayout
-        android:id="@+id/toolbar_user_field"
+        android:id="@+id/toolbar_user_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/avatar"
+            android:id="@+id/toolbar_user_avatar"
             android:layout_width="@dimen/avatar_small"
             android:layout_height="@dimen/avatar_small"
             android:layout_gravity="center_vertical"
@@ -31,7 +31,7 @@
             android:src="@drawable/ic_avatar" />
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/toolbar_user_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

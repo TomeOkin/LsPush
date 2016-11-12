@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.support.annotation.NonNull;
 
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class StringUtils {
-    private StringUtils() {}
+    private StringUtils() { }
 
     private static final Pattern BLANK = Pattern.compile("\\s+");
 

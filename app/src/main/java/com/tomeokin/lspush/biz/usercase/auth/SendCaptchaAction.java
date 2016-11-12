@@ -24,7 +24,7 @@ import com.tomeokin.lspush.biz.base.support.BaseActionCallback;
 import com.tomeokin.lspush.biz.base.support.CommonCallback;
 import com.tomeokin.lspush.biz.common.NoGuarantee;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.SMSCaptchaUtils;
+import com.tomeokin.lspush.util.SMSCaptchaUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.data.remote.LsPushService;

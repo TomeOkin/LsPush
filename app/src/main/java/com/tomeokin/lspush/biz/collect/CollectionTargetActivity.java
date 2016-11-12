@@ -32,7 +32,7 @@ import android.webkit.WebViewClient;
 
 import com.tomeokin.lspush.R;
 import com.tomeokin.lspush.data.model.Image;
-import com.tomeokin.lspush.ui.widget.BaseWebViewActivity;
+import com.tomeokin.lspush.biz.base.BaseWebViewActivity;
 import com.tomeokin.lspush.ui.widget.dialog.OnActionClickListener;
 
 import timber.log.Timber;

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class SoftInputUtils {
-    private SoftInputUtils() {}
+    private SoftInputUtils() { }
 
     public static void hideInput(View view) {
         ((InputMethodManager) view.getContext().

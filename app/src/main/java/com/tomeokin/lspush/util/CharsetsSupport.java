@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import java.nio.charset.Charset;
 
 public class CharsetsSupport {
+    private CharsetsSupport() { }
+
     public static final Charset UTF_8 = Charset.forName("UTF-8");
 }

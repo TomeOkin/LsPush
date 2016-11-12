@@ -26,7 +26,7 @@ import com.orhanobut.hawk.LogInterceptor;
 import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.NetworkUtils;
+import com.tomeokin.lspush.util.NetworkUtils;
 import com.tomeokin.lspush.config.LsPushConfig;
 import com.tomeokin.lspush.data.crypt.BeeCrypto;
 import com.tomeokin.lspush.data.crypt.BeeEncryption;

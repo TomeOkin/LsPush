@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -51,7 +51,7 @@ public class MimeTypeUtils {
     private static final boolean DEBUG = false; // Set to true to enable logging
     private static final String TAG = "MimeTypeUtils";
 
-    private MimeTypeUtils() {}
+    private MimeTypeUtils() { }
 
     /**
      * @return The MIME type for the given file.

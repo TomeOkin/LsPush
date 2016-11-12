@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.util.SoftInputUtils;
 
 public final class FieldSwitchAdapter {
     private final TextView mTextField;

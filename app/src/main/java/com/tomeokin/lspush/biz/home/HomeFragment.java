@@ -45,7 +45,7 @@ import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.user.UserActivity;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
-import com.tomeokin.lspush.common.StringUtils;
+import com.tomeokin.lspush.util.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.CollectionResponse;

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.common;
+package com.tomeokin.lspush.util;
 
 public class UrlUtils {
-    private UrlUtils() {}
+    private UrlUtils() { }
 
     public static String trim(String old) {
         String url = old;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.ui.widget;
+package com.tomeokin.lspush.biz.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,11 +37,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tomeokin.lspush.R;
-import com.tomeokin.lspush.biz.base.BaseActivity;
-import com.tomeokin.lspush.common.ClipboardUtil;
-import com.tomeokin.lspush.common.IntentUtils;
-import com.tomeokin.lspush.common.StringUtils;
-import com.tomeokin.lspush.ui.widget.listener.AnimationListenerAdapter;
+import com.tomeokin.lspush.ui.widget.ShadowLayout;
+import com.tomeokin.lspush.util.AnimUtils;
+import com.tomeokin.lspush.util.ClipboardUtils;
+import com.tomeokin.lspush.util.IntentUtils;
+import com.tomeokin.lspush.util.StringUtils;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -160,7 +160,7 @@ public class BaseWebViewActivity extends BaseActivity
     protected void hideMenu() {
         Animation popupAnim = AnimationUtils.loadAnimation(this, R.anim.popup_layout_hide);
         mShadowLayout.startAnimation(popupAnim);
-        popupAnim.setAnimationListener(new AnimationListenerAdapter() {
+        popupAnim.setAnimationListener(new AnimUtils.AnimationListenerAdapter() {
             @Override
             public void onAnimationEnd(Animation animation) {
                 mMenuLayout.setVisibility(View.GONE);
@@ -227,7 +227,7 @@ public class BaseWebViewActivity extends BaseActivity
                 return true;
             case R.id.action_copy_link:
                 hideMenu();
-                ClipboardUtil.setText(this, mWebView.getUrl());
+                ClipboardUtils.setText(this, mWebView.getUrl());
                 showSnackbarNotification(getString(R.string.copied_to_clipboard));
                 return true;
             case R.id.action_share:

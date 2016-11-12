@@ -17,7 +17,7 @@ package com.tomeokin.lspush.data.crypt;
 
 import android.util.Base64;
 
-import com.tomeokin.lspush.common.CharsetsSupport;
+import com.tomeokin.lspush.util.CharsetsSupport;
 
 import java.security.MessageDigest;
 

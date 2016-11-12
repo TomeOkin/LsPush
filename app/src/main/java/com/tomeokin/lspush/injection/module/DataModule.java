@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.tomeokin.lspush.biz.common.UserScene;
-import com.tomeokin.lspush.common.PreferenceUtils;
+import com.tomeokin.lspush.util.PreferenceUtils;
 import com.tomeokin.lspush.data.crypt.BeeConcealKeyChain;
 import com.tomeokin.lspush.data.local.DbOpenHelper;
 import com.tomeokin.lspush.injection.qualifier.AppContext;

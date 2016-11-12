@@ -38,7 +38,7 @@ import com.tomeokin.lspush.injection.ProvideComponent;
 import com.tomeokin.lspush.injection.component.CollectionWebViewComponent;
 import com.tomeokin.lspush.injection.component.DaggerCollectionWebViewComponent;
 import com.tomeokin.lspush.injection.module.CollectionModule;
-import com.tomeokin.lspush.ui.widget.BaseWebViewActivity;
+import com.tomeokin.lspush.biz.base.BaseWebViewActivity;
 
 import javax.inject.Inject;
 

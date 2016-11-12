@@ -43,7 +43,7 @@ import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.usercase.auth.CheckCaptchaAction;
 import com.tomeokin.lspush.biz.usercase.auth.SendCaptchaAction;
 import com.tomeokin.lspush.ui.navigator.Navigator;
-import com.tomeokin.lspush.common.SoftInputUtils;
+import com.tomeokin.lspush.util.SoftInputUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.CaptchaRequest;
 import com.tomeokin.lspush.injection.component.AuthComponent;

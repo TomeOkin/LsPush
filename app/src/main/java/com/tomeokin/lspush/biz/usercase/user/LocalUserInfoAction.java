@@ -24,7 +24,7 @@ import com.tomeokin.lspush.biz.base.support.BaseAction;
 import com.tomeokin.lspush.biz.base.support.CommonSubscriber;
 import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.job.sync.SyncService;
-import com.tomeokin.lspush.common.PreferenceUtils;
+import com.tomeokin.lspush.util.PreferenceUtils;
 import com.tomeokin.lspush.data.local.Db;
 import com.tomeokin.lspush.data.model.AccessResponse;
 import com.tomeokin.lspush.data.model.BaseResponse;
