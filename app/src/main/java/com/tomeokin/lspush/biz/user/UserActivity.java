@@ -203,7 +203,6 @@ public class UserActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mUid = getIntent().getStringExtra(ARG_UID);
-
         //mAppBar.addOnOffsetChangedListener(mOnOffsetChangeListener);
     }
 
