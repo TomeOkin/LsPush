@@ -42,6 +42,8 @@
     <color name="black_6_transparent">#0f000000</color>
     <color name="transparent">#00000000</color>
 
+    <color name="black_30_transparent_alpha">#4D202020</color>
+
     <color name="grey_90_transparent">#ff070808</color>
     <color name="grey_80_transparent">#ff161819</color>
     <color name="grey_70_transparent">#ff25272a</color>

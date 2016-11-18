@@ -154,7 +154,7 @@
 
     <style name="Widget.LsPush.Toolbar">
         <!--<item name="android:titleTextAppearance">@style/TitleTextAppearance</item>-->
-        <item name="android:background">?android:colorPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
@@ -234,8 +234,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="BaseAppTheme" />
 
+    <style name="AppTheme.UserPage">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="AppTheme.WebView">
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AppTheme.Auth">

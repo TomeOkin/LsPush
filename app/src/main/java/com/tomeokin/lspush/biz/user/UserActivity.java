@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import com.tomeokin.lspush.R;
@@ -35,6 +37,8 @@ public class UserActivity extends BaseActivity {
 
     @BindView(R.id.appBar) AppBarLayout mAppBar;
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.tabLayout) TabLayout mTabLayout;
+    @BindView(R.id.viewPager) ViewPager mViewPager;
     //@BindView(R.id.toolbar_user_layout) View mToolbarUserField;
     //@BindView(R.id.toolbar_user_avatar) ImageView mToolbarAvatar;
     //@BindView(R.id.toolbar_user_nickname) TextView mToolbarNickname;
@@ -47,6 +51,7 @@ public class UserActivity extends BaseActivity {
         Intent starter = new Intent(context, UserActivity.class);
         starter.putExtra(ARG_UID, uid);
         context.startActivity(starter);
+
     }
 
     @Override

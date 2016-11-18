@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apply plugin: 'bugly'
-//apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.getkeepsafe.dexcount'
 //apply from: rootProject.file('buildsystem/quality.gradle')
 //apply from: rootProject.file('buildsystem/jacoco.gradle')
 //apply from: rootProject.file('buildsystem/compile.gradle')

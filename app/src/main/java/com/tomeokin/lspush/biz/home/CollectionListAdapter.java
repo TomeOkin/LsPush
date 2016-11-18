@@ -188,7 +188,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private RecyclerView.ViewHolder createCollectionHolder(LayoutInflater inflater, ViewGroup parent) {
-        final View view = inflater.inflate(R.layout.layout_item_collection, parent, false);
+        final View view = inflater.inflate(R.layout.list_item_collection, parent, false);
         final CollectionViewHolder holder = new CollectionViewHolder(view);
         holder.itemView.setOnClickListener(this);
         holder.userField.setOnClickListener(mUserClickListener);

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tomeokin.lspush.ui.widget.SwipeRefreshLayoutWithEmpty xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+        <ViewStub
+            android:id="@+id/empty_layout_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+        <!--<include-->
+        <!--android:id="@+id/empty_layout"-->
+        <!--layout="@layout/layout_empty_collection"-->
+        <!--android:visibility="visible" />-->
+
+    </FrameLayout>
+
+</com.tomeokin.lspush.ui.widget.SwipeRefreshLayoutWithEmpty>

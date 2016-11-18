@@ -17,14 +17,11 @@ package com.tomeokin.lspush.biz.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,11 +42,11 @@ import com.tomeokin.lspush.biz.common.UserScene;
 import com.tomeokin.lspush.biz.user.UserActivity;
 import com.tomeokin.lspush.biz.usercase.collection.CollectionAction;
 import com.tomeokin.lspush.biz.usercase.collection.FavorAction;
-import com.tomeokin.lspush.util.StringUtils;
 import com.tomeokin.lspush.data.model.BaseResponse;
 import com.tomeokin.lspush.data.model.Collection;
 import com.tomeokin.lspush.data.model.CollectionResponse;
 import com.tomeokin.lspush.injection.component.HomeComponent;
+import com.tomeokin.lspush.util.StringUtils;
 
 import javax.inject.Inject;
 
@@ -206,8 +203,6 @@ public class HomeFragment extends BaseFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_home_menu, menu);
-        Drawable drawable = menu.findItem(R.id.action_search).getIcon();
-        DrawableCompat.setTint(drawable, Color.WHITE);
     }
 
     @Override

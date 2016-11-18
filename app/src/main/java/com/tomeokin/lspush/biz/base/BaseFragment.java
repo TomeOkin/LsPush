@@ -26,6 +26,7 @@ import com.tomeokin.lspush.biz.base.lifecycle.LifecycleDispatcherManager;
 import com.tomeokin.lspush.biz.base.lifecycle.LifecycleListenerSupport;
 import com.tomeokin.lspush.biz.base.lifecycle.OnLifecycleListener;
 import com.tomeokin.lspush.injection.ProvideComponent;
+import com.tomeokin.lspush.injection.component.ActivityComponent;
 
 import java.util.ArrayList;
 
@@ -76,7 +77,7 @@ public abstract class BaseFragment extends Fragment implements LifecycleDispatch
      * Gets a component for dependency injection by its type.
      */
     @SuppressWarnings("unchecked")
-    protected <C> C component(Class<C> componentType) {
+    protected <C extends ActivityComponent> C component(Class<C> componentType) {
         return componentType.cast(((ProvideComponent<C>) getActivity()).component());
     }
 
