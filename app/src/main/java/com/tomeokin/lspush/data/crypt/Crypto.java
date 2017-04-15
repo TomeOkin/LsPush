@@ -43,18 +43,18 @@ import javax.crypto.spec.IvParameterSpec;
 import timber.log.Timber;
 
 public class Crypto {
-    private static Crypto crypto;
+    private static Crypto cryptor;
     private static PublicKey pubKey;
 
     public static Crypto get() {
-        if (crypto == null) {
+        if (cryptor == null) {
             try {
-                crypto = new Crypto(LsPushConfig.getPublicKey());
+                cryptor = new Crypto(LsPushConfig.getPublicKey());
             } catch (Exception e) {
-                Timber.tag(UserScene.TAG_APP).wtf(e, "generate crypto instance failure");
+                Timber.tag(UserScene.TAG_APP).wtf(e, "generate cryptor instance failure");
             }
         }
-        return crypto;
+        return cryptor;
     }
 
     /**

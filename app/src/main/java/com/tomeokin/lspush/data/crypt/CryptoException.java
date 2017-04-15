@@ -13,29 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomeokin.lspush.data.model.internal;
+package com.tomeokin.lspush.data.crypt;
 
-import com.tomeokin.lspush.data.model.BaseResponse;
-
-import java.util.List;
-
-public class ListResponse<T> extends BaseResponse {
-    private List<T> list;
-
-    public ListResponse(List<T> list) {
-        this.list = list;
-    }
-
-    public ListResponse(int resultCode, String result, List<T> list) {
-        super(resultCode, result);
-        this.list = list;
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-}
+public class CryptoException { }
